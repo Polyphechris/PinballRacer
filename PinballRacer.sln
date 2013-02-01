@@ -1,0 +1,24 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PinballRacer", "PinballRacer\PinballRacer\PinballRacer.csproj", "{8B7B8310-C72C-423A-BD57-2A9F1811DC25}"
+EndProject
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "PinballRacerContent", "PinballRacer\PinballRacerContent\PinballRacerContent.contentproj", "{841D2319-4A3C-47DC-8753-2E6D85465A42}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8B7B8310-C72C-423A-BD57-2A9F1811DC25}.Debug|x86.ActiveCfg = Debug|x86
+		{8B7B8310-C72C-423A-BD57-2A9F1811DC25}.Debug|x86.Build.0 = Debug|x86
+		{8B7B8310-C72C-423A-BD57-2A9F1811DC25}.Release|x86.ActiveCfg = Release|x86
+		{8B7B8310-C72C-423A-BD57-2A9F1811DC25}.Release|x86.Build.0 = Release|x86
+		{841D2319-4A3C-47DC-8753-2E6D85465A42}.Debug|x86.ActiveCfg = Debug|x86
+		{841D2319-4A3C-47DC-8753-2E6D85465A42}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
