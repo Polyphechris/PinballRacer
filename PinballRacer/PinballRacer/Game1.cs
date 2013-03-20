@@ -25,12 +25,14 @@ namespace PinballRacer
         Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(70), 600 / 600, 1, 200);
         Model PinballTable;
 
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
             //InitEffect();
+
         }
 
         /// <summary>
@@ -92,6 +94,7 @@ namespace PinballRacer
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
           //  DrawLines(view,projection, new Vector3(-100,0,0), new Vector3(100,0,0));
+
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
