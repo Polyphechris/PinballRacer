@@ -19,10 +19,18 @@ namespace PinballRacer
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        BasicEffect m_basicEffect;
+
+        Matrix view = Matrix.CreateLookAt(new Vector3(0, 0, 12f), Vector3.Zero, Vector3.UnitY);
+        Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(70), 600 / 600, 1, 200);
+        Model PinballTable;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            //InitEffect();
         }
 
         /// <summary>
@@ -83,9 +91,42 @@ namespace PinballRacer
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+          //  DrawLines(view,projection, new Vector3(-100,0,0), new Vector3(100,0,0));
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
+        }
+
+        public void InitEffect()
+        {
+
+            m_basicEffect = new BasicEffect(graphics.GraphicsDevice);
+            m_basicEffect.View = view;
+            m_basicEffect.Projection = projection;
+
+            //Basic Effect Parameters
+            m_basicEffect = new BasicEffect(graphics.GraphicsDevice);
+            m_basicEffect.VertexColorEnabled = true;
+            m_basicEffect.World = Matrix.CreateScale(1.0f);
+            m_basicEffect.PreferPerPixelLighting = true;
+        }
+
+
+        /// <summary>
+        /// This method is responsible for drawing the lines between the joints using the
+        /// vertices method.
+        /// </summary>
+        private void DrawLines(Matrix view, Matrix projection, Vector3 start, Vector3 end)
+        {
+            VertexPositionColor[] primitiveList = new VertexPositionColor[2];
+            primitiveList[0] = new VertexPositionColor(start, Color.Black);
+            primitiveList[1] = new VertexPositionColor(end, Color.Black);
+            m_basicEffect.CurrentTechnique.Passes[0].Apply();
+            //Draws Lines Between Vertices
+            graphics.GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(
+                PrimitiveType.LineList,
+                primitiveList, 0,
+                1);
         }
     }
 }
