@@ -10,16 +10,10 @@ namespace PinballRacer.Track
     {
         public Vector3 start;
         public Vector3 end;
-
-
-        public override void draw(Matrix view, Matrix projection)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public override Vector3 getResultingForce(Vector3 player)
         {
-            throw new NotImplementedException();
+            return Vector3.Zero;
         }
     }
 }

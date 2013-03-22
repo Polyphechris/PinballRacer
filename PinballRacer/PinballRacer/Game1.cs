@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using PinballRacer.Track;
 
 namespace PinballRacer
 {
@@ -21,16 +22,25 @@ namespace PinballRacer
 
         BasicEffect m_basicEffect;
 
-        Matrix view = Matrix.CreateLookAt(new Vector3(0, 0, 12f), Vector3.Zero, Vector3.UnitY);
-        Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(70), 600 / 600, 1, 200);
+        Matrix view = Matrix.CreateLookAt(new Vector3(0, 0, 50f), Vector3.Zero, Vector3.UnitY);
+        Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(70), 800 / 600, 1, 100);
         Model PinballTable;
 
+        RaceTrack track;
+
+        //Camera attributes
+        float angleX = 0;
+        float angleY = 0;
+        float zoom = 0;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+
             Content.RootDirectory = "Content";
 
+            graphics.PreferredBackBufferWidth = 800;
+            graphics.PreferredBackBufferHeight = 600;
             //InitEffect();
 
         }
@@ -56,7 +66,9 @@ namespace PinballRacer
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            Content.Load<Model>("cube");
 
+            track = new RaceTrack(Content);
             // TODO: use this.Content to load your game content here
         }
 
@@ -76,10 +88,14 @@ namespace PinballRacer
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            KeyboardState keyboardState = Keyboard.GetState();
+
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                keyboardState.IsKeyDown(Keys.Escape))
                 this.Exit();
 
+            cameraMotion(keyboardState);
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -93,9 +109,18 @@ namespace PinballRacer
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-          //  DrawLines(view,projection, new Vector3(-100,0,0), new Vector3(100,0,0));
+            #region ResetGraphic
+            ResetGraphic();
+            #endregion
 
-            // TODO: Add your drawing code here
+            #region render 3D
+            BeginRender3D();
+            //Render 3D here
+            track.Draw(view, projection);
+            #endregion
+            
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
@@ -131,5 +156,94 @@ namespace PinballRacer
                 primitiveList, 0,
                 1);
         }
+
+        public void cameraMotion(KeyboardState keyboardState)
+        {
+            //accepts all th input and reacts to it
+            if (keyboardState.IsKeyDown(Keys.D1))
+            {
+            }
+            if (keyboardState.IsKeyDown(Keys.D2))
+            {
+            }
+            if (keyboardState.IsKeyDown(Keys.D3))
+            {  
+            }
+            if (keyboardState.IsKeyDown(Keys.D4))
+            {
+            }
+            if (keyboardState.IsKeyDown(Keys.D5))
+            {              
+            }
+            if (keyboardState.IsKeyDown(Keys.X))
+            {
+            }
+            if (keyboardState.IsKeyDown(Keys.S))
+            {
+                angleX = 0.009f;
+                view = view * Matrix.CreateRotationX(angleX);
+            }
+            if (keyboardState.IsKeyDown(Keys.W))
+            {
+                angleX = -0.009f;
+                view = view * Matrix.CreateRotationX(angleX);
+            }
+            if (keyboardState.IsKeyDown(Keys.D))
+            {
+                angleY = 0.009f;
+                view = view * Matrix.CreateRotationY(angleY);
+            }
+            if (keyboardState.IsKeyDown(Keys.A))
+            {
+                angleY = -0.009f;
+                view = view * Matrix.CreateRotationY(angleY);
+            }
+            if (keyboardState.IsKeyDown(Keys.E))
+            {
+                zoom = 0.5f;
+                view = view * Matrix.CreateTranslation(new Vector3(0, 0, zoom));
+            }
+            if (keyboardState.IsKeyDown(Keys.Q))
+            {
+                zoom = -0.5f;
+                view = view * Matrix.CreateTranslation(new Vector3(0, 0, zoom));
+            }
+            if (keyboardState.IsKeyDown(Keys.K))
+            {
+                zoom = 0.5f;
+                view = view * Matrix.CreateTranslation(new Vector3(0, zoom, 0));
+            }
+            if (keyboardState.IsKeyDown(Keys.I))
+            {
+                zoom = -0.5f;
+                view = view * Matrix.CreateTranslation(new Vector3(0, zoom, 0));
+            }
+            if (keyboardState.IsKeyDown(Keys.L))
+            {
+                zoom = -0.5f;
+                view = view * Matrix.CreateTranslation(new Vector3(zoom, 0, 0));
+            }
+            if (keyboardState.IsKeyDown(Keys.J))
+            {
+                zoom = 0.5f;
+                view = view * Matrix.CreateTranslation(new Vector3(zoom, 0, 0));
+            }
+        }
+
+        public void ResetGraphic()
+        {
+            GraphicsDevice.BlendState = BlendState.AlphaBlend;
+            GraphicsDevice.DepthStencilState = DepthStencilState.None;
+            GraphicsDevice.RasterizerState = RasterizerState.CullCounterClockwise;
+            GraphicsDevice.SamplerStates[0] = SamplerState.AnisotropicWrap;
+
+        }
+        public void BeginRender3D()
+        {
+            GraphicsDevice.BlendState = BlendState.Opaque;
+            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+        }
+
+
     }
 }

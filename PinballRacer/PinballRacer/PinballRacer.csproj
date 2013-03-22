@@ -80,10 +80,10 @@
     <Compile Include="Track\Obstacles\Flipper.cs" />
     <Compile Include="Track\TrackGraph.cs" />
     <Compile Include="Track\Wall.cs" />
+    <Compile Include="Track\Walls\Floor.cs" />
     <Compile Include="Track\Walls\WallBonus.cs" />
     <Compile Include="Track\Walls\WallBumper.cs" />
-    <Compile Include="Track\Track.cs" />
-    <Compile Include="Track\Walls\WallCurve.cs" />
+    <Compile Include="Track\RaceTrack.cs" />
     <Compile Include="Track\Walls\WallRegular.cs" />
   </ItemGroup>
   <ItemGroup>

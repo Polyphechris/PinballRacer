@@ -2,19 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 
 namespace PinballRacer.Track.Obstacles
 {
     class WallBumper : Wall
     {
-        public override void draw(Microsoft.Xna.Framework.Matrix view, Microsoft.Xna.Framework.Matrix projection)
+        public override Vector3 getResultingForce(Microsoft.Xna.Framework.Vector3 player)
         {
-            throw new NotImplementedException();
-        }
-
-        public override Microsoft.Xna.Framework.Vector3 getResultingForce(Microsoft.Xna.Framework.Vector3 player)
-        {
-            throw new NotImplementedException();
+            return Vector3.Zero;
         }
     }
 }

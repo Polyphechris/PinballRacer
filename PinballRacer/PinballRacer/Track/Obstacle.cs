@@ -9,16 +9,35 @@ namespace PinballRacer.Track
 {
     public abstract class Obstacle
     {
-        Model model;
-        int score;
-        Vector3 position;
+        protected Model model;
+        protected int score;
+        protected Vector3 position;
+        protected Vector3 scale;
 
         //How much force is transmited back to the ball
-        float elasticity;
+        protected float elasticity;
 
         public void update(float time) { }
 
-        public abstract void draw(Matrix view, Matrix projection);
+        public void draw(Matrix view, Matrix projection)
+        {
+            foreach (ModelMesh mesh in model.Meshes)
+            {
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+                    effect.EnableDefaultLighting();
+                    effect.AmbientLightColor = new Vector3(0.3f, 0.3f, 0.3f);
+                    effect.DiffuseColor = new Vector3(0.88f, 0.88f, 0.88f);
+                    effect.DirectionalLight0.Direction = new Vector3(0, 0, 1);
+                    effect.DirectionalLight0.DiffuseColor = new Vector3(0.5f, 0.5f, 0.5f);// Shinnyness/reflexive
+                    effect.World = Matrix.CreateScale(scale) * Matrix.CreateTranslation(position);
+                    effect.View = view;
+                    effect.Projection = projection;
+                    //effect.Alpha = 0.8f;
+                }
+                mesh.Draw();
+            }
+        }
 
         //Takes a player's position and returns a resulting force based on shape and elasticity
         public abstract Vector3 getResultingForce(Vector3 player);
