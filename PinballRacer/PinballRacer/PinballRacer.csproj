@@ -80,6 +80,7 @@
     <Compile Include="Player\Pinball\Pinball.cs" />
     <Compile Include="Player\Pinball\Skin.cs" />
     <Compile Include="Player\Player.cs" />
+    <Compile Include="Player\PlayerSpriteManager.cs" />
     <Compile Include="Player\Score.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="Track\Obstacles\Bumper.cs" />
     <Compile Include="Track\Obstacles\Flipper.cs" />
     <Compile Include="Track\TrackGraph.cs" />
+    <Compile Include="Track\TrackSpriteManager.cs" />
     <Compile Include="Track\Wall.cs" />
     <Compile Include="Track\Walls\Floor.cs" />
     <Compile Include="Track\Walls\WallBonus.cs" />

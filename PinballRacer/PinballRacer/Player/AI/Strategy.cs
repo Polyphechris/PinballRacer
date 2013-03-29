@@ -5,7 +5,7 @@ using System.Text;
 
 namespace PinballRacer.Player.AI
 {
-    class Strategy
+    class StrategyAI
     {
     }
 }
