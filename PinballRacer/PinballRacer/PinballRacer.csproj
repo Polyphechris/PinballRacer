@@ -72,10 +72,9 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Player\AI\AI.cs" />
-    <Compile Include="Player\AI\Strategies\FinishFirstStrategy.cs" />
-    <Compile Include="Player\AI\Strategies\MostPointsStrategy.cs" />
-    <Compile Include="Player\AI\Strategy.cs" />
+    <Compile Include="Player\Strategies\FinishFirstStrategy.cs" />
+    <Compile Include="Player\Strategies\MostPointsStrategy.cs" />
+    <Compile Include="Player\Strategies\Strategy.cs" />
     <Compile Include="Player\HumanPlayer.cs" />
     <Compile Include="Player\NpcPlayer.cs" />
     <Compile Include="Player\Player.cs" />

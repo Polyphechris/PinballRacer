@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
-using PinballRacer.Player.AI;
+using PinballRacer.Player.Strategies;
 
 namespace PinballRacer.Player
 {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 
-namespace PinballRacer.Player.AI
+namespace PinballRacer.Player.Strategies
 {
     public abstract class Strategy
     {
