@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace PinballRacer.Player.AI.Strategy
+namespace PinballRacer.Player.AI.Strategies
 {
-    class MostPoints
+    public class FinishFirstStrategy// : Strategy
     {
     }
 }
