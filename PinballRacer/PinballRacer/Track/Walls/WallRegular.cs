@@ -12,8 +12,8 @@ namespace PinballRacer.Track.Walls
         public WallRegular(float x, float y, Model m)
         {
             model = m;
-            scale = new Vector3(0.5f, 1, 0.5f);
-            position = new Vector3(x, 0, y);
+            scale = new Vector3(0.5f,  0.5f, 0.5f);
+            position = new Vector3(x,  y, 0);
         }
     }
 }

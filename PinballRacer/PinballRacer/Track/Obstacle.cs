@@ -19,16 +19,16 @@ namespace PinballRacer.Track
 
         public void update(float time) { }
 
-        public void draw(Matrix view, Matrix projection)
+        public virtual void draw(Matrix view, Matrix projection)
         {
             foreach (ModelMesh mesh in model.Meshes)
             {
                 foreach (BasicEffect effect in mesh.Effects)
                 {
                     effect.EnableDefaultLighting();
-                    effect.AmbientLightColor = new Vector3(0.3f, 0.3f, 0.3f);
-                    effect.DiffuseColor = new Vector3(0.88f, 0.88f, 0.88f);
-                    effect.DirectionalLight0.Direction = new Vector3(0, 0, 1);
+                    //effect.AmbientLightColor = new Vector3(0.3f, 0.3f, 0.3f);
+                    //effect.DiffuseColor = new Vector3(0.88f, 0.88f, 0.88f);
+                    effect.DirectionalLight0.Direction = new Vector3(0, 0, -1);
                     effect.DirectionalLight0.DiffuseColor = new Vector3(0.5f, 0.5f, 0.5f);// Shinnyness/reflexive
                     effect.World = Matrix.CreateScale(scale) * Matrix.CreateTranslation(position);
                     effect.View = view;

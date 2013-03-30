@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using PinballRacer.Track.Walls;
+using PinballRacer.Track.Obstacles;
 
 namespace PinballRacer.Track
 {
@@ -89,6 +90,10 @@ namespace PinballRacer.Track
         private void InitializeObstacles()
         {
             obstacles = new List<Obstacle>();
+            obstacles.Add(new Bumper(10, 10, content.Load<Model>("bumper_1")));
+            var bump = new Bumper(20, 10, content.Load<Model>("bumper_1"));
+            bump.isHit = true;
+            obstacles.Add(bump);
         }
 
         private void AddWall(int x, int y)
