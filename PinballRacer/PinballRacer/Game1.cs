@@ -1,13 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
+using PinballRacer.Player;
 using PinballRacer.Track;
 
 namespace PinballRacer
@@ -19,14 +13,15 @@ namespace PinballRacer
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        TrackSpriteManager trackManager;
+        PlayerSpriteManager playerManager;
 
         BasicEffect m_basicEffect;
 
-        Matrix view = Matrix.CreateLookAt(new Vector3(10, 10, 24f), Vector3.Zero, Vector3.UnitY);
-        Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(70), 800 / 600, 1, 100);
-        Model PinballTable;
+        public static Matrix view = Matrix.CreateLookAt(new Vector3(10, 10, 24f), Vector3.Zero, Vector3.UnitY);
+        public static Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(70), 800 / 600, 1, 100);
 
-        RaceTrack track;
+        Model PinballTable;
 
         //Camera attributes
         float angleX = 0;
@@ -35,14 +30,22 @@ namespace PinballRacer
 
         public Game1()
         {
+            //  Initialize drawable game components
             graphics = new GraphicsDeviceManager(this);
+            trackManager = new TrackSpriteManager(this);
+            playerManager = new PlayerSpriteManager(this);
 
+            //  Add game components to the collection; xna will automatically call each update and draw method of every component.
+            this.Components.Add(trackManager);
+            this.Components.Add(playerManager);
+
+            //  Setting up default root directory
             Content.RootDirectory = "Content";
 
+            //  Defining the window size
             graphics.PreferredBackBufferWidth = 800;
             graphics.PreferredBackBufferHeight = 600;
             //InitEffect();
-
         }
 
         /// <summary>
@@ -54,7 +57,6 @@ namespace PinballRacer
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
             base.Initialize();
         }
 
@@ -65,10 +67,7 @@ namespace PinballRacer
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            Content.Load<Model>("cube");
-
-            track = new RaceTrack(Content);
+            spriteBatch = new SpriteBatch(GraphicsDevice);            
             // TODO: use this.Content to load your game content here
         }
 
@@ -115,12 +114,10 @@ namespace PinballRacer
 
             #region render 3D
             BeginRender3D();
-            //Render 3D here
-            track.Draw(view, projection);
             #endregion
-            
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone);
-            spriteBatch.End();
+
+            //spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone);
+            //spriteBatch.End();
 
             base.Draw(gameTime);
         }
