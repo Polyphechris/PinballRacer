@@ -34,7 +34,7 @@ namespace PinballRacer.Track.Obstacles
                     // effect.EnableDefaultLighting();
                     effect.DirectionalLight0.Enabled = true; 
                     effect.DirectionalLight0.Direction = new Vector3(0f, 1f, -1f);
-                    effect.DirectionalLight0.DiffuseColor = new Vector3(0.7f, 0.7f, 0.7f);// Shinnyness/reflexive
+                    effect.DirectionalLight0.DiffuseColor = new Vector3(0.9f, 0.9f, 0.9f);// Shinnyness/reflexive
                     effect.AmbientLightColor = new Vector3(0.2f);
                     effect.World = Matrix.CreateScale(scale) * Matrix.CreateTranslation(position);
                     effect.View = view;

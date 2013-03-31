@@ -54,6 +54,20 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="bumper_2.fbx">
+      <Name>bumper_2</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="spring.fbx">
+      <Name>spring</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="floor.fbx">
       <Name>floor</Name>
       <Importer>FbxImporter</Importer>

@@ -10,7 +10,7 @@ namespace PinballRacer.Track
         //  Models        
 
         //  Track elements
-        RaceTrack track;
+        public RaceTrack track;
 
         public TrackSpriteManager(Game1 game)
             : base(game)

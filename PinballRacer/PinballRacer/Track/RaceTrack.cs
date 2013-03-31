@@ -21,6 +21,8 @@ namespace PinballRacer.Track
         public const int TRACK_HEIGHT_OUT = 70;
 
         ContentManager content;
+        Model spring;
+        public float springLevel;
 
         List<Obstacle> obstacles;
         List<Wall> walls;
@@ -40,12 +42,14 @@ namespace PinballRacer.Track
             InitializeOutterWalls();
             InitializeInnerWalls();
             InitializeObstacles();
+            spring = content.Load<Model>("spring");
+            springLevel = 0.5f;
         }
 
         private void InitializeFloor()
         {
             floors = new List<Floor>();
-            Model m = content.Load<Model>("floor");
+            Model m = content.Load<Model>("cube");
             //Setting up the floor
             for (int i = 0; i < TRACK_WIDTH; ++i)
             {
@@ -89,17 +93,28 @@ namespace PinballRacer.Track
             {
                 AddWall(TRACK_WIDTH - 4, k);                
             }
-            
+            for (int l = 10; l < 20; ++l)
+            {
+                AddWall(5, l);
+            } 
+            for (int r = 10; r < 20; ++r)
+            {
+                AddWall(TRACK_WIDTH - 9, r);
+            }
         }
 
         private void InitializeObstacles()
         {
             obstacles = new List<Obstacle>();
-            obstacles.Add(new Bumper(30, 50, content.Load<Model>("bumper_1")));
-            obstacles.Add(new Bumper(10, 70, content.Load<Model>("bumper_1")));
-            var bump = new Bumper(20, 30, content.Load<Model>("bumper_1"));
+            obstacles.Add(new Bumper(TRACK_WIDTH - 13, 50, content.Load<Model>("bumper_1")));
+            obstacles.Add(new Bumper(TRACK_WIDTH - 10, 60, content.Load<Model>("bumper_1")));
+            obstacles.Add(new Bumper(TRACK_WIDTH - 7, 40, content.Load<Model>("bumper_1")));
+            obstacles.Add(new Bumper(10, 50, content.Load<Model>("bumper_1")));
+            obstacles.Add(new Bumper(7, 60, content.Load<Model>("bumper_1")));
+            var bump = new Bumper(4, 40, content.Load<Model>("bumper_1"));
             bump.isHit = true;
             obstacles.Add(bump);
+            obstacles.Add(new WallBumper(30, 10, content.Load<Model>("bumper_2")));
         }
 
         private void AddWall(int x, int y)
@@ -129,6 +144,30 @@ namespace PinballRacer.Track
             foreach (Obstacle o in obstacles)
             {
                 o.draw(view, projection);
+            }
+            DrawSpring();
+        }
+
+        public void DrawSpring()
+        {
+            foreach (ModelMesh mesh in spring.Meshes)
+            {
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+                    effect.LightingEnabled = true;
+                    effect.EnableDefaultLighting();
+                    effect.DirectionalLight0.Enabled = true;
+                    effect.DirectionalLight0.Direction = new Vector3(0, 0, -1);
+                    effect.AmbientLightColor = new Vector3(0.55f);
+                    effect.DirectionalLight0.DiffuseColor = new Vector3(1, 1, 1);// Shinnyness/reflexive
+                    effect.World = Matrix.CreateScale(new Vector3(0.5f,0.5f,springLevel)) * 
+                        Matrix.CreateTranslation(new Vector3(47.5f, 0f, 4 * springLevel)) *
+                        Matrix.CreateRotationX(MathHelper.ToRadians(-90));
+                    effect.View = Game1.view;
+                    effect.Projection = Game1.projection;
+                    //effect.Alpha = 0.8f;
+                }
+                mesh.Draw();
             }
         }
 

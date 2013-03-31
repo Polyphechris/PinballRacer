@@ -157,6 +157,10 @@ namespace PinballRacer
         public void cameraMotion(KeyboardState keyboardState)
         {
             //accepts all th input and reacts to it
+            if (keyboardState.IsKeyDown(Keys.Space))
+            {
+                trackManager.track.springLevel -= 0.01f;
+            }
             if (keyboardState.IsKeyDown(Keys.D1))
             {
             }
@@ -177,52 +181,52 @@ namespace PinballRacer
             }
             if (keyboardState.IsKeyDown(Keys.S))
             {
-                angleX = 0.009f;
+                angleX = 0.01f;
                 view = view * Matrix.CreateRotationX(angleX);
             }
             if (keyboardState.IsKeyDown(Keys.W))
             {
-                angleX = -0.009f;
+                angleX = -0.01f;
                 view = view * Matrix.CreateRotationX(angleX);
             }
             if (keyboardState.IsKeyDown(Keys.D))
             {
-                angleY = 0.009f;
+                angleY = 0.01f;
                 view = view * Matrix.CreateRotationY(angleY);
             }
             if (keyboardState.IsKeyDown(Keys.A))
             {
-                angleY = -0.009f;
+                angleY = -0.01f;
                 view = view * Matrix.CreateRotationY(angleY);
             }
             if (keyboardState.IsKeyDown(Keys.E))
             {
-                zoom = 0.5f;
+                zoom = 0.2f;
                 view = view * Matrix.CreateTranslation(new Vector3(0, 0, zoom));
             }
             if (keyboardState.IsKeyDown(Keys.Q))
             {
-                zoom = -0.5f;
+                zoom = -0.2f;
                 view = view * Matrix.CreateTranslation(new Vector3(0, 0, zoom));
             }
             if (keyboardState.IsKeyDown(Keys.K))
             {
-                zoom = 0.5f;
+                zoom = 0.1f;
                 view = view * Matrix.CreateTranslation(new Vector3(0, zoom, 0));
             }
             if (keyboardState.IsKeyDown(Keys.I))
             {
-                zoom = -0.5f;
+                zoom = -0.1f;
                 view = view * Matrix.CreateTranslation(new Vector3(0, zoom, 0));
             }
             if (keyboardState.IsKeyDown(Keys.L))
             {
-                zoom = -0.5f;
+                zoom = -0.1f;
                 view = view * Matrix.CreateTranslation(new Vector3(zoom, 0, 0));
             }
             if (keyboardState.IsKeyDown(Keys.J))
             {
-                zoom = 0.5f;
+                zoom = 0.1f;
                 view = view * Matrix.CreateTranslation(new Vector3(zoom, 0, 0));
             }
         }
