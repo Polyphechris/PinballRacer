@@ -17,7 +17,7 @@ namespace PinballRacer.Track
         //Bottom left and top right corners of the inner walls
         public const int TRACK_WIDTH_IN = 15;
         public const int TRACK_HEIGHT_IN = 30;
-        public const int TRACK_WIDTH_OUT = 35;
+        public const int TRACK_WIDTH_OUT = 32;
         public const int TRACK_HEIGHT_OUT = 70;
 
         ContentManager content;
@@ -106,15 +106,18 @@ namespace PinballRacer.Track
         private void InitializeObstacles()
         {
             obstacles = new List<Obstacle>();
-            obstacles.Add(new Bumper(TRACK_WIDTH - 13, 50, content.Load<Model>("bumper_1")));
-            obstacles.Add(new Bumper(TRACK_WIDTH - 10, 60, content.Load<Model>("bumper_1")));
-            obstacles.Add(new Bumper(TRACK_WIDTH - 7, 40, content.Load<Model>("bumper_1")));
+            obstacles.Add(new Bumper(TRACK_WIDTH - 14, 50, content.Load<Model>("bumper_1")));
+            obstacles.Add(new Bumper(TRACK_WIDTH - 11, 60, content.Load<Model>("bumper_1")));
+            obstacles.Add(new Bumper(TRACK_WIDTH - 8, 40, content.Load<Model>("bumper_1")));
             obstacles.Add(new Bumper(10, 50, content.Load<Model>("bumper_1")));
             obstacles.Add(new Bumper(7, 60, content.Load<Model>("bumper_1")));
             var bump = new Bumper(4, 40, content.Load<Model>("bumper_1"));
             bump.isHit = true;
             obstacles.Add(bump);
             obstacles.Add(new WallBumper(30, 10, content.Load<Model>("bumper_2")));
+            
+            obstacles.Add(new Flipper((TRACK_WIDTH - 4)/2 - 10, 10, content.Load<Model>("flipper"), Matrix.CreateRotationZ(0f)));
+            obstacles.Add(new Flipper((TRACK_WIDTH - 4)/2 + 10, 10, content.Load<Model>("flipper"), Matrix.CreateRotationZ((float)Math.PI)));
         }
 
         private void AddWall(int x, int y)

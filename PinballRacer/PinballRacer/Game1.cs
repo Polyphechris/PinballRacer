@@ -69,6 +69,8 @@ namespace PinballRacer
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);            
             // TODO: use this.Content to load your game content here
+
+            GraphicsDevice.RasterizerState = RasterizerState.CullNone;
         }
 
         /// <summary>
@@ -201,32 +203,32 @@ namespace PinballRacer
             }
             if (keyboardState.IsKeyDown(Keys.E))
             {
-                zoom = 0.2f;
+                zoom = 0.35f;
                 view = view * Matrix.CreateTranslation(new Vector3(0, 0, zoom));
             }
             if (keyboardState.IsKeyDown(Keys.Q))
             {
-                zoom = -0.2f;
+                zoom = -0.35f;
                 view = view * Matrix.CreateTranslation(new Vector3(0, 0, zoom));
             }
             if (keyboardState.IsKeyDown(Keys.K))
             {
-                zoom = 0.1f;
+                zoom = 0.25f;
                 view = view * Matrix.CreateTranslation(new Vector3(0, zoom, 0));
             }
             if (keyboardState.IsKeyDown(Keys.I))
             {
-                zoom = -0.1f;
+                zoom = -0.25f;
                 view = view * Matrix.CreateTranslation(new Vector3(0, zoom, 0));
             }
             if (keyboardState.IsKeyDown(Keys.L))
             {
-                zoom = -0.1f;
+                zoom = -0.25f;
                 view = view * Matrix.CreateTranslation(new Vector3(zoom, 0, 0));
             }
             if (keyboardState.IsKeyDown(Keys.J))
             {
-                zoom = 0.1f;
+                zoom = 0.25f;
                 view = view * Matrix.CreateTranslation(new Vector3(zoom, 0, 0));
             }
         }
@@ -235,7 +237,7 @@ namespace PinballRacer
         {
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
             GraphicsDevice.DepthStencilState = DepthStencilState.None;
-            GraphicsDevice.RasterizerState = RasterizerState.CullCounterClockwise;
+            //GraphicsDevice.RasterizerState = RasterizerState.CullCounterClockwise;
             GraphicsDevice.SamplerStates[0] = SamplerState.AnisotropicWrap;
 
         }

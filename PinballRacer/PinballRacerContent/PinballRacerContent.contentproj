@@ -68,8 +68,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="floor.fbx">
-      <Name>floor</Name>
+    <Compile Include="flipper.fbx">
+      <Name>flipper</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>
