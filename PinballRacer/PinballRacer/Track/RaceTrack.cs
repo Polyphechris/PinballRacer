@@ -94,6 +94,7 @@ namespace PinballRacer.Track
             var bump = new Bumper(20, 10, content.Load<Model>("bumper_1"));
             bump.isHit = true;
             obstacles.Add(bump);
+            obstacles.Add(new WallBumper(30, 10, content.Load<Model>("spring")));
         }
 
         private void AddWall(int x, int y)
