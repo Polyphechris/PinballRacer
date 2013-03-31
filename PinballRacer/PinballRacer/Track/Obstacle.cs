@@ -26,6 +26,7 @@ namespace PinballRacer.Track
                 foreach (BasicEffect effect in mesh.Effects)
                 {
                     effect.LightingEnabled = true;
+                   //Comment this out for smoothing the walls and floors
                     effect.EnableDefaultLighting();
                     effect.DirectionalLight0.Enabled = true; 
                     effect.DirectionalLight0.Direction = new Vector3(0, 0, -1);

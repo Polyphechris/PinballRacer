@@ -30,17 +30,13 @@ namespace PinballRacer.Track.Obstacles
             {
                 foreach (BasicEffect effect in mesh.Effects)
                 {
-                    effect.LightingEnabled = true;
-                    // effect.EnableDefaultLighting();
-                    effect.DirectionalLight0.Enabled = true; 
-                    effect.DirectionalLight0.Direction = new Vector3(0f, 1f, -1f);
+                    effect.EnableDefaultLighting();
+                    effect.DirectionalLight0.Direction = new Vector3(0f, 0, -1f);
                     effect.DirectionalLight0.DiffuseColor = new Vector3(0.9f, 0.9f, 0.9f);// Shinnyness/reflexive
-                    effect.AmbientLightColor = new Vector3(0.2f);
                     effect.World = Matrix.CreateScale(scale) * Matrix.CreateTranslation(position);
                     effect.View = view;
                     effect.Projection = projection;
                     //effect.Alpha = 0.8f;
-
                     if (isHit)
                     {
                         effect.DirectionalLight1.SpecularColor = new Vector3(1f, 1f, 1f);
