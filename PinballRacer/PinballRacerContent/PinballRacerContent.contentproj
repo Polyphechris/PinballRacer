@@ -47,6 +47,13 @@
     <Folder Include="Track\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="bumper_1.fbx">
+      <Name>bumper_1</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="floor.fbx">
       <Name>floor</Name>
       <Importer>FbxImporter</Importer>

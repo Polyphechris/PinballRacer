@@ -18,9 +18,9 @@ namespace PinballRacer
 
         BasicEffect m_basicEffect;
 
-        //  global variables that other drawing classes will need
-        public static Matrix view = Matrix.CreateLookAt(new Vector3(0, 0, 50f), Vector3.Zero, Vector3.UnitY);
+        public static Matrix view = Matrix.CreateLookAt(new Vector3(20, 50, 70f), new Vector3(20, 50, 0), Vector3.UnitY);
         public static Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(70), 800 / 600, 1, 100);
+
         Model PinballTable;
 
         //Camera attributes
