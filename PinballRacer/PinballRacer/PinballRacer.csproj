@@ -72,14 +72,14 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Player\Strategies\FinishFirstStrategy.cs" />
-    <Compile Include="Player\Strategies\MostPointsStrategy.cs" />
-    <Compile Include="Player\Strategies\Strategy.cs" />
-    <Compile Include="Player\HumanPlayer.cs" />
-    <Compile Include="Player\NpcPlayer.cs" />
-    <Compile Include="Player\Player.cs" />
-    <Compile Include="Player\PlayerSpriteManager.cs" />
-    <Compile Include="Player\Score.cs" />
+    <Compile Include="Players\Strategies\FinishFirstStrategy.cs" />
+    <Compile Include="Players\Strategies\MostPointsStrategy.cs" />
+    <Compile Include="Players\Strategies\Strategy.cs" />
+    <Compile Include="Players\HumanPlayer.cs" />
+    <Compile Include="Players\NpcPlayer.cs" />
+    <Compile Include="Players\Player.cs" />
+    <Compile Include="Players\PlayerSpriteManager.cs" />
+    <Compile Include="Players\Score.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />

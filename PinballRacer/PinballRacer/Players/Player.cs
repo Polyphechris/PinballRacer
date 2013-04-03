@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace PinballRacer.Player
+namespace PinballRacer.Players
 {
     public abstract class Player
     {

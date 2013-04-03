@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-namespace PinballRacer.Player
+namespace PinballRacer.Players
 {
     public class PlayerSpriteManager : Microsoft.Xna.Framework.DrawableGameComponent
     {

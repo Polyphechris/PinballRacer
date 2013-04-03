@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace PinballRacer.Player
+namespace PinballRacer.Players.Strategies
 {
-    class Score
+    public class MostPointsStrategy// : Strategy
     {
+        
     }
 }

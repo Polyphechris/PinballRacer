@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
-using PinballRacer.Player;
+using PinballRacer.Players;
 using Microsoft.Xna.Framework.Graphics;
 using PinballRacer.Track.Walls;
 

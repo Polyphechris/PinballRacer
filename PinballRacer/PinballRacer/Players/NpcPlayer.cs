@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using PinballRacer.Player.Strategies;
+using PinballRacer.Players.Strategies;
 
-namespace PinballRacer.Player
+namespace PinballRacer.Players
 {
     public class NpcPlayer : Player
     {
