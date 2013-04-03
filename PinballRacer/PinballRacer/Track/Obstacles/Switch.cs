@@ -120,7 +120,7 @@ namespace PinballRacer.Track.Obstacles
                         effect.View = view;
                         effect.Projection = projection;
                         effect.Alpha = 0.7f;
-                        if (lanes[i])
+                        if (lanes[i].W == 1)
                         {
                             effect.EmissiveColor = new Vector3(1, 1, 0.1f);
                             effect.DirectionalLight0.DiffuseColor = new Vector3(0.9f, 0.9f, 0.1f);
