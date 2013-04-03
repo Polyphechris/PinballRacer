@@ -87,6 +87,7 @@
     <Compile Include="Track\Obstacles\Bumper.cs" />
     <Compile Include="Track\Obstacles\Flipper.cs" />
     <Compile Include="Track\Obstacles\Slingshot.cs" />
+    <Compile Include="Track\Obstacles\Switch.cs" />
     <Compile Include="Track\TrackGraph.cs" />
     <Compile Include="Track\TrackSpriteManager.cs" />
     <Compile Include="Track\Wall.cs" />

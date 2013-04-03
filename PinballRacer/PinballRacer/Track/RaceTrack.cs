@@ -18,7 +18,7 @@ namespace PinballRacer.Track
         public const int TRACK_WIDTH_IN = 15;
         public const int TRACK_HEIGHT_IN = 30;
         public const int TRACK_WIDTH_OUT = 32;
-        public const int TRACK_HEIGHT_OUT = 70;
+        public const int TRACK_HEIGHT_OUT = 80;
 
         ContentManager content;
         Model spring;
@@ -119,6 +119,8 @@ namespace PinballRacer.Track
             
             obstacles.Add(new Flipper((TRACK_WIDTH - 4)/2 - 10, 10, content.Load<Model>("flipper"), Matrix.CreateRotationZ(0f)));
             obstacles.Add(new Flipper((TRACK_WIDTH - 4)/2 + 10, 10, content.Load<Model>("flipper"), Matrix.CreateRotationZ((float)Math.PI)));
+
+            obstacles.Add(new Switch(new Vector2(TRACK_WIDTH/2 - 4, TRACK_HEIGHT - 15) , content.Load<Model>("ball"), content.Load<Model>("cube")));
         }
 
         private void AddWall(int x, int y)
