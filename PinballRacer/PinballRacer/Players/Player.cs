@@ -11,7 +11,7 @@ namespace PinballRacer.Players
     {
         //  Constants (not sure if all are needed)
         protected const float COLLISION_TIME = 500.0f;
-        protected const float RADIUS = 0.5f;
+        public const float RADIUS = 0.5f;
         protected const float BOUNDARYX = 15f;
         protected const float BOUNDARYY = 19f;
 
@@ -26,7 +26,7 @@ namespace PinballRacer.Players
         protected const float CONE = (float)Math.PI / 4;
 
         //  Movement attributes
-        protected Vector3 position { get; set; }
+        public Vector3 position { get; set; }
         protected Vector3 direction { get; set; }
         protected float velocity { get; set; }
         protected float acceleration { get; set; }
@@ -40,7 +40,8 @@ namespace PinballRacer.Players
         private Vector3 color { get; set; }
         private float scale { get; set; }
         private float rotation { get; set; }
-        
+
+        public bool hitSwitch;
 
         public void Direction()
         {

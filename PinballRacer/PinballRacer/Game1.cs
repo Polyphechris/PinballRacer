@@ -243,7 +243,7 @@ namespace PinballRacer
         }
         public void BeginRender3D()
         {
-            GraphicsDevice.BlendState = BlendState.Opaque;
+            GraphicsDevice.BlendState = BlendState.AlphaBlend;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
         }
 
