@@ -17,7 +17,7 @@ namespace PinballRacer.Track
         //How much force is transmited back to the ball
         protected float elasticity;
 
-        public void update(float time) { }
+        public virtual void update(float time) { }
 
         public virtual void draw(Matrix view, Matrix projection)
         {

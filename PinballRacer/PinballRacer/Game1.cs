@@ -98,6 +98,7 @@ namespace PinballRacer
 
             cameraMotion(keyboardState);
             // TODO: Add your update logic here
+            trackManager.track.Update(gameTime.ElapsedGameTime.Milliseconds);
 
             base.Update(gameTime);
         }
@@ -243,7 +244,7 @@ namespace PinballRacer
         }
         public void BeginRender3D()
         {
-            GraphicsDevice.BlendState = BlendState.AlphaBlend;
+            GraphicsDevice.BlendState = BlendState.Opaque;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
         }
 

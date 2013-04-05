@@ -32,7 +32,8 @@ namespace PinballRacer.Track
         TrackGraph NodeGraph;
 
         public float[,] TerrainMap;
-        public enum squareStates { EMPTY = 0, WALL, PLAYER1, PLAYER2, OBSTACLE, GOAL1, LAST};
+        public enum squareStates { EMPTY = 0, WALL, PLAYER1, PLAYER2, OBSTACLE, GOAL1, LAST };
+        public enum trackStates { PLAYING = 0, START, GAMEOVER };
         public squareStates[,] board;
 
         public RaceTrack(ContentManager c)
@@ -117,8 +118,8 @@ namespace PinballRacer.Track
             obstacles.Add(new Slingshot((TRACK_WIDTH - 4) / 2 - 13, 18, content.Load<Model>("bumper_2"), Matrix.CreateRotationZ(MathHelper.ToRadians(79))));
             obstacles.Add(new Slingshot((TRACK_WIDTH - 4) / 2 + 13, 18, content.Load<Model>("bumper_2"), Matrix.CreateRotationZ(MathHelper.ToRadians(-159))));
             
-            obstacles.Add(new Flipper((TRACK_WIDTH - 4)/2 - 10, 10, content.Load<Model>("flipper"), Matrix.CreateRotationZ(0f)));
-            obstacles.Add(new Flipper((TRACK_WIDTH - 4)/2 + 10, 10, content.Load<Model>("flipper"), Matrix.CreateRotationZ((float)Math.PI)));
+            obstacles.Add(new Flipper((TRACK_WIDTH - 4)/2 - 10, 10, content.Load<Model>("flipper"), 0f - 0.3f, false));
+            obstacles.Add(new Flipper((TRACK_WIDTH - 4) / 2 + 10, 10, content.Load<Model>("flipper"), (float)Math.PI + 0.3f, true));
 
             obstacles.Add(new Switch(new Vector2(TRACK_WIDTH/2 - 4, TRACK_HEIGHT - 15) , content.Load<Model>("ball"), content.Load<Model>("cube")));
         }
@@ -132,6 +133,14 @@ namespace PinballRacer.Track
                 board[x, y] = squareStates.WALL;
                 walls.Add(new WallRegular(x, y, m));
                 //Add to track graph
+            }
+        }
+
+        public void Update(float time)
+        {
+            foreach (Obstacle o in obstacles)
+            {
+                o.update(time);
             }
         }
 

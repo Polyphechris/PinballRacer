@@ -7,5 +7,6 @@ namespace PinballRacer.Track.Walls
 {
     class WallBonus : Wall
     {
+        public const float E = 1f;
     }
 }
