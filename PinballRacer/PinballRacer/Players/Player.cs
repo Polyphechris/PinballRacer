@@ -36,12 +36,17 @@ namespace PinballRacer.Players
         protected float timer { get; set; }        
 
         //  Model attributes
-        public Model model { get; set; }        
-        private Vector3 color { get; set; }
-        private float scale { get; set; }
-        private float rotation { get; set; }
+        public Model model { get; private set; }        
+        public Vector3 color { get; set; }
+        protected float scale { get; set; }
+        protected float rotation { get; set; }  //  In degrees, converted to radians in draw method
 
         public bool hitSwitch;
+
+        public void InitializeModel(Model aModel)
+        {
+            model = aModel;
+        }
 
         public void Direction()
         {
@@ -75,7 +80,7 @@ namespace PinballRacer.Players
         public void Draw(Matrix view, Matrix projection)
         {
             Matrix world = Matrix.CreateScale(scale) *
-                 Matrix.CreateRotationY(rotation) *
+                 Matrix.CreateRotationY(MathHelper.ToRadians(rotation)) *
                  Matrix.CreateTranslation(position);
 
             foreach (ModelMesh mesh in model.Meshes)

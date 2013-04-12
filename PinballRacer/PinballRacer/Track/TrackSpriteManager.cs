@@ -5,7 +5,7 @@ namespace PinballRacer.Track
 {
     public class TrackSpriteManager : Microsoft.Xna.Framework.DrawableGameComponent
     {
-        SpriteBatch spriteBatch;        
+        SpriteBatch spriteBatch;
 
         //  Models        
 

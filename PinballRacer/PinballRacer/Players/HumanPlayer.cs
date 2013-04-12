@@ -26,6 +26,14 @@ namespace PinballRacer.Players
             turnLeft = Keys.Left;
         }
 
+        public void InitializePlayer(Vector3 aPosition, Vector3 aDirection, float aScale, float aRotation)
+        {
+            position = aPosition;
+            direction = aDirection;
+            scale = aScale;
+            rotation = aRotation;
+        }
+
         public void InitializeMovementKeys(Keys up, Keys down, Keys right, Keys left)
         {
             speedUp = up;
@@ -51,13 +59,21 @@ namespace PinballRacer.Players
                 }
                 if (key.Equals(turnRight))
                 {
-                    
+                    rotation += 5.0f;
                 }
                 if (key.Equals(turnLeft))
                 {
-
+                    rotation -= 5.0f;
                 }
-            }            
+            }
+
+            //  Calculating direction
+
+            float horizontalDirection = (float)(Math.Cos(MathHelper.ToRadians(rotation)));
+            float verticalDirection = (float)(Math.Sin(MathHelper.ToRadians(rotation) - Math.PI));
+            direction = new Vector3(horizontalDirection, verticalDirection, 0.0f);
+
+            position += velocity * direction;
         }
         
         private bool CheckPressedKeys(Keys key)
