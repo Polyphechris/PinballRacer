@@ -30,6 +30,8 @@ namespace PinballRacer
         Keys previousKey;
 
         //Camera attributes
+        ChaseCamera camera;
+        CameraView cameraView;
         float angleX = 0;
         float angleY = 0;
         float zoom = 0;
@@ -65,6 +67,10 @@ namespace PinballRacer
         {
             // TODO: Add your initialization logic here
             base.Initialize();
+
+            // Set up aspect ratio
+            camera.AspectRatio = (float)graphics.GraphicsDevice.Viewport.Width /
+                graphics.GraphicsDevice.Viewport.Height;
         }
 
         /// <summary>
@@ -81,6 +87,13 @@ namespace PinballRacer
             smoke = Content.Load<Texture2D>("smoke");
 
             GraphicsDevice.RasterizerState = RasterizerState.CullNone;
+
+            // Initial camera load
+            camera = new ChaseCamera();
+            cameraView = CameraView.OVERVIEW;
+            Player player = playerManager.GetHumanPlayer();
+            UpdatePlayerCamera(player);
+            camera.Reset();
         }
 
         /// <summary>
@@ -112,6 +125,11 @@ namespace PinballRacer
                 cameraMotion(keyboardState);
                 trackManager.track.Update(gameTime.ElapsedGameTime.Milliseconds);
             }
+
+            // Update camera
+            Player player = playerManager.GetHumanPlayer();
+            UpdatePlayerCamera(player); // TODO: Add a player as a parameter
+
             base.Update(gameTime);
         }
 
@@ -221,6 +239,18 @@ namespace PinballRacer
             }
             if (keyboardState.IsKeyDown(Keys.D5))
             {              
+            }
+            if (keyboardState.IsKeyDown(Keys.D8))
+            {
+                cameraView = CameraView.FIRST_PERSON;
+            }
+            if (keyboardState.IsKeyDown(Keys.D9))
+            {
+                cameraView = CameraView.THIRD_PERSON;
+            }
+            if (keyboardState.IsKeyDown(Keys.D0))
+            {
+                cameraView = CameraView.OVERVIEW;
             }
             if (keyboardState.IsKeyDown(Keys.X))
             {
@@ -362,6 +392,31 @@ namespace PinballRacer
             if (keyboardState.IsKeyUp(Keys.Space))
             {
                 pressed = false;
+            }
+        }
+
+        private void UpdatePlayerCamera(Player player)
+        {
+            camera.ChasePosition = player.position;
+            camera.ChaseDirection = player.direction;
+            //camera.Up = player.Up;
+
+            switch(cameraView)
+            {
+                case CameraView.FIRST_PERSON:
+                    camera.DesiredPositionOffset = new Vector3(2, 2, 2);
+                    //view = camera.View;
+                    //projection = camera.Projection;
+                    break;
+                case CameraView.THIRD_PERSON:
+                    camera.DesiredPositionOffset = new Vector3(0, 2000, 3500);
+                    //view = camera.View;
+                    //projection = camera.Projection;
+                    break;
+                default:
+                    view = Matrix.CreateLookAt(new Vector3(20, 50, 70f), new Vector3(20, 50, 0), Vector3.UnitY);
+                    projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(70), 16 / 9, 1, 200);
+                    break;
             }
         }
     }

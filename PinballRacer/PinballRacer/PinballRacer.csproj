@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PlayerCollisionManager.cs" />
+    <Compile Include="Players\ChaseCamera.cs" />
     <Compile Include="Players\Strategies\FinishFirstStrategy.cs" />
     <Compile Include="Players\Strategies\MostPointsStrategy.cs" />
     <Compile Include="Players\Strategies\Strategy.cs" />
