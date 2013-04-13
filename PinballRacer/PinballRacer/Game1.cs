@@ -19,9 +19,15 @@ namespace PinballRacer
         BasicEffect m_basicEffect;
 
         public static Matrix view = Matrix.CreateLookAt(new Vector3(20, 50, 70f), new Vector3(20, 50, 0), Vector3.UnitY);
-        public static Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(70), 800 / 600, 1, 100);
-
+        public static Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(70), 16 / 9, 1, 200);
         Model PinballTable;
+
+        public enum states { box = 0, pause, play, main1, victory, instructions, last };
+        states gameState = states.main1;
+        SpriteFont font;
+        private Texture2D smoke;
+        bool pressed;
+        Keys previousKey;
 
         //Camera attributes
         float angleX = 0;
@@ -43,8 +49,9 @@ namespace PinballRacer
             Content.RootDirectory = "Content";
 
             //  Defining the window size
-            graphics.PreferredBackBufferWidth = 800;
-            graphics.PreferredBackBufferHeight = 600;
+            //graphics.PreferredBackBufferWidth = 800;
+            //graphics.PreferredBackBufferHeight = 600;
+            pressed = false;
             //InitEffect();
         }
 
@@ -69,6 +76,9 @@ namespace PinballRacer
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);            
             // TODO: use this.Content to load your game content here
+
+            font = Content.Load<SpriteFont>("Score");
+            smoke = Content.Load<Texture2D>("smoke");
 
             GraphicsDevice.RasterizerState = RasterizerState.CullNone;
         }
@@ -95,11 +105,13 @@ namespace PinballRacer
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
                 keyboardState.IsKeyDown(Keys.Escape))
                 this.Exit();
-
-            cameraMotion(keyboardState);
-            // TODO: Add your update logic here
-            trackManager.track.Update(gameTime.ElapsedGameTime.Milliseconds);
-
+            
+            handleGameState(keyboardState);
+            if (gameState == states.play)
+            {
+                cameraMotion(keyboardState);
+                trackManager.track.Update(gameTime.ElapsedGameTime.Milliseconds);
+            }
             base.Update(gameTime);
         }
 
@@ -110,19 +122,50 @@ namespace PinballRacer
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            if (gameState == states.play || gameState == states.pause || gameState == states.instructions || gameState == states.victory)
+            {
+                #region ResetGraphic
+                ResetGraphic();
+                #endregion
 
-            #region ResetGraphic
-            ResetGraphic();
-            #endregion
+                #region render 3D
+                BeginRender3D();
+                #endregion
 
-            #region render 3D
-            BeginRender3D();
-            #endregion
+                base.Draw(gameTime);
+            }
 
-            //spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone);
-            //spriteBatch.End();
-
-            base.Draw(gameTime);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone);
+                  
+            if (gameState == states.pause)
+            {
+                spriteBatch.Draw(smoke, new Vector2(0, 0), new Rectangle(0, 0, 2000, 2000), Color.FromNonPremultiplied(155, 155, 155, 155));            
+                spriteBatch.DrawString(font, "PAUSED", new Vector2((graphics.PreferredBackBufferWidth / 2) - 25, graphics.PreferredBackBufferHeight / 2), Color.White);
+                spriteBatch.DrawString(font, "(i)Instructions", new Vector2((graphics.PreferredBackBufferWidth / 2) - 65, graphics.PreferredBackBufferHeight / 2 + 30), Color.White);
+            }
+            if (gameState == states.main1)
+            {
+                spriteBatch.DrawString(font, "PINBALL RACERS", new Vector2(25, 25), Color.White);
+                spriteBatch.DrawString(font, "Press Space to Begin",
+                    new Vector2((graphics.PreferredBackBufferWidth / 2) - 105, graphics.PreferredBackBufferHeight / 2 + 30), Color.White);
+            }
+            if (gameState == states.instructions)
+            {
+                int startInstruction = 125;
+                spriteBatch.Draw(smoke,
+                    new Rectangle((int)(graphics.PreferredBackBufferWidth / 10), (int)(graphics.PreferredBackBufferHeight / 10),
+                        (int)(graphics.PreferredBackBufferWidth - (graphics.PreferredBackBufferWidth / 5)),
+                        (int)(graphics.PreferredBackBufferHeight - (graphics.PreferredBackBufferHeight / 5))),
+                    new Rectangle(0, 0, 1000, 1000),
+                    Color.FromNonPremultiplied(155, 155, 155, 195)); 
+                spriteBatch.DrawString(font, "INSTRUCTIONS", new Vector2((graphics.PreferredBackBufferWidth / 2) - 65, graphics.PreferredBackBufferHeight / 10 + 25), Color.White);
+                spriteBatch.DrawString(font, "Use W/A/S/D to rotate camera", new Vector2(graphics.PreferredBackBufferWidth / 9, startInstruction + 25), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(font, "Use Up/Down/Left/Right to move camera", new Vector2(graphics.PreferredBackBufferWidth / 9, startInstruction + 45), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(font, "Use Q/E to move forward and backward", new Vector2(graphics.PreferredBackBufferWidth / 9, startInstruction + 65), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(font, "X to reset camera", new Vector2(graphics.PreferredBackBufferWidth / 9, startInstruction + 85), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(font, "Space Next/Pause", new Vector2(graphics.PreferredBackBufferWidth / 9, startInstruction + 125), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
+            } 
+            spriteBatch.End();
         }
 
         public void InitEffect()
@@ -249,5 +292,77 @@ namespace PinballRacer
         }
 
 
+        public void handleGameState(KeyboardState keyboardState)
+        {
+            // Allows the game to exit
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+               keyboardState.IsKeyDown(Keys.Escape))
+                this.Exit();
+
+            // Switch Full Screen
+            if (keyboardState.IsKeyDown(Keys.F11))
+            {
+                graphics.ToggleFullScreen();
+                 projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(70), 1280 / 720, 1, 200);
+                graphics.PreferredBackBufferWidth = 1280;
+                graphics.PreferredBackBufferHeight = 720;
+            }
+            if (gameState == states.main1)
+            {
+                if (keyboardState.IsKeyDown(Keys.Space) && !pressed)
+                {
+                    pressed = true;
+                    gameState = states.play;
+                }
+                else
+                {
+                    previousKey = Keys.D0;
+                }
+            }
+            else if (gameState == states.victory)
+            {
+                if (keyboardState.IsKeyDown(Keys.Space) && !pressed)
+                {
+                    pressed = true;
+                    gameState = states.main1;
+                }
+            }
+            else if (gameState == states.pause)
+            {
+                if (keyboardState.IsKeyDown(Keys.Space) && !pressed)
+                {
+                    pressed = true;
+                    gameState = states.play;
+                }
+                else if (keyboardState.IsKeyDown(Keys.I))
+                {
+                    gameState = states.instructions;
+                }
+            }
+            else if (gameState == states.instructions)
+            {
+                if (keyboardState.IsKeyDown(Keys.Space) && !pressed)
+                {
+                    pressed = true;
+                    gameState = states.pause;
+                }
+            }
+            else if (gameState == states.play)
+            {
+                if (keyboardState.IsKeyDown(Keys.Space) && !pressed)
+                {
+                    pressed = true;
+                    gameState = states.pause;
+                }
+                else if (keyboardState.IsKeyDown(Keys.I))
+                {
+                    gameState = states.instructions;
+                }
+            }
+            if (keyboardState.IsKeyUp(Keys.Space))
+            {
+                pressed = false;
+            }
+        }
     }
 }
