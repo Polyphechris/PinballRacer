@@ -29,7 +29,7 @@ namespace PinballRacer.Players
         public Vector3 position { get; set; }
         protected Vector3 direction { get; set; }
         protected float velocity { get; set; }
-        protected float acceleration { get; set; }
+        protected float acceleration { get; set; }        
 
         //  Collision attributes
         protected bool hasCollided { get; set; }

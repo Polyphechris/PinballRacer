@@ -10,23 +10,25 @@ namespace PinballRacer.Players
     public class HumanPlayer : Player
     {
         KeyboardState lastKeyboardState;
+        GamePadState padState;
 
         //  Specific keys for movement
-        Keys speedUp;
-        Keys slowDown;
+        Keys accelerate;
+        Keys brake;
         Keys turnRight;
         Keys turnLeft;
 
         public HumanPlayer()
         {
             //  Default movement keys
-            speedUp = Keys.Up;
-            slowDown = Keys.Down;
+            accelerate = Keys.Up;
+            brake = Keys.Down;
             turnRight = Keys.Right;
             turnLeft = Keys.Left;
         }
 
-        public void InitializePlayer(Vector3 aPosition, Vector3 aDirection, float aScale, float aRotation)
+        #region Initialization Methods
+        public void InitializePosition(Vector3 aPosition, Vector3 aDirection, float aScale, float aRotation)
         {
             position = aPosition;
             direction = aDirection;
@@ -36,36 +38,44 @@ namespace PinballRacer.Players
 
         public void InitializeMovementKeys(Keys up, Keys down, Keys right, Keys left)
         {
-            speedUp = up;
-            slowDown = down;
+            accelerate = up;
+            brake = down;
             turnRight = right;
             turnLeft = left;
         }
+        #endregion
+
 
         public override void Update(GameTime gameTime)
         {
+            //  Resetting necessary parameters
+            bool isAccelerating = false; //only considered accelerating whenever accelerate button is used.
+            bool isSlowingDown = false;
             KeyboardState keyboardState = Keyboard.GetState();
             Keys[] keys = keyboardState.GetPressedKeys();
 
+            
             foreach (Keys key in keys)
             {
-                if (key.Equals(speedUp))
+                if (key.Equals(accelerate))
                 {
-                    velocity += SPEED_UP;
+                    isAccelerating = true;                    
                 }
-                if (key.Equals(slowDown))
-                {
-                    velocity += SLOW_DOWN;
+                else if (key.Equals(brake))
+                {                    
+                    isSlowingDown = true;
                 }
-                if (key.Equals(turnRight))
+                else if (key.Equals(turnRight))
                 {
                     rotation += 5.0f;
                 }
-                if (key.Equals(turnLeft))
+                else if (key.Equals(turnLeft))
                 {
                     rotation -= 5.0f;
                 }
             }
+
+            CheckSpeed(isAccelerating, isSlowingDown);
 
             //  Calculating direction
 
@@ -75,8 +85,35 @@ namespace PinballRacer.Players
 
             position += velocity * direction;
         }
+
         
-        private bool CheckPressedKeys(Keys key)
+        private void CheckSpeed(bool accelerating, bool slowingDown)
+        {            
+            if(accelerating)   //  Giving priority to acceleration if both speedUp and brake are pressed at the same time
+            {
+                velocity += SPEED_UP;            
+            }
+            else
+            {
+                if (velocity > 0.0f)
+                {
+                    if (slowingDown)
+                    {
+                        velocity += SLOW_DOWN * 2;  //  Make brake slow down by twice the amount
+                    }
+                    else if (!accelerating && !slowingDown)
+                    {
+                        velocity += SLOW_DOWN;
+                    }
+                }                
+                else
+                {
+                    velocity = 0.0f;
+                }
+            }
+        }
+        
+        private bool CheckPreviousPressedKeys(Keys key)
         {
             bool keyPressed = false;
 

@@ -46,9 +46,9 @@ namespace PinballRacer.Players
             Vector3 position = new Vector3(0.0f, 0.0f, 0.0f);
             Vector3 direction = new Vector3(0.0f, 0.0f, 0.0f);
             float scale = 10.0f;
-            float rotation = 0.0f;
+            float rotation = 270.0f;
             
-            human.InitializePlayer(position, direction, scale, rotation);
+            human.InitializePosition(position, direction, scale, rotation);
         }
 
         protected override void LoadContent()
