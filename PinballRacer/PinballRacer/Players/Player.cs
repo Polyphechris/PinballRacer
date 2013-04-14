@@ -52,13 +52,6 @@ namespace PinballRacer.Players
             model = aModel;
         }
 
-        public void Direction()
-        {
-            //  Calculates the direction that the player needs to steer at. It will adjust the rotation and
-
-        }
-
-
         public bool CheckCollision()
         {
             //TODO set logic for collision, needs arguments in the method
