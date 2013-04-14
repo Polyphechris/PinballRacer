@@ -110,6 +110,13 @@
   <ItemGroup>
     <Compile Include="tirestack.fbx">
       <Name>tirestack</Name>
+	  <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="testBall.fbx">
+      <Name>testBall</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>

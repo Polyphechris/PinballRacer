@@ -13,22 +13,23 @@ namespace PinballRacer.Players
         GamePadState padState;
 
         //  Specific keys for movement
-        Keys accelerate;
-        Keys brake;
-        Keys turnRight;
-        Keys turnLeft;
+        Keys forward;
+        Keys reverse;
+        Keys rightRoll;
+        Keys leftRoll;
 
         public HumanPlayer()
         {
+            modelRotation = Quaternion.Identity;
             //  Default movement keys
-            accelerate = Keys.Up;
-            brake = Keys.Down;
-            turnRight = Keys.Right;
-            turnLeft = Keys.Left;
+            forward = Keys.Up;
+            reverse = Keys.Down;
+            rightRoll = Keys.Right;
+            leftRoll = Keys.Left;
         }
 
         #region Initialization Methods
-        public void InitializePosition(Vector3 aPosition, Vector3 aDirection, float aScale, float aRotation)
+        public void InitializePosition(Vector3 aPosition, Vector3 aDirection, float aScale, Vector3 aRotation)
         {
             position = aPosition;
             direction = aDirection;
@@ -38,77 +39,177 @@ namespace PinballRacer.Players
 
         public void InitializeMovementKeys(Keys up, Keys down, Keys right, Keys left)
         {
-            accelerate = up;
-            brake = down;
-            turnRight = right;
-            turnLeft = left;
+            forward = up;
+            reverse = down;
+            rightRoll = right;
+            leftRoll = left;
         }
         #endregion
 
 
         public override void Update(GameTime gameTime)
         {
-            //  Resetting necessary parameters
-            bool isAccelerating = false; //only considered accelerating whenever accelerate button is used.
-            bool isSlowingDown = false;
+            //  Setting necessary parameters
+            bool yawChanged = false;
+            bool pitchChanged = false;
+            
+            previousRotation = rotation;            
+            
             KeyboardState keyboardState = Keyboard.GetState();
             Keys[] keys = keyboardState.GetPressedKeys();
-
             
+            //  yaw(spin), pitch (forward/backward), roll (sideways)
             foreach (Keys key in keys)
-            {
-                if (key.Equals(accelerate))
-                {
-                    isAccelerating = true;                    
-                }
-                else if (key.Equals(brake))
-                {                    
-                    isSlowingDown = true;
-                }
-                else if (key.Equals(turnRight))
-                {
-                    rotation += 5.0f;
-                }
-                else if (key.Equals(turnLeft))
-                {
-                    rotation -= 5.0f;
-                }
+            {             
+                CheckPitchRollChanges(key,  ref yawChanged, ref pitchChanged);
             }
 
-            CheckSpeed(isAccelerating, isSlowingDown);
+            ApplyFriction(yawChanged, pitchChanged);
+            UpdateRotation();
 
-            //  Calculating direction
-
-            float horizontalDirection = (float)(Math.Cos(MathHelper.ToRadians(rotation)));
-            float verticalDirection = (float)(Math.Sin(MathHelper.ToRadians(rotation) - Math.PI));
-            direction = new Vector3(horizontalDirection, verticalDirection, 0.0f);
-
-            position += velocity * direction;
+            position += velocity;
         }
 
-        
-        private void CheckSpeed(bool accelerating, bool slowingDown)
-        {            
-            if(accelerating)   //  Giving priority to acceleration if both speedUp and brake are pressed at the same time
+        private void ApplyFriction(bool hasYawChanged, bool hasPitchChanged)
+        {
+            if (hasYawChanged)
             {
-                velocity += SPEED_UP;            
+                if (velocity.X > SPEED_UP)
+                {
+                    velocity.X += 0.5f * SLOW_DOWN;
+                }
+                else if (velocity.X < SLOW_DOWN)
+                {
+                    velocity.X += 0.5f * SPEED_UP;
+                }
+                else
+                {
+                    velocity.X = 0.0f;
+                }
             }
             else
             {
-                if (velocity > 0.0f)
+                if (velocity.X > SPEED_UP)
                 {
-                    if (slowingDown)
-                    {
-                        velocity += SLOW_DOWN * 2;  //  Make brake slow down by twice the amount
-                    }
-                    else if (!accelerating && !slowingDown)
-                    {
-                        velocity += SLOW_DOWN;
-                    }
-                }                
+                    velocity.X += 1.5f * SLOW_DOWN;
+                }
+                else if (velocity.X < SLOW_DOWN)
+                {
+                    velocity.X += 1.5f * SPEED_UP;
+                }
                 else
                 {
-                    velocity = 0.0f;
+                    velocity.X = 0.0f;
+                }
+            }
+
+            if (hasPitchChanged)
+            {
+                if (velocity.Y > SPEED_UP)
+                {
+                    velocity.Y += 0.5f * SLOW_DOWN;
+                }
+                else if (velocity.Y < SLOW_DOWN)
+                {
+                    velocity.Y += 0.5f * SPEED_UP;
+                }
+                else
+                {
+                    velocity.Y = 0.0f;
+                }
+            }
+            else
+            {
+                if (velocity.Y > SPEED_UP)
+                {
+                    velocity.Y += 1.5f * SLOW_DOWN;
+                }
+                else if (velocity.Y < SLOW_DOWN)
+                {
+                    velocity.Y += 1.5f * SPEED_UP;
+                }
+                else
+                {
+                    velocity.Y = 0.0f;
+                }
+
+            }
+        }
+        private void UpdateRotation()
+        {
+            if (!velocity.Equals(Vector3.Zero))
+            {
+                //  velocity = angular velocity * rotation             
+                
+                rotation.X = velocity.X / ANGULAR_VELOCITY + previousRotation.X;
+                rotation.X = RebalanceRotation(rotation.X);
+
+                //  Condition to fix the yaw/pitch problem
+                if (rotation.X > 90.0f && rotation.X < 270.0f)
+                {
+                    rotation.Y = velocity.Y / ANGULAR_VELOCITY + previousRotation.Y;
+                    rotation.Y = RebalanceRotation(rotation.Y);
+                }
+                else
+                {
+                    rotation.Y = -velocity.Y / ANGULAR_VELOCITY + previousRotation.Y;
+                    rotation.Y = RebalanceRotation(rotation.Y);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Checks to see if rotations exceed 0-360 degrees
+        /// </summary>
+        private float RebalanceRotation(float aRotation)
+        {
+            float rebalancedRotation = aRotation;
+            
+            if (aRotation > 360.0f)
+            {
+                rebalancedRotation -= 360.0f;
+            }
+            else if (aRotation < 0.0f)
+            {
+                rebalancedRotation += 360.0f;
+            }
+            return rebalancedRotation;
+        }
+
+        private void CheckPitchRollChanges(Keys key, ref bool hasYawChanged, ref bool hasPitchChanged)
+        {
+            //  yaw(spin), pitch (forward/backward), roll (sideways)
+            if (key.Equals(forward))
+            {
+                hasPitchChanged = true;
+                if (velocity.Y != MAX_SPEED)
+                {
+                    velocity.Y += 2 * SPEED_UP;
+                }
+            }
+            else if (key.Equals(reverse))
+            {
+                hasPitchChanged = true;
+                if (velocity.Y != -MAX_SPEED)
+                {
+                    velocity.Y += 2 * SLOW_DOWN;
+                }
+                
+            }
+            else if (key.Equals(rightRoll))
+            {
+                hasYawChanged = true;
+                if (velocity.X != MAX_SPEED)
+                {
+                    velocity.X += 2 * SPEED_UP;
+                }
+            }
+            else if (key.Equals(leftRoll))
+            {
+                hasYawChanged = true;
+                if (velocity.X != -MAX_SPEED)
+                {
+                    velocity.X += 2 * SLOW_DOWN;
                 }
             }
         }

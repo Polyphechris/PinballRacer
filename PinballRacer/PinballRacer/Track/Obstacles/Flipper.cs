@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using PinballRacer.Players;
 
 namespace PinballRacer.Track.Obstacles
 {
@@ -38,14 +39,16 @@ namespace PinballRacer.Track.Obstacles
             position = new Vector3(x, y, 0f);
             scale = new Vector3(0.7f);
         }
-
-        public override Vector3 getResultingForce(Microsoft.Xna.Framework.Vector3 player)
+        
+        public override Vector3 getResultingForce(Player p)
         {
+            Vector3 player = p.position;
             return Vector3.Zero;
         }
 
         public override void update(float time)
         {
+            base.update(time);
             if (state == states.IDLE)
             {
                 w = 0;

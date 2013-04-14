@@ -10,7 +10,7 @@ namespace PinballRacer.Track.Obstacles
 {
     public class Bumper : Obstacle
     {
-        public const float RADIUS = 1f;
+        public const float RADIUS = 1.15f;
         public const float E = 1f;
 
         public Bumper(float x, float y, Model m)
@@ -22,8 +22,9 @@ namespace PinballRacer.Track.Obstacles
             CollisionBox = new Rectangle((int)(x - (RADIUS * 2)),(int)( y - (RADIUS * 2)), (int)RADIUS * 4, (int)RADIUS * 4);
         }
 
-        public override Vector3 getResultingForce(Microsoft.Xna.Framework.Vector3 player)
+        public override Vector3 getResultingForce(Player p)
         {
+            Vector3 player = p.position;
             if (Vector3.Distance(player, position) <= RADIUS + Player.RADIUS)
             {
                 isHit = true;

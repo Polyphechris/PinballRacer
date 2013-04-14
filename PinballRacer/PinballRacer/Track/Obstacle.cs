@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using PinballRacer.Players;
 
 namespace PinballRacer.Track
 {
@@ -54,13 +55,24 @@ namespace PinballRacer.Track
                     effect.View = view;
                     effect.Projection = projection;
                     //effect.Alpha = 0.8f;
+                    if (isHit)
+                    {
+                        effect.DirectionalLight1.SpecularColor = new Vector3(1f, 1f, 1f);
+                        effect.EmissiveColor = new Vector3(0.2f, 0.2f, 0.2f);
+                        effect.DirectionalLight0.DiffuseColor = new Vector3(0.9f, 0.9f, 0.9f);// Shinnyness/reflexive
+                    }
+                    else
+                    {
+                        effect.DirectionalLight1.SpecularColor = Vector3.Zero;
+                        effect.EmissiveColor = Vector3.Zero;
+                    }
                 }
                 mesh.Draw();
             }
         }
 
         //Takes a player's position and returns a resulting force based on shape and elasticity
-        public abstract Vector3 getResultingForce(Vector3 player);
+        public abstract Vector3 getResultingForce(Player p);
 
         private bool IsCollision(Model model1, Matrix world1, Model model2, Matrix world2)
         {

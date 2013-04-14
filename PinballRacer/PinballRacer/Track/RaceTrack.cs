@@ -150,7 +150,7 @@ namespace PinballRacer.Track
             if (board[x, y] != squareStates.WALL)
             {
                 board[x, y] = squareStates.WALL;
-                Wall w = new WallRegular(x, y, m);
+                Wall w = new WallBumper(x, y, m);
                 AddObstacle(w);
                 walls.Add(w);
                 tiles[x, y] = w.ID;
@@ -164,7 +164,7 @@ namespace PinballRacer.Track
             if (board[x, y] != squareStates.WALL)
             {
                 board[x, y] = squareStates.WALL;
-                Wall w = new WallBumper(x,y,m);
+                Wall w = new WallRegular(x, y, m);
                 AddObstacle(w);
                 walls.Add(w);
                 tiles[x, y] = w.ID;
@@ -187,10 +187,10 @@ namespace PinballRacer.Track
                 f.draw(view, projection);
             }
 
-            foreach (Wall w in walls)
-            {
-                w.draw(view, projection);
-            }
+            //foreach (Wall w in walls)
+            //{
+            //    w.draw(view, projection);
+            //}
 
             foreach (Obstacle o in obstacles.Values)
             {
