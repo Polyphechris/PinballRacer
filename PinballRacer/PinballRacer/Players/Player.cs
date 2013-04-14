@@ -42,8 +42,7 @@ namespace PinballRacer.Players
         protected float scale { get; set; }
         protected Vector3 rotation;
         protected Vector3 previousRotation;
-        protected float previousPitchChange { get; set; }
-        protected float previousRollChange { get; set; }
+        protected Quaternion modelRotation;
         //protected float rotation { get; set; }  //  In degrees, converted to radians in draw method
 
         public bool hitSwitch;
@@ -84,10 +83,10 @@ namespace PinballRacer.Players
         
         public void Draw(Matrix view, Matrix projection)
         {
-            //  yaw(spin), pitch (forward/backward), roll (sideways)
+            //  yaw(spin), pitch (forward/backward), roll (sideways)            
             Matrix world = Matrix.CreateScale(scale) *
-                Matrix.CreateFromYawPitchRoll(MathHelper.ToRadians(rotation.X), MathHelper.ToRadians(rotation.Y), MathHelper.ToRadians(rotation.Z)) * 
-                Matrix.CreateTranslation(position);
+                    Matrix.CreateFromYawPitchRoll(MathHelper.ToRadians(rotation.X), MathHelper.ToRadians(rotation.Y), MathHelper.ToRadians(rotation.Z)) *
+                    Matrix.CreateTranslation(position);            
 
             foreach (ModelMesh mesh in model.Meshes)
             {
@@ -103,6 +102,19 @@ namespace PinballRacer.Players
                 mesh.Draw();
             }
 
+        }
+
+        private static float WrapAngle(float radians)
+        {
+            while (radians < -MathHelper.Pi)
+            {
+                radians += MathHelper.TwoPi;
+            }
+            while (radians > MathHelper.Pi)
+            {
+                radians -= MathHelper.TwoPi;
+            }
+            return radians;
         }
 
     }
