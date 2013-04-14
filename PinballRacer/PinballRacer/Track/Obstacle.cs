@@ -54,6 +54,17 @@ namespace PinballRacer.Track
                     effect.View = view;
                     effect.Projection = projection;
                     //effect.Alpha = 0.8f;
+                    if (isHit)
+                    {
+                        effect.DirectionalLight1.SpecularColor = new Vector3(1f, 1f, 1f);
+                        effect.EmissiveColor = new Vector3(0.2f, 0.2f, 0.2f);
+                        effect.DirectionalLight0.DiffuseColor = new Vector3(0.9f, 0.9f, 0.9f);// Shinnyness/reflexive
+                    }
+                    else
+                    {
+                        effect.DirectionalLight1.SpecularColor = Vector3.Zero;
+                        effect.EmissiveColor = Vector3.Zero;
+                    }
                 }
                 mesh.Draw();
             }

@@ -92,7 +92,8 @@ namespace PinballRacer.Track.Obstacles
         
         public override Vector3 getResultingForce(Vector3 player)
         {
-            throw new NotImplementedException();
+          //  throw new NotImplementedException();
+            return Vector3.Zero;
         }
 
         public override void draw(Matrix view, Matrix projection)

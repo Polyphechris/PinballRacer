@@ -9,7 +9,7 @@ namespace PinballRacer.Players
         SpriteBatch spriteBatch;
 
         HumanPlayer human;
-        List<NpcPlayer> npcs;
+        public List<NpcPlayer> npcs;
 
         Model ball;
 
@@ -43,9 +43,9 @@ namespace PinballRacer.Players
             human = new HumanPlayer();
             human.InitializeModel(ball);
 
-            Vector3 position = new Vector3(0.0f, 0.0f, 0.0f);
+            Vector3 position = new Vector3(10.0f,10.0f, 0.0f);
             Vector3 direction = new Vector3(0.0f, 0.0f, 0.0f);
-            float scale = 10.0f;
+            float scale = 0.5f;
             float rotation = 270.0f;
             
             human.InitializePosition(position, direction, scale, rotation);

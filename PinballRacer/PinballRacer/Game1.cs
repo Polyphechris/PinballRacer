@@ -15,6 +15,7 @@ namespace PinballRacer
         SpriteBatch spriteBatch;
         TrackSpriteManager trackManager;
         PlayerSpriteManager playerManager;
+        PlayerCollisionManager collisionManager;
 
         BasicEffect m_basicEffect;
 
@@ -42,7 +43,7 @@ namespace PinballRacer
             graphics = new GraphicsDeviceManager(this);
             trackManager = new TrackSpriteManager(this);
             playerManager = new PlayerSpriteManager(this);
-
+                        
             //  Add game components to the collection; xna will automatically call each update and draw method of every component.
             this.Components.Add(trackManager);
             this.Components.Add(playerManager);
@@ -94,6 +95,9 @@ namespace PinballRacer
             Player player = playerManager.GetHumanPlayer();
             UpdatePlayerCamera(player);
             camera.Reset();
+
+            collisionManager = new PlayerCollisionManager(Content, trackManager.track);
+            collisionManager.InitializePlayers(playerManager.npcs, player);
         }
 
         /// <summary>
@@ -124,11 +128,12 @@ namespace PinballRacer
             {
                 cameraMotion(keyboardState);
                 trackManager.track.Update(gameTime.ElapsedGameTime.Milliseconds);
+                collisionManager.update(gameTime);
             }
 
             // Update camera
             Player player = playerManager.GetHumanPlayer();
-            UpdatePlayerCamera(player); // TODO: Add a player as a parameter
+            //UpdatePlayerCamera(player); // TODO: Add a player as a parameter
 
             base.Update(gameTime);
         }

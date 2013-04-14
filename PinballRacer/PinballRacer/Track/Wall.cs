@@ -12,37 +12,63 @@ namespace PinballRacer.Track
     {
         public Vector3 start;
         public Vector3 end;
+        public Model playerModel;
+
+        public bool Collides(Vector3 player)
+        {
+            Matrix world1 = Matrix.CreateScale(0.5f) * Matrix.CreateTranslation(player);
+            Matrix world2 = Matrix.CreateScale(0.5f) * Matrix.CreateTranslation(position);
+            //Check bounding spheres
+            for (int meshIndex1 = 0; meshIndex1 < playerModel.Meshes.Count; meshIndex1++)
+            {
+                BoundingSphere sphere1 = playerModel.Meshes[meshIndex1].BoundingSphere;
+                sphere1 = sphere1.Transform(world1);
+                //Check bounding Boxes
+                if (UpdateBoundingBox(model, world2).Intersects(sphere1))
+                {
+                    return true;
+                }
+            }            
+            return false;
+        }
 
         public override Vector3 getResultingForce(Vector3 player)
         {
-            //Force can be one of 4 directions
-            //Figure out which face of the cube we hit
-            float playerRight = player.X + Player.RADIUS;
-            float playerLeft = player.X - Player.RADIUS;
-            float playerTop = player.Y + Player.RADIUS;
-            float playerBottom = player.Y - Player.RADIUS;
+            if (Collides(player))
+            {
+                //Force can be one of 4 directions
+                //Figure out which face of the cube we hit
+                float playerRight = player.X + Player.RADIUS;
+                float playerLeft = player.X - Player.RADIUS;
+                float playerTop = player.Y + Player.RADIUS;
+                float playerBottom = player.Y - Player.RADIUS;
 
-            float wallRight = position.X + 0.5f;
-            float wallLeft = position.X - 0.5f;
-            float wallTop = position.Y + 0.5f;
-            float wallBottom = position.Y - 0.5f;
+                float wallRight = position.X + 0.5f;
+                float wallLeft = position.X - 0.5f;
+                float wallTop = position.Y + 0.5f;
+                float wallBottom = position.Y - 0.5f;
 
-            if (playerRight >= wallRight && playerLeft <= wallRight)
-            {
-                return new Vector3(1, 0, 0);
+                //Assume a hit until the end
+                isHit = true;
+                if (playerRight >= wallRight && playerLeft <= wallRight)
+                {
+                    return new Vector3(1, 0, 0);
+                }
+                if (playerRight >= wallLeft && playerLeft <= wallLeft)
+                {
+                    return new Vector3(-1, 0, 0);
+                }
+                if (playerTop >= wallTop && playerBottom <= wallTop)
+                {
+                    return new Vector3(0, 1, 0);
+                }
+                if (playerTop >= wallBottom && playerBottom <= wallBottom)
+                {
+                    return new Vector3(0, -1, 0);
+                }
             }
-            if (playerRight >= wallLeft && playerLeft <= wallLeft)
-            {
-                return new Vector3(-1, 0, 0);
-            }
-            if (playerTop >= wallTop && playerBottom <= wallTop)
-            {
-                return new Vector3(0, 1, 0);
-            }
-            if (playerTop >= wallBottom && playerBottom <= wallBottom)
-            {
-                return new Vector3(0, -1, 0);
-            }
+            //If we got to the end, hit is false
+            isHit = false; ;
             return Vector3.Zero;
         }
 

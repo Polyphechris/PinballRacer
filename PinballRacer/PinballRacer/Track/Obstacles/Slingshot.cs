@@ -87,6 +87,7 @@ namespace PinballRacer.Track.Obstacles
                     float d = (lines[i].X * player.X + lines[i].Y * player.Y + lines[i].Z) / (float)(Math.Sqrt(Math.Pow(lines[i].X, 2) + Math.Pow(lines[i].Y, 2)));
                     if (d <= Player.RADIUS)
                     {
+                        isHit = true;
                         return forces[i] * E;
                     }
                 }
@@ -122,7 +123,7 @@ namespace PinballRacer.Track.Obstacles
                     effect.DirectionalLight0.DiffuseColor = new Vector3(0.9f, 0.9f, 0.9f);// Shinnyness/reflexive
                     effect.World = Matrix.CreateScale(scale) * rotation * Matrix.CreateTranslation(position);
                     effect.View = view;
-                    effect.Projection = projection;
+                    effect.Projection = projection; effect.EmissiveColor = Vector3.Zero;                    
                 }
                 mesh.Draw();
             }
