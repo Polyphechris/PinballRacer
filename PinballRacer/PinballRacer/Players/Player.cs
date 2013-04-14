@@ -86,7 +86,7 @@ namespace PinballRacer.Players
         {
             //  yaw(spin), pitch (forward/backward), roll (sideways)
             Matrix world = Matrix.CreateScale(scale) *
-                Matrix.CreateFromYawPitchRoll(MathHelper.ToRadians(rotation.X), MathHelper.ToRadians(rotation.Y), MathHelper.ToRadians(rotation.Z)) * 
+                Matrix.CreateFromYawPitchRoll(MathHelper.ToRadians(rotation.Z), MathHelper.ToRadians(rotation.Y), MathHelper.ToRadians(rotation.X)) * 
                 Matrix.CreateTranslation(position);
 
             foreach (ModelMesh mesh in model.Meshes)
