@@ -43,10 +43,10 @@ namespace PinballRacer.Players
             human = new HumanPlayer();
             human.InitializeModel(ball);
 
-            Vector3 position = new Vector3(0.0f, 0.0f, 0.0f);
+            Vector3 position = new Vector3(25.0f, 50.0f, 0.0f);
             Vector3 direction = new Vector3(0.0f, 0.0f, 0.0f);
             float scale = 10.0f;
-            float rotation = 270.0f;
+            Vector3 rotation = new Vector3(0.0f, 0.0f, 0.0f);
             
             human.InitializePosition(position, direction, scale, rotation);
         }
@@ -54,7 +54,7 @@ namespace PinballRacer.Players
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(Game.GraphicsDevice);
-            ball = Game.Content.Load<Model>("ball");
+            ball = Game.Content.Load<Model>("testBall");
             base.LoadContent();
         }
 
