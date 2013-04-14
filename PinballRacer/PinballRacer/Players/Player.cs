@@ -15,9 +15,9 @@ namespace PinballRacer.Players
         protected const float BOUNDARYX = 15f;
         protected const float BOUNDARYY = 19f;
 
-        protected const float ANGULAR_VELOCITY = 0.1f;
-        protected const float SPEED_UP = 0.005f;
-        protected const float SLOW_DOWN = -0.005f;
+        protected const float ANGULAR_VELOCITY = 0.02f;     // Increasing this reduces the rotation speed
+        protected const float SPEED_UP = 0.0005f;
+        protected const float SLOW_DOWN = -0.0005f;
         protected const float MAX_ACC = 0.005f;
         protected const float MIN_ACC = -0.005f;
         protected const float MAX_SPEED = 4f;
@@ -30,7 +30,7 @@ namespace PinballRacer.Players
         public Vector3 position { get; set; }
         protected Vector3 direction { get; set; }
         protected Vector3 velocity;
-        protected float acceleration { get; set; }        
+        protected Vector3 acceleration { get; set; }        
 
         //  Collision attributes
         protected bool hasCollided { get; set; }
@@ -45,19 +45,14 @@ namespace PinballRacer.Players
         protected Quaternion modelRotation;
         //protected float rotation { get; set; }  //  In degrees, converted to radians in draw method
 
+        protected List<Vector4> impulses = new List<Vector4>();
+
         public bool hitSwitch;
 
         public void InitializeModel(Model aModel)
         {
             model = aModel;
         }
-
-        public void Direction()
-        {
-            //  Calculates the direction that the player needs to steer at. It will adjust the rotation and
-
-        }
-
 
         public bool CheckCollision()
         {
@@ -79,8 +74,29 @@ namespace PinballRacer.Players
             }
         }
 
-        public abstract void Update(GameTime gameTime);
+        public virtual void Update(GameTime gameTime)
+        {
+
+            for (int i = 0; i < impulses.Count; ++i)
+            {
+                impulses[i] += new Vector4(0, 0, 0, gameTime.ElapsedGameTime.Milliseconds);
+                if (impulses[i].W > 50)
+                {
+                    impulses.RemoveAt(i);
+                }
+                else
+                {
+                    Vector3 J = new Vector3(impulses[i].X, impulses[i].Y, impulses[i].Z);
+                    acceleration += J;
+                }
+            }
+        }
         
+        public void AddImpulses(List<Vector4> newImpulses)
+        {
+            impulses.AddRange(newImpulses);
+        }
+
         public void Draw(Matrix view, Matrix projection)
         {
             //  yaw(spin), pitch (forward/backward), roll (sideways)            

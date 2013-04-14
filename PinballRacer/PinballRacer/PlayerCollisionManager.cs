@@ -81,6 +81,8 @@ namespace PinballRacer
                         Impulses.Add(new Vector4(i.X, i.Y, i.Z, 0));
                     }
                 }
+                p.AddImpulses(Impulses);
+
                 p.Update(time);
             }    
 
