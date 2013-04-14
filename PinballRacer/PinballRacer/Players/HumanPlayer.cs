@@ -20,6 +20,7 @@ namespace PinballRacer.Players
 
         public HumanPlayer()
         {
+            modelRotation = Quaternion.Identity;
             //  Default movement keys
             forward = Keys.Up;
             reverse = Keys.Down;
@@ -82,18 +83,7 @@ namespace PinballRacer.Players
                     //rotation -= 5.0f;
                 }
             }
-
             CheckMomentum(pitchChanged, rollChanged);
-            //CheckSpeed(isRollingForward, isRollingSideways);
-
-            //  Calculating direction
-
-            //float horizontalDirection = (float)(Math.Cos(MathHelper.ToRadians(rotation.X)));
-            //float verticalDirection = (float)(Math.Sin(MathHelper.ToRadians(rotation.Y) - Math.PI));
-            float horizontalDirection = 5.0f;
-            float verticalDirection = 0.0f;
-
-            direction = new Vector3(horizontalDirection, verticalDirection, 0.0f);
 
             position += velocity;//velocity * direction;            
         }
@@ -135,13 +125,23 @@ namespace PinballRacer.Players
                     }
                 }
                 
-                rotation.X = velocity.X / ANGULAR_VELOCITY + RebalanceRotation(previousRotation.X);
-                rotation.Y = -velocity.Y / ANGULAR_VELOCITY + RebalanceRotation(previousRotation.Y);                
+                rotation.X = velocity.X / ANGULAR_VELOCITY + previousRotation.X;
+                rotation.X = RebalanceRotation(rotation.X);
+                if (rotation.X > 90.0f && rotation.X < 270.0f)
+                {
+                    rotation.Y = velocity.Y / ANGULAR_VELOCITY + previousRotation.Y;
+                    rotation.Y = RebalanceRotation(rotation.Y);
+                }
+                else
+                {
+                    rotation.Y = -velocity.Y / ANGULAR_VELOCITY + previousRotation.Y;
+                    rotation.Y = RebalanceRotation(rotation.Y);
+                }
             }
         }
 
         /// <summary>
-        /// Checks to see if rotations exceed -360/360 degrees
+        /// Checks to see if rotations exceed 0-360 degrees
         /// </summary>
         private float RebalanceRotation(float aRotation)
         {
