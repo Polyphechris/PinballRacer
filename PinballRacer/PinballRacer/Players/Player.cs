@@ -15,9 +15,9 @@ namespace PinballRacer.Players
         protected const float BOUNDARYX = 15f;
         protected const float BOUNDARYY = 19f;
 
-        protected const float ANGULAR_VELOCITY = 0.1f;
-        protected const float SPEED_UP = 0.005f;
-        protected const float SLOW_DOWN = -0.005f;
+        protected const float ANGULAR_VELOCITY = 0.02f;     // Increasing this reduces the rotation speed
+        protected const float SPEED_UP = 0.0005f;
+        protected const float SLOW_DOWN = -0.0005f;
         protected const float MAX_ACC = 0.005f;
         protected const float MIN_ACC = -0.005f;
         protected const float MAX_SPEED = 4f;

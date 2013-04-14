@@ -95,11 +95,11 @@ namespace PinballRacer.Players
                 //  velocity = angular velocity * rotation
                 if (!hasPitchChanged)
                 {
-                    if (velocity.Y > 0.01f)
+                    if (velocity.Y > SPEED_UP)
                     {
                         velocity.Y += SLOW_DOWN;
                     }
-                    else if (velocity.Y < -0.01f)
+                    else if (velocity.Y < SLOW_DOWN)
                     {
                         velocity.Y += SPEED_UP;
                     }
@@ -111,11 +111,11 @@ namespace PinballRacer.Players
 
                 if (!hasRollChanged)
                 {
-                    if (velocity.X > 0.01f)
+                    if (velocity.X > SPEED_UP)
                     {
                         velocity.X += SLOW_DOWN;
                     }
-                    else if (velocity.X < -0.01f)
+                    else if (velocity.X < SLOW_DOWN)
                     {
                         velocity.X += SPEED_UP;
                     }
