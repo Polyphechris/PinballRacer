@@ -41,6 +41,7 @@ namespace PinballRacer.Track.Obstacles
                 lanes[i] = new Vector4(bottomLeft.X + (i * 3) + 1.5f, bottomLeft.Y + LANE_HEIGHT / 2, -0.5f, 0);
             }
             InitializeWalls();
+            CollisionBox = new Rectangle((int)bottomLeft.X, (int)bottomLeft.Y, (int)LANE_WIDTH * 7, (int)LANE_HEIGHT);
         }
 
         private void InitializeWalls()
@@ -57,38 +58,32 @@ namespace PinballRacer.Track.Obstacles
 
         public bool CheckLight(Player p)
         {
-
-            //Check is we are in range of the switches
-            if(p.position.Y >= bottomLeft.Y && p.position.Y <= bottomLeft.Y + LANE_HEIGHT && !p.hitSwitch)
+            //Check what lane we are in if any
+            int lightIndex = (int)((p.position.X - bottomLeft.X - 1.5f) / 3);
+            if (lightIndex >= 0 && lightIndex < 3)
             {
-                //Check what lane we are in if any
-                int lightIndex = (int)((p.position.X - bottomLeft.X - 1.5f) / 3);
-                if (lightIndex >= 0 && lightIndex < 3)
+                float distance = Vector3.Distance(p.position, 
+                    new Vector3(lanes[lightIndex].X, lanes[lightIndex].Y, lanes[lightIndex].Z));
+                if (distance <= Player.RADIUS + LIGHT_RADIUS)
                 {
-                    float distance = Vector3.Distance(p.position, 
-                        new Vector3(lanes[lightIndex].X, lanes[lightIndex].Y, lanes[lightIndex].Z));
-                    if (distance <= Player.RADIUS + LIGHT_RADIUS)
+                    //Set the player to having passed over so it doesnt switch twice in <1s
+                    p.hitSwitch = true;
+
+                    //Switch the light's status
+                    int score = LIGHT_VALUE;
+                    if (lanes[lightIndex].W == 0)
                     {
-                        //Set the player to having passed over so it doesnt switch twice in <1s
-                        p.hitSwitch = true;
-
-                        //Switch the light's status
-                        int score = LIGHT_VALUE;
-                        if (lanes[lightIndex].W == 0)
-                        {
-                            lanes[lightIndex] += new Vector4(0, 0, 0, 1);
-                            lightsOn++;
-                            if (lightsOn == 3) score = JACKPOT_VALUE;
-                        }
-                        else
-                        {
-                            lightsOn++;
-                            lanes[lightIndex] -= new Vector4(0, 0, 0, 1);
-                        }
-                        //Give player a score
-                        //TO DO
+                        lanes[lightIndex] += new Vector4(0, 0, 0, 1);
+                        lightsOn++;
+                        if (lightsOn == 3) score = JACKPOT_VALUE;
                     }
-
+                    else
+                    {
+                        lightsOn++;
+                        lanes[lightIndex] -= new Vector4(0, 0, 0, 1);
+                    }
+                    //Give player a score
+                    //TO DO
                 }
             }
             return false;
