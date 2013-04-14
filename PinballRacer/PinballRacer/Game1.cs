@@ -403,7 +403,7 @@ namespace PinballRacer
         private void UpdatePlayerCamera(Player player)
         {
             camera.ChasePosition = player.position;
-            camera.ChaseDirection = player.direction;
+            //camera.ChaseDirection = player.direction;
             //camera.Up = player.Up;
 
             switch(cameraView)

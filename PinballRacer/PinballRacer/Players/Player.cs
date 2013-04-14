@@ -15,6 +15,7 @@ namespace PinballRacer.Players
         protected const float BOUNDARYX = 15f;
         protected const float BOUNDARYY = 19f;
 
+        protected const float ANGULAR_VELOCITY = 0.1f;
         protected const float SPEED_UP = 0.005f;
         protected const float SLOW_DOWN = -0.005f;
         protected const float MAX_ACC = 0.005f;
@@ -27,8 +28,8 @@ namespace PinballRacer.Players
 
         //  Movement attributes
         public Vector3 position { get; set; }
-        public Vector3 direction { get; set; }
-        protected float velocity { get; set; }
+        protected Vector3 direction { get; set; }
+        protected Vector3 velocity;
         protected float acceleration { get; set; }        
 
         //  Collision attributes
@@ -39,7 +40,11 @@ namespace PinballRacer.Players
         public Model model { get; private set; }        
         public Vector3 color { get; set; }
         protected float scale { get; set; }
-        protected float rotation { get; set; }  //  In degrees, converted to radians in draw method
+        protected Vector3 rotation;
+        protected Vector3 previousRotation;
+        protected float previousPitchChange { get; set; }
+        protected float previousRollChange { get; set; }
+        //protected float rotation { get; set; }  //  In degrees, converted to radians in draw method
 
         public bool hitSwitch;
 
@@ -79,19 +84,18 @@ namespace PinballRacer.Players
         
         public void Draw(Matrix view, Matrix projection)
         {
+            //  yaw(spin), pitch (forward/backward), roll (sideways)
             Matrix world = Matrix.CreateScale(scale) *
-                 Matrix.CreateRotationY(MathHelper.ToRadians(rotation)) *
-                 Matrix.CreateTranslation(position);
+                Matrix.CreateFromYawPitchRoll(MathHelper.ToRadians(rotation.X), MathHelper.ToRadians(rotation.Y), MathHelper.ToRadians(rotation.Z)) * 
+                Matrix.CreateTranslation(position);
 
             foreach (ModelMesh mesh in model.Meshes)
             {
                 foreach (BasicEffect effect in mesh.Effects)
                 {
                     effect.EnableDefaultLighting();
-                    effect.AmbientLightColor = new Vector3(0.2f, 0.2f, 0.2f);
-
-                    effect.DiffuseColor = color;
-
+                    effect.AmbientLightColor = Color.Red.ToVector3();//new Vector3(0.2f, 0.2f, 0.2f);
+                    //effect.DiffuseColor = color;
                     effect.World = world;
                     effect.View = view;
                     effect.Projection = projection;
