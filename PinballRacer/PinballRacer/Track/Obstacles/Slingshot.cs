@@ -21,7 +21,7 @@ namespace PinballRacer.Track.Obstacles
             rotation = r;
             model = m;
             position = new Vector3(x, y, 2f);
-            scale = new Vector3(0.12f, 0.12f, 0.06f);
+            scale = new Vector3(10f, 10f, 10f);
             InitializeSegments();
             CollisionBox = new Rectangle((int)(vertices[0].X - 1), (int)(vertices[2].Y - 1), 
                 (int)(vertices[2].X - vertices[0].X + 2), (int)(vertices[0].Y - vertices[2].Y + 2));

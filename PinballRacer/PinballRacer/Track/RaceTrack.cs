@@ -120,8 +120,8 @@ namespace PinballRacer.Track
             var bump = new Bumper(4, 40, content.Load<Model>("bumper_1"));
            // bump.isHit = true;
             AddObstacle(bump);
-            AddObstacle(new Slingshot((TRACK_WIDTH - 4) / 2 - 13, 18, content.Load<Model>("bumper_2"), Matrix.CreateRotationZ(MathHelper.ToRadians(79))));
-            AddObstacle(new Slingshot((TRACK_WIDTH - 4) / 2 + 13, 18, content.Load<Model>("bumper_2"), Matrix.CreateRotationZ(MathHelper.ToRadians(-159))));
+            AddObstacle(new Slingshot((TRACK_WIDTH - 4) / 2 - 13, 18, content.Load<Model>("slingshotleft"), Matrix.CreateRotationZ(MathHelper.ToRadians(0))));
+            AddObstacle(new Slingshot((TRACK_WIDTH - 4) / 2 + 13, 18, content.Load<Model>("slingshotright"), Matrix.CreateRotationZ(MathHelper.ToRadians(0))));
 
             AddObstacle(new Flipper((TRACK_WIDTH - 4) / 2 - 10, 10, content.Load<Model>("flipper"), 0f - 0.3f, false));
             AddObstacle(new Flipper((TRACK_WIDTH - 4) / 2 + 10, 10, content.Load<Model>("flipper"), (float)Math.PI + 0.3f, true));

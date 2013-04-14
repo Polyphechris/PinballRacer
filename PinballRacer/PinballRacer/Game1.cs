@@ -128,7 +128,7 @@ namespace PinballRacer
 
             // Update camera
             Player player = playerManager.GetHumanPlayer();
-            UpdatePlayerCamera(player); // TODO: Add a player as a parameter
+            //UpdatePlayerCamera(player); // TODO: Add a player as a parameter
 
             base.Update(gameTime);
         }
