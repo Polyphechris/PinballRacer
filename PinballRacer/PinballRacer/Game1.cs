@@ -133,7 +133,7 @@ namespace PinballRacer
 
             // Update camera
             Player player = playerManager.GetHumanPlayer();
-            //UpdatePlayerCamera(player); // TODO: Add a player as a parameter
+            UpdatePlayerCamera(player); // TODO: Add a player as a parameter
 
             base.Update(gameTime);
         }
@@ -402,23 +402,27 @@ namespace PinballRacer
 
         private void UpdatePlayerCamera(Player player)
         {
-            camera.ChasePosition = player.position;
-            //camera.ChaseDirection = player.direction;
-            //camera.Up = player.Up;
+            Matrix transform = Matrix.Identity;
+            camera.ChasePosition = new Vector3(-1, 0, 0);
+            camera.ChaseDirection = new Vector3(0, -1, 0);
+            camera.Up = new Vector3(0, 0, 1);
 
-            switch(cameraView)
+            switch (cameraView)
             {
                 case CameraView.FIRST_PERSON:
-                    camera.DesiredPositionOffset = new Vector3(2, 2, 2);
-                    //view = camera.View;
-                    //projection = camera.Projection;
+                    // Update view and projection to a 1st person view according to the player's position                    
+                    view = Matrix.CreateLookAt(player.position + Vector3.TransformNormal(new Vector3(0, 10, 0), transform),
+                        player.position + Vector3.TransformNormal(new Vector3(0, 20, 0), transform), Vector3.UnitZ);
+                    projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(70), 16 / 9, 1, 200);
                     break;
                 case CameraView.THIRD_PERSON:
-                    camera.DesiredPositionOffset = new Vector3(0, 2000, 3500);
-                    //view = camera.View;
-                    //projection = camera.Projection;
+                    // Update view and projection to a 3rd person view according to the player's position
+                    view = Matrix.CreateLookAt(player.position + Vector3.TransformNormal(new Vector3(0, -20, 10), transform),
+                        player.position, Vector3.UnitZ);
+                    projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(70), 16 / 9, 1, 200);
                     break;
                 default:
+                    // Update view and projection to overview
                     view = Matrix.CreateLookAt(new Vector3(20, 50, 70f), new Vector3(20, 50, 0), Vector3.UnitY);
                     projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(70), 16 / 9, 1, 200);
                     break;
