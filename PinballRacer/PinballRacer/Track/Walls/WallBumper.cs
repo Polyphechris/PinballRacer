@@ -20,8 +20,9 @@ namespace PinballRacer.Track.Obstacles
             scale = new Vector3(0.1f, 0.1f, 0.05f);
         }
 
-        public override Vector3 getResultingForce(Microsoft.Xna.Framework.Vector3 player)
+        public override Vector3 getResultingForce(Player p)
         {
+            Vector3 player = p.position;
             if (Vector3.Distance(player, position) <= RADIUS + Player.RADIUS)
             {
                 isHit = true;

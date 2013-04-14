@@ -44,7 +44,7 @@ namespace PinballRacer.Players
             human.InitializeModel(ball);
 
             Vector3 position = new Vector3(10.0f,10.0f, 0.0f);
-            float scale = 5.5f;
+            float scale = 0.5f;
             Vector3 direction = new Vector3(0.0f, 0.0f, 0.0f);
             Vector3 rotation = new Vector3(0.0f, 0.0f, 0.0f);
             

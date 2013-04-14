@@ -75,9 +75,10 @@ namespace PinballRacer.Track.Obstacles
             }
             return false;
         }
-
-        public override Vector3 getResultingForce(Vector3 player)
+        
+        public override Vector3 getResultingForce(Player p)
         {
+            Vector3 player = p.position;
             for (int i = 0; i < 3; ++i)
             {    
                 int end = (i+1) % 3;

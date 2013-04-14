@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using PinballRacer.Players;
 
 namespace PinballRacer.Track
 {
@@ -71,7 +72,7 @@ namespace PinballRacer.Track
         }
 
         //Takes a player's position and returns a resulting force based on shape and elasticity
-        public abstract Vector3 getResultingForce(Vector3 player);
+        public abstract Vector3 getResultingForce(Player p);
 
         private bool IsCollision(Model model1, Matrix world1, Model model2, Matrix world2)
         {

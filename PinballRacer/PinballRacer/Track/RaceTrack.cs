@@ -168,7 +168,6 @@ namespace PinballRacer.Track
                 AddObstacle(w);
                 walls.Add(w);
                 tiles[x, y] = w.ID;
-                w.playerModel = content.Load<Model>("ball");
                 //Add to track graph
             }
         }

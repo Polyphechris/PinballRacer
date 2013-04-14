@@ -31,6 +31,7 @@ namespace PinballRacer
         {
             foreach (NpcPlayer npc in players)
             {
+                npc.model = human.model;
                 NPC.Add(npc);
             }
             NPC.Add(human);
@@ -74,7 +75,7 @@ namespace PinballRacer
                 foreach (Obstacle o in obstaclesInRange.Values)
                 {
                     //Checks for and returns forces
-                    Vector3 i = o.getResultingForce(p.position);
+                    Vector3 i = o.getResultingForce(p);
                     if (!i.Equals(Vector3.Zero))
                     {
                         Impulses.Add(new Vector4(i.X, i.Y, i.Z, 0));

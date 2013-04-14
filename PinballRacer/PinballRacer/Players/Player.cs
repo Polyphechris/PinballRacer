@@ -37,7 +37,7 @@ namespace PinballRacer.Players
         protected float timer { get; set; }        
 
         //  Model attributes
-        public Model model { get; private set; }        
+        public Model model { get; set; }        
         public Vector3 color { get; set; }
         protected float scale { get; set; }
         protected Vector3 rotation;
