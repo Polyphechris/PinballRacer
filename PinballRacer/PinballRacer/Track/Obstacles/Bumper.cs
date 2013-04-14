@@ -12,20 +12,21 @@ namespace PinballRacer.Track.Obstacles
     {
         public const float RADIUS = 1f;
         public const float E = 1f;
-        public bool isHit;
 
         public Bumper(float x, float y, Model m)
         {
             model = m;
             position = new Vector3(x, y, 0.5f);
             scale = new Vector3(0.7f, 0.7f, 0.025f);
-            isHit = false;
+            isHit = false;            
+            CollisionBox = new Rectangle((int)(x - (RADIUS * 2)),(int)( y - (RADIUS * 2)), (int)RADIUS * 4, (int)RADIUS * 4);
         }
 
         public override Vector3 getResultingForce(Microsoft.Xna.Framework.Vector3 player)
         {
             if (Vector3.Distance(player, position) <= RADIUS + Player.RADIUS)
             {
+                isHit = true;
                 Vector3 force = player - position;
                 force.Normalize();
                 return force * E;

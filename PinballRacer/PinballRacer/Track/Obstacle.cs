@@ -9,15 +9,33 @@ namespace PinballRacer.Track
 {
     public abstract class Obstacle
     {
+        const float HIT_TIMER = 300f;
+        float hitTime = 0;
+        public int ID { get; set; }
         protected Model model;
         protected int score;
         protected Vector3 position;
         protected Vector3 scale;
+        public bool isHit;
+        //Box for what tiles in the collision grid gets populated
+        public Rectangle CollisionBox;
 
         //How much force is transmited back to the ball
         protected float elasticity;
 
-        public virtual void update(float time) { }
+        public virtual void update(float time) 
+        {
+            if (isHit)
+            {
+                hitTime += time;
+                if (hitTime >= HIT_TIMER)
+                {
+                    isHit = false;
+                    hitTime = 0;
+                }
+            }
+
+        }
 
         public virtual void draw(Matrix view, Matrix projection)
         {

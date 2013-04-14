@@ -6,20 +6,23 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PinballRacer.Players;
 using Microsoft.Xna.Framework.Content;
+using PinballRacer.Track;
 
 namespace PinballRacer
 {
     class PlayerCollisionManager
     {
-                const float DETECTION_LENGTH = 3f;
+        const float DETECTION_LENGTH = 3f;
 
         public List<Player> NPC;
+        RaceTrack Track;
         ContentManager content;
         Model wall;
         Model ball;
 
-        public PlayerCollisionManager(ContentManager c)
+        public PlayerCollisionManager(ContentManager c, RaceTrack t)
         {
+            Track = t;
             content = c;
             NPC = new List<Player>();
             InitializePlayers();
@@ -60,34 +63,36 @@ namespace PinballRacer
                 int y = (int)p.position.Y;
                 if (x == 0) ++x;
                 if (y == 0) ++y;
-                List<Vector3> walls = new List<Vector3>();
-                List<Vector3> obstacles = new List<Vector3>();
-                //for (int i = x - 1; i <= x + 2; ++i)
-                //{
-                //    for (int j = y - 1; j <= y + 2; ++j)
-                //    {
-                //        if ((int)level.board[i, j] == 1)
-                //        {
-                //            walls.Add(new Vector3(i, j, 0));
-                //        }
-                //        //Check and handle obstacle collisions
-                //        if ((int)level.board[i, j] == 4)
-                //        {
-                //            CollisionObstacle(p);
-                //            obstacles.Add(new Vector3(i, j, 0));
-                //        }
-                //    }
-                //}
-
-                //Check Player to Wall Collision
-                Vector3 WallCollision = Collision(p, walls);
-                if (WallCollision != Vector3.Zero)
+                List<Obstacle> obstaclesInRange = new List<Obstacle>();
+                for (int i = x - 1; i <= x + 2; ++i)
                 {
-                    HandleCollision(p, WallCollision);
+                    for (int j = y - 1; j <= y + 2; ++j)
+                    {
+                        if (Track.tiles[i, j] != 0)
+                        {
+                            obstaclesInRange.Add(Track.obstacles[Track.tiles[i, j]]);
+                        }
+                    }
                 }
 
-                //Check for collision with ray
-                obstacles.AddRange(walls);
+                List<Vector4> Impulses = new List<Vector4>();
+                foreach (Obstacle o in obstaclesInRange)
+                {
+                    Vector3 i = o.getResultingForce(p.position);
+                    if (!i.Equals(Vector3.Zero))
+                    {
+                        Impulses.Add(new Vector4(i.X, i.Y, i.Z, 0));
+                    }
+                }
+                //Check Player to Wall Collision
+                //Vector3 WallCollision = Collision(p, walls);
+                //if (WallCollision != Vector3.Zero)
+                //{
+                //    HandleCollision(p, WallCollision);
+                //}
+
+                ////Check for collision with ray
+                //obstacles.AddRange(walls);
 
                 p.Update(time);
             }    

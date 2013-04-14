@@ -68,7 +68,11 @@ namespace PinballRacer.Players
         {
             base.Draw(gameTime);
             human.Draw(Game1.view, Game1.projection);
+        }
 
+        public Player GetHumanPlayer()
+        {
+            return human;
         }
     }
 }

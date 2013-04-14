@@ -4,12 +4,15 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using PinballRacer.Players;
 
 namespace PinballRacer.Track.Obstacles
 {
     class WallBumper : Wall
     {
         public const float E = 1f;
+        public const float RADIUS = 0.5f;
+
         public WallBumper(float x, float y, Model m)
         {
             model = m;
@@ -19,6 +22,13 @@ namespace PinballRacer.Track.Obstacles
 
         public override Vector3 getResultingForce(Microsoft.Xna.Framework.Vector3 player)
         {
+            if (Vector3.Distance(player, position) <= RADIUS + Player.RADIUS)
+            {
+                isHit = true;
+                Vector3 force = player - position;
+                force.Normalize();
+                return force * E;
+            }
             return Vector3.Zero;
         }
 

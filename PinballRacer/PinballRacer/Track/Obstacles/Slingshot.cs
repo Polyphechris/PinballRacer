@@ -23,6 +23,8 @@ namespace PinballRacer.Track.Obstacles
             position = new Vector3(x, y, 2f);
             scale = new Vector3(0.12f, 0.12f, 0.06f);
             InitializeSegments();
+            CollisionBox = new Rectangle((int)(vertices[0].X - 1), (int)(vertices[2].Y - 1), 
+                (int)(vertices[2].X - vertices[0].X + 2), (int)(vertices[0].Y - vertices[2].Y + 2));
         }
 
         public void InitializeSegments()
@@ -32,9 +34,9 @@ namespace PinballRacer.Track.Obstacles
             vertices[1] = Vector3.Zero; //Bottom
             vertices[2] = Vector3.Zero; //Right
             ////TEST DATA
-            //vertices[0] = Vector3.UnitY; //Top
-            //vertices[1] = Vector3.Zero; //Bottom
-            //vertices[2] = Vector3.UnitX; //Right
+            vertices[0] = Vector3.UnitY + 3*Vector3.One; //Top
+            vertices[1] = Vector3.Zero + 3 * Vector3.One; //Bottom
+            vertices[2] = Vector3.UnitX + 3 * Vector3.One; //Right
 
             //Line Equations for each side of the shape
             lines = new Vector3[3];

@@ -12,6 +12,7 @@ namespace PinballRacer.Track
 {
     public class RaceTrack
     {
+        static int ID = 1;
         public const int TRACK_WIDTH = 50;
         public const int TRACK_HEIGHT = 100;
         //Bottom left and top right corners of the inner walls
@@ -24,7 +25,7 @@ namespace PinballRacer.Track
         Model spring;
         public float springLevel;
 
-        List<Obstacle> obstacles;
+        public Dictionary<int, Obstacle> obstacles;
         List<Wall> walls;
         List<Floor> floors;
 
@@ -35,14 +36,19 @@ namespace PinballRacer.Track
         public enum squareStates { EMPTY = 0, WALL, PLAYER1, PLAYER2, OBSTACLE, GOAL1, LAST };
         public enum trackStates { PLAYING = 0, START, GAMEOVER };
         public squareStates[,] board;
+        public int[,] tiles;
 
         public RaceTrack(ContentManager c)
         {
+            obstacles = new Dictionary<int, Obstacle>();
+            tiles = new int[TRACK_WIDTH, TRACK_HEIGHT];
+            board = new squareStates[TRACK_WIDTH, TRACK_HEIGHT];
+
             content = c;
+            InitializeObstacles();
             InitializeFloor();
             InitializeOutterWalls();
             InitializeInnerWalls();
-            InitializeObstacles();
             spring = content.Load<Model>("spring");
             springLevel = 0.5f;
         }
@@ -86,7 +92,7 @@ namespace PinballRacer.Track
                 {
                     if (j == TRACK_HEIGHT_IN || i == TRACK_WIDTH_IN || j == TRACK_HEIGHT_OUT - 1 || i == TRACK_WIDTH_OUT - 1)
                     {
-                        AddWall(i, j);
+                        AddWallBumper(i, j);
                     }
                 }
             }
@@ -106,22 +112,49 @@ namespace PinballRacer.Track
 
         private void InitializeObstacles()
         {
-            obstacles = new List<Obstacle>();
-            obstacles.Add(new Bumper(TRACK_WIDTH - 14, 50, content.Load<Model>("bumper_1")));
-            obstacles.Add(new Bumper(TRACK_WIDTH - 11, 60, content.Load<Model>("bumper_1")));
-            obstacles.Add(new Bumper(TRACK_WIDTH - 8, 40, content.Load<Model>("bumper_1")));
-            obstacles.Add(new Bumper(10, 50, content.Load<Model>("bumper_1")));
-            obstacles.Add(new Bumper(7, 60, content.Load<Model>("bumper_1")));
+            AddObstacle(new Bumper(TRACK_WIDTH - 14, 50, content.Load<Model>("bumper_1")));
+            AddObstacle(new Bumper(TRACK_WIDTH - 11, 60, content.Load<Model>("bumper_1")));
+            AddObstacle(new Bumper(TRACK_WIDTH - 8, 40, content.Load<Model>("bumper_1")));
+            AddObstacle(new Bumper(10, 50, content.Load<Model>("bumper_1")));
+            AddObstacle(new Bumper(7, 60, content.Load<Model>("bumper_1")));
             var bump = new Bumper(4, 40, content.Load<Model>("bumper_1"));
-            bump.isHit = true;
-            obstacles.Add(bump);
-            obstacles.Add(new Slingshot((TRACK_WIDTH - 4) / 2 - 13, 18, content.Load<Model>("bumper_2"), Matrix.CreateRotationZ(MathHelper.ToRadians(79))));
-            obstacles.Add(new Slingshot((TRACK_WIDTH - 4) / 2 + 13, 18, content.Load<Model>("bumper_2"), Matrix.CreateRotationZ(MathHelper.ToRadians(-159))));
-            
-            obstacles.Add(new Flipper((TRACK_WIDTH - 4)/2 - 10, 10, content.Load<Model>("flipper"), 0f - 0.3f, false));
-            obstacles.Add(new Flipper((TRACK_WIDTH - 4) / 2 + 10, 10, content.Load<Model>("flipper"), (float)Math.PI + 0.3f, true));
+           // bump.isHit = true;
+            AddObstacle(bump);
+            AddObstacle(new Slingshot((TRACK_WIDTH - 4) / 2 - 13, 18, content.Load<Model>("bumper_2"), Matrix.CreateRotationZ(MathHelper.ToRadians(79))));
+            AddObstacle(new Slingshot((TRACK_WIDTH - 4) / 2 + 13, 18, content.Load<Model>("bumper_2"), Matrix.CreateRotationZ(MathHelper.ToRadians(-159))));
 
-            obstacles.Add(new Switch(new Vector2(TRACK_WIDTH/2 - 4, TRACK_HEIGHT - 15) , content.Load<Model>("ball"), content.Load<Model>("cube")));
+            AddObstacle(new Flipper((TRACK_WIDTH - 4) / 2 - 10, 10, content.Load<Model>("flipper"), 0f - 0.3f, false));
+            AddObstacle(new Flipper((TRACK_WIDTH - 4) / 2 + 10, 10, content.Load<Model>("flipper"), (float)Math.PI + 0.3f, true));
+
+            AddObstacle(new Switch(new Vector2(TRACK_WIDTH / 2 - 4, TRACK_HEIGHT - 15), content.Load<Model>("ball"), content.Load<Model>("cube")));
+        }
+
+        private void AddObstacle(Obstacle o)
+        {
+            o.ID = ID;
+            for (int i = o.CollisionBox.X; i <= o.CollisionBox.X + o.CollisionBox.Width; ++i)
+            {
+                for (int j = o.CollisionBox.Y; j <= o.CollisionBox.Y + o.CollisionBox.Height; ++j)
+                {
+                    tiles[i, j] = o.ID;
+                }
+            }
+            obstacles.Add(ID, o);
+            ID++;
+        }
+
+        private void AddWallBumper(int x, int y)
+        {
+            board = new squareStates[TRACK_WIDTH, TRACK_HEIGHT];
+            Model m = content.Load<Model>("cube");
+            if (board[x, y] != squareStates.WALL)
+            {
+                board[x, y] = squareStates.WALL;
+                Wall w = new WallRegular(x, y, m);
+                AddObstacle(w);
+                walls.Add(w);
+                tiles[x, y] = w.ID;
+            }
         }
 
         private void AddWall(int x, int y)
@@ -131,14 +164,17 @@ namespace PinballRacer.Track
             if (board[x, y] != squareStates.WALL)
             {
                 board[x, y] = squareStates.WALL;
-                walls.Add(new WallRegular(x, y, m));
+                Wall w = new WallBumper(x,y,m);
+                AddObstacle(w);
+                walls.Add(w);
+                tiles[x, y] = w.ID;
                 //Add to track graph
             }
         }
 
         public void Update(float time)
         {
-            foreach (Obstacle o in obstacles)
+            foreach (Obstacle o in obstacles.Values)
             {
                 o.update(time);
             }
@@ -156,7 +192,7 @@ namespace PinballRacer.Track
                 w.draw(view, projection);
             }
 
-            foreach (Obstacle o in obstacles)
+            foreach (Obstacle o in obstacles.Values)
             {
                 o.draw(view, projection);
             }
