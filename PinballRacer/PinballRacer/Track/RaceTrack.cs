@@ -41,8 +41,8 @@ namespace PinballRacer.Track
         public RaceTrack(ContentManager c)
         {
             obstacles = new Dictionary<int, Obstacle>();
-            tiles = new int[TRACK_WIDTH, TRACK_HEIGHT];
-            board = new squareStates[TRACK_WIDTH, TRACK_HEIGHT];
+            tiles = new int[TRACK_WIDTH+1, TRACK_HEIGHT+1];
+            board = new squareStates[TRACK_WIDTH+1, TRACK_HEIGHT+1];
 
             content = c;
             InitializeObstacles();
