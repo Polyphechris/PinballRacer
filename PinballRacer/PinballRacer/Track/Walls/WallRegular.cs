@@ -55,22 +55,26 @@ namespace PinballRacer.Track.Walls
 
                 //Assume a hit until the end
                 isHit = true;
+                Vector3 impulse = Vector3.Zero;
                 if (playerRight >= wallRight && playerLeft <= wallRight)
                 {
-                    return new Vector3(1, 0, 0);
+                    impulse += new Vector3(1, 0, 0);
                 }
                 if (playerRight >= wallLeft && playerLeft <= wallLeft)
                 {
-                    return new Vector3(-1, 0, 0);
+                    impulse += new Vector3(-1, 0, 0);
                 }
                 if (playerTop >= wallTop && playerBottom <= wallTop)
                 {
-                    return new Vector3(0, 1, 0);
+                    impulse += new Vector3(0, 1, 0);
                 }
                 if (playerTop >= wallBottom && playerBottom <= wallBottom)
                 {
-                    return new Vector3(0, -1, 0);
+                    impulse += new Vector3(0, -1, 0);
                 }
+                if(!impulse.Equals(Vector3.Zero))
+                    impulse.Normalize();
+                return impulse;
             }
             //If we got to the end, hit is false
             isHit = false; ;

@@ -19,8 +19,7 @@ namespace PinballRacer.Players
         Keys leftRoll;
 
         public HumanPlayer()
-        {
-            modelRotation = Quaternion.Identity;
+        {            
             //  Default movement keys
             forward = Keys.Up;
             reverse = Keys.Down;
@@ -49,11 +48,10 @@ namespace PinballRacer.Players
 
         public override void Update(GameTime gameTime)
         {
-            //  Setting necessary parameters
-            bool yawChanged = false;
-            bool pitchChanged = false;
-            
-            previousRotation = rotation;            
+            base.Update(gameTime);
+            //  Setting necessary parameters            
+            Vector3 previousVelocity = velocity;
+            Vector3 previousRotation = rotation;            
             
             KeyboardState keyboardState = Keyboard.GetState();
             Keys[] keys = keyboardState.GetPressedKeys();
@@ -61,98 +59,58 @@ namespace PinballRacer.Players
             //  yaw(spin), pitch (forward/backward), roll (sideways)
             foreach (Keys key in keys)
             {             
-                CheckPitchRollChanges(key,  ref yawChanged, ref pitchChanged);
+                CheckPitchRollChanges(key);
             }
 
-            ApplyFriction(yawChanged, pitchChanged);
-            UpdateRotation();
-
+            if (impulses.Count > 0)
+            {
+                velocity += acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
+            ApplyFriction(previousVelocity);
+            UpdateRotation(previousRotation);
+            
             position += velocity;
+            
         }
 
-        private void ApplyFriction(bool hasYawChanged, bool hasPitchChanged)
+        private void ApplyFriction(Vector3 aPreviousVelocity)
         {
-            if (hasYawChanged)
+            if (aPreviousVelocity.Length() < 0.025f)
             {
-                if (velocity.X > SPEED_UP)
-                {
-                    velocity.X += 0.5f * SLOW_DOWN;
-                }
-                else if (velocity.X < SLOW_DOWN)
-                {
-                    velocity.X += 0.5f * SPEED_UP;
-                }
-                else
-                {
-                    velocity.X = 0.0f;
-                }
+                velocity *= STATIC_FRICTION;
             }
             else
             {
-                if (velocity.X > SPEED_UP)
+                if (velocity.Length() > 0.005f)
                 {
-                    velocity.X += 1.5f * SLOW_DOWN;
-                }
-                else if (velocity.X < SLOW_DOWN)
-                {
-                    velocity.X += 1.5f * SPEED_UP;
+                    velocity *= KINETIC_FRICTION;
                 }
                 else
                 {
-                    velocity.X = 0.0f;
+                    velocity = Vector3.Zero;
                 }
-            }
-
-            if (hasPitchChanged)
-            {
-                if (velocity.Y > SPEED_UP)
-                {
-                    velocity.Y += 0.5f * SLOW_DOWN;
-                }
-                else if (velocity.Y < SLOW_DOWN)
-                {
-                    velocity.Y += 0.5f * SPEED_UP;
-                }
-                else
-                {
-                    velocity.Y = 0.0f;
-                }
-            }
-            else
-            {
-                if (velocity.Y > SPEED_UP)
-                {
-                    velocity.Y += 1.5f * SLOW_DOWN;
-                }
-                else if (velocity.Y < SLOW_DOWN)
-                {
-                    velocity.Y += 1.5f * SPEED_UP;
-                }
-                else
-                {
-                    velocity.Y = 0.0f;
-                }
-
             }
         }
-        private void UpdateRotation()
+
+        /// <summary>
+        /// Formula: velocity = angular velocity * rotation
+        /// </summary>
+        private void UpdateRotation(Vector3 aPreviousRotation)
         {
             if (!velocity.Equals(Vector3.Zero))
-            {
-                //  velocity = angular velocity * rotation             
-                
-                rotation.X = velocity.X / ANGULAR_VELOCITY + previousRotation.X;
+            {   
+                rotation.X = velocity.X / ANGULAR_VELOCITY + aPreviousRotation.X;
                 rotation.X = RebalanceRotation(rotation.X);
 
                 //  Condition to fix the yaw/pitch problem
                 if (rotation.X > 90.0f && rotation.X < 270.0f)
                 {
-                    rotation.Y = velocity.Y / ANGULAR_VELOCITY + previousRotation.Y;
+                    rotation.Y = velocity.Y / ANGULAR_VELOCITY + aPreviousRotation.Y;
                     rotation.Y = RebalanceRotation(rotation.Y);
                 }
                 else
                 {
-                    rotation.Y = -velocity.Y / ANGULAR_VELOCITY + previousRotation.Y;
+                    rotation.Y = -velocity.Y / ANGULAR_VELOCITY + aPreviousRotation.Y;
                     rotation.Y = RebalanceRotation(rotation.Y);
                 }
             }
@@ -176,21 +134,19 @@ namespace PinballRacer.Players
             return rebalancedRotation;
         }
 
-        private void CheckPitchRollChanges(Keys key, ref bool hasYawChanged, ref bool hasPitchChanged)
+        private void CheckPitchRollChanges(Keys key)
         {
             //  yaw(spin), pitch (forward/backward), roll (sideways)
             if (key.Equals(forward))
-            {
-                hasPitchChanged = true;
-                if (velocity.Y != MAX_SPEED)
+            {                
+                if (velocity.Y < MAX_SPEED)
                 {
                     velocity.Y += 2 * SPEED_UP;
                 }
             }
             else if (key.Equals(reverse))
-            {
-                hasPitchChanged = true;
-                if (velocity.Y != -MAX_SPEED)
+            {                
+                if (velocity.Y > -MAX_SPEED)
                 {
                     velocity.Y += 2 * SLOW_DOWN;
                 }
@@ -198,16 +154,14 @@ namespace PinballRacer.Players
             }
             else if (key.Equals(rightRoll))
             {
-                hasYawChanged = true;
-                if (velocity.X != MAX_SPEED)
+                if (velocity.X < MAX_SPEED)
                 {
                     velocity.X += 2 * SPEED_UP;
                 }
             }
             else if (key.Equals(leftRoll))
             {
-                hasYawChanged = true;
-                if (velocity.X != -MAX_SPEED)
+                if (velocity.X > -MAX_SPEED)
                 {
                     velocity.X += 2 * SLOW_DOWN;
                 }

@@ -33,6 +33,7 @@ namespace PinballRacer
         //Camera attributes
         ChaseCamera camera;
         CameraView cameraView;
+        float camAngle = 0;
         float angleX = 0;
         float angleY = 0;
         float zoom = 0;
@@ -133,7 +134,7 @@ namespace PinballRacer
 
             // Update camera
             Player player = playerManager.GetHumanPlayer();
-            //UpdatePlayerCamera(player); // TODO: Add a player as a parameter
+            UpdatePlayerCamera(player);
 
             base.Update(gameTime);
         }
@@ -181,12 +182,16 @@ namespace PinballRacer
                         (int)(graphics.PreferredBackBufferHeight - (graphics.PreferredBackBufferHeight / 5))),
                     new Rectangle(0, 0, 1000, 1000),
                     Color.FromNonPremultiplied(155, 155, 155, 195)); 
-                spriteBatch.DrawString(font, "INSTRUCTIONS", new Vector2((graphics.PreferredBackBufferWidth / 2) - 65, graphics.PreferredBackBufferHeight / 10 + 25), Color.White);
-                spriteBatch.DrawString(font, "Use W/A/S/D to rotate camera", new Vector2(graphics.PreferredBackBufferWidth / 9, startInstruction + 25), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
-                spriteBatch.DrawString(font, "Use Up/Down/Left/Right to move camera", new Vector2(graphics.PreferredBackBufferWidth / 9, startInstruction + 45), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
-                spriteBatch.DrawString(font, "Use Q/E to move forward and backward", new Vector2(graphics.PreferredBackBufferWidth / 9, startInstruction + 65), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
-                spriteBatch.DrawString(font, "X to reset camera", new Vector2(graphics.PreferredBackBufferWidth / 9, startInstruction + 85), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
-                spriteBatch.DrawString(font, "Space Next/Pause", new Vector2(graphics.PreferredBackBufferWidth / 9, startInstruction + 125), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(font, "INSTRUCTIONS", new Vector2((graphics.PreferredBackBufferWidth / 2) - 65, graphics.PreferredBackBufferHeight / 10 + 22), Color.White);
+
+                spriteBatch.DrawString(font, " - Free Camera -", new Vector2(graphics.PreferredBackBufferWidth / 9, startInstruction + 25), Color.White);
+                spriteBatch.DrawString(font, "Use W/A/S/D to rotate camera", new Vector2(graphics.PreferredBackBufferWidth / 9, startInstruction + 65), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(font, "Use Q/E to move forward and backward", new Vector2(graphics.PreferredBackBufferWidth / 9, startInstruction + 85), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(font, "X to reset camera", new Vector2(graphics.PreferredBackBufferWidth / 9, startInstruction + 105), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(font, "Use I/J/K/L to move camera", new Vector2(graphics.PreferredBackBufferWidth / 9, startInstruction + 125), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
+                
+                spriteBatch.DrawString(font, "Use Up/Down/Left/Right to move Ball", new Vector2(graphics.PreferredBackBufferWidth / 9, startInstruction + 165), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(font, "Space Next/Pause", new Vector2(graphics.PreferredBackBufferWidth / 9, startInstruction + 185), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
             } 
             spriteBatch.End();
         }
@@ -225,6 +230,13 @@ namespace PinballRacer
 
         public void cameraMotion(KeyboardState keyboardState)
         {
+
+            if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.Down) || 
+                keyboardState.IsKeyDown(Keys.Left) || keyboardState.IsKeyDown(Keys.Right))
+            {                
+                UpdateCameraAngle(keyboardState);
+            }
+
             //accepts all th input and reacts to it
             if (keyboardState.IsKeyDown(Keys.Space))
             {
@@ -245,6 +257,14 @@ namespace PinballRacer
             if (keyboardState.IsKeyDown(Keys.D5))
             {              
             }
+            if (keyboardState.IsKeyDown(Keys.D6))
+            {
+                camAngle -= 0.05f;
+            }
+            if (keyboardState.IsKeyDown(Keys.D7))
+            {
+                camAngle += 0.05f;
+            }
             if (keyboardState.IsKeyDown(Keys.D8))
             {
                 cameraView = CameraView.FIRST_PERSON;
@@ -256,6 +276,8 @@ namespace PinballRacer
             if (keyboardState.IsKeyDown(Keys.D0))
             {
                 cameraView = CameraView.OVERVIEW;
+                view = Matrix.CreateLookAt(new Vector3(20, 50, 70f), new Vector3(20, 50, 0), Vector3.UnitY);
+                projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(70), 16 / 9, 1, 200);
             }
             if (keyboardState.IsKeyDown(Keys.X))
             {
@@ -402,30 +424,96 @@ namespace PinballRacer
 
         private void UpdatePlayerCamera(Player player)
         {
-            Matrix transform = Matrix.Identity;
-            camera.ChasePosition = new Vector3(-1, 0, 0);
-            camera.ChaseDirection = new Vector3(0, -1, 0);
-            camera.Up = new Vector3(0, 0, 1);
+            Matrix transform = Matrix.Identity;            
 
             switch (cameraView)
             {
                 case CameraView.FIRST_PERSON:
-                    // Update view and projection to a 1st person view according to the player's position                    
-                    view = Matrix.CreateLookAt(player.position + Vector3.TransformNormal(new Vector3(0, 10, 0), transform),
-                        player.position + Vector3.TransformNormal(new Vector3(0, 20, 0), transform), Vector3.UnitZ);
-                    projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(70), 16 / 9, 1, 200);
+                    // Update view to a 1st person view according to the player's position      
+                    view = Matrix.CreateLookAt(player.position, player.position + new Vector3(0,1,0), Vector3.UnitZ) * Matrix.CreateRotationY(camAngle);
+                    Vector3 test = player.velocity;
                     break;
                 case CameraView.THIRD_PERSON:
-                    // Update view and projection to a 3rd person view according to the player's position
-                    view = Matrix.CreateLookAt(player.position + Vector3.TransformNormal(new Vector3(0, -20, 10), transform),
+                    // Update view to a 3rd person view according to the player's position
+                    view = Matrix.CreateLookAt(player.position + Vector3.TransformNormal(new Vector3(0, -5, 2.5f), transform),
                         player.position, Vector3.UnitZ);
-                    projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(70), 16 / 9, 1, 200);
                     break;
                 default:
-                    // Update view and projection to overview
-                    view = Matrix.CreateLookAt(new Vector3(20, 50, 70f), new Vector3(20, 50, 0), Vector3.UnitY);
-                    projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(70), 16 / 9, 1, 200);
+                    // Update view to overview
+                    //view = Matrix.CreateLookAt(new Vector3(20, 50, 70f), new Vector3(20, 50, 0), Vector3.UnitY);
                     break;
+            }
+        }
+
+        private void UpdateCameraAngle(KeyboardState keyboardState)
+        {
+            bool up = false;
+            bool down = false;
+            bool left = false;
+            bool right = false;
+            float targetAngle = 0;
+            float angleIncrement = 0.05f;
+
+            // Check to see which keys are pressed
+            if (keyboardState.IsKeyDown(Keys.Up)){up = true;}
+            if (keyboardState.IsKeyDown(Keys.Down)) { down = true; }
+            if (keyboardState.IsKeyDown(Keys.Left)) { left = true; }
+            if (keyboardState.IsKeyDown(Keys.Right)) { right = true; }
+
+            // Determine the angle to target
+            if (left)
+            {
+                targetAngle = 270;
+            }
+
+            if (right)
+            {
+                targetAngle = 90;
+            }
+
+            if(up){
+                targetAngle = 0;
+                if (up && left)
+                {
+                    targetAngle = -315;
+                }
+
+                if (up && right)
+                {
+                    targetAngle = 45;
+                }
+            }
+
+
+            if (down)
+            {
+                targetAngle = 180;
+                if (down && left)
+                {
+                    targetAngle = -225;
+                }
+
+                if (down && right)
+                {
+                    targetAngle = 135;
+                }
+            }
+
+            // If the camera angle is set to the direction already
+            if (camAngle == MathHelper.ToRadians(targetAngle))
+            {
+                return;
+            }
+
+            // Update the camera angle as needed
+            if (camAngle > MathHelper.ToRadians(targetAngle))
+            {
+                camAngle -= angleIncrement;
+            }
+
+            if (camAngle < MathHelper.ToRadians(targetAngle))
+            {
+                camAngle += angleIncrement;
             }
         }
     }

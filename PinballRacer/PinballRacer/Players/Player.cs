@@ -16,12 +16,13 @@ namespace PinballRacer.Players
         protected const float BOUNDARYY = 19f;
 
         protected const float ANGULAR_VELOCITY = 0.02f;     // Increasing this reduces the rotation speed
-        protected const float SPEED_UP = 0.0005f;
-        protected const float SLOW_DOWN = -0.0005f;
+        protected const float SPEED_UP = 0.005f;
+        protected const float SLOW_DOWN = -0.005f;
         protected const float MAX_ACC = 0.005f;
         protected const float MIN_ACC = -0.005f;
         protected const float MAX_SPEED = 4f;
-        protected const float FRICTION = 1f;
+        protected const float KINETIC_FRICTION = 0.95f;
+        protected const float STATIC_FRICTION = 0.75f;
         protected const float CHASE_SPEED_UP = 1.2f;
         protected const float IMMUNITY = 3000f;
         protected const float CONE = (float)Math.PI / 4;
@@ -29,7 +30,7 @@ namespace PinballRacer.Players
         //  Movement attributes
         public Vector3 position { get; set; }
         protected Vector3 direction { get; set; }
-        protected Vector3 velocity;
+        public Vector3 velocity;
         protected Vector3 acceleration { get; set; }        
 
         //  Collision attributes
@@ -40,10 +41,7 @@ namespace PinballRacer.Players
         public Model model { get; set; }        
         public Vector3 color { get; set; }
         protected float scale { get; set; }
-        protected Vector3 rotation;
-        protected Vector3 previousRotation;
-        protected Quaternion modelRotation;
-        //protected float rotation { get; set; }  //  In degrees, converted to radians in draw method
+        protected Vector3 rotation;        
 
         protected List<Vector4> impulses = new List<Vector4>();
 
@@ -76,11 +74,11 @@ namespace PinballRacer.Players
 
         public virtual void Update(GameTime gameTime)
         {
-
+            acceleration = Vector3.Zero;
             for (int i = 0; i < impulses.Count; ++i)
             {
                 impulses[i] += new Vector4(0, 0, 0, gameTime.ElapsedGameTime.Milliseconds);
-                if (impulses[i].W > 50)
+                if (impulses[i].W > 100)
                 {
                     impulses.RemoveAt(i);
                 }
