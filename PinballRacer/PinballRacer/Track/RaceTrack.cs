@@ -146,7 +146,7 @@ namespace PinballRacer.Track
         private void AddWallBumper(int x, int y)
         {
             board = new squareStates[TRACK_WIDTH, TRACK_HEIGHT];
-            Model m = content.Load<Model>("cube");
+            Model m = content.Load<Model>("tirestack");
             if (board[x, y] != squareStates.WALL)
             {
                 board[x, y] = squareStates.WALL;
