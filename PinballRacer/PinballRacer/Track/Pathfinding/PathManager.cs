@@ -68,7 +68,7 @@ namespace PinballRacer.Track.Pathfinding
 
         public void Draw(Matrix view, Matrix projection, Model node, Model edge)
         {
-            TileGraph.Draw(view, projection, node, edge);
+            //TileGraph.Draw(view, projection, node, edge);
         }
 
         private void BuildTileGraph()

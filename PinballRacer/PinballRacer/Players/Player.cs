@@ -78,7 +78,7 @@ namespace PinballRacer.Players
             for (int i = 0; i < impulses.Count; ++i)
             {
                 impulses[i] += new Vector4(0, 0, 0, gameTime.ElapsedGameTime.Milliseconds);
-                if (impulses[i].W > 100)
+                if (impulses[i].W > 50)
                 {
                     impulses.RemoveAt(i);
                 }

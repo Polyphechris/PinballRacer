@@ -30,7 +30,7 @@ namespace PinballRacer.Track.Obstacles
                 isHit = true;
                 Vector3 force = player - position;
                 force.Normalize();
-                return force * E;
+                return new Vector3(force.X, force.Y, 0) * E;
             }
             return Vector3.Zero;
         }
