@@ -149,7 +149,7 @@ namespace PinballRacer.Track.Obstacles
 
         public override void draw(Matrix view, Matrix projection)
         {
-            drawVertex(view, projection);
+            //drawVertex(view, projection);
             foreach (ModelMesh mesh in model.Meshes)
             {
                 foreach (BasicEffect effect in mesh.Effects)
