@@ -16,12 +16,12 @@ namespace PinballRacer.Track.Obstacles
         Vector3[] lines; // (a,b,c)
         Vector3[] forces;
 
-        public Slingshot(float x, float y, Model m, Matrix r)
+        public Slingshot(Vector3 pos, Model m, Matrix r)
         {
             rotation = r;
             model = m;
-            position = new Vector3(x, y, 2f);
-            scale = new Vector3(10f, 10f, 10f);
+            position = pos;
+            scale = new Vector3(7f, 7f, 7f);
             InitializeSegments();
             CollisionBox = new Rectangle((int)(vertices[0].X - 1), (int)(vertices[2].Y - 1), 
                 (int)(vertices[2].X - vertices[0].X + 2), (int)(vertices[0].Y - vertices[2].Y + 2));
