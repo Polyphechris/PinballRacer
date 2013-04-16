@@ -10,8 +10,8 @@ namespace PinballRacer.Track.Obstacles
 {
     class WallBumper : Wall
     {
-        public const float E = 1f;
-        public const float RADIUS = 0.5f;
+        public const float E = 2f;
+        public const float RADIUS = 1f;
 
         public WallBumper(float x, float y, Model m)
         {
@@ -29,7 +29,7 @@ namespace PinballRacer.Track.Obstacles
                 Vector3 force = player - position;
                 force.Normalize();
                 isHit = true;
-                return force * E;
+                return new Vector3(force.X, force.Y,0) * E;
             }
             return Vector3.Zero;
         }

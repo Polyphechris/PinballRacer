@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using PinballRacer.Track.Pathfinding;
 
 namespace PinballRacer.Players
 {
@@ -44,8 +45,7 @@ namespace PinballRacer.Players
         protected Vector3 rotation;        
 
         protected List<Vector4> impulses = new List<Vector4>();
-
-        public bool hitSwitch;
+        private Path path;
 
         public void InitializeModel(Model aModel)
         {
@@ -78,7 +78,7 @@ namespace PinballRacer.Players
             for (int i = 0; i < impulses.Count; ++i)
             {
                 impulses[i] += new Vector4(0, 0, 0, gameTime.ElapsedGameTime.Milliseconds);
-                if (impulses[i].W > 100)
+                if (impulses[i].W > 50)
                 {
                     impulses.RemoveAt(i);
                 }
@@ -131,5 +131,12 @@ namespace PinballRacer.Players
             return radians;
         }
 
+        public bool NullPath()
+        { return path == null; }
+
+        public void SetPath(Path p)
+        {
+            path = p;
+        }
     }
 }

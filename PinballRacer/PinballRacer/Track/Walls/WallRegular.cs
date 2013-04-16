@@ -74,7 +74,7 @@ namespace PinballRacer.Track.Walls
                 }
                 if(!impulse.Equals(Vector3.Zero))
                     impulse.Normalize();
-                return impulse;
+                return impulse * E;
             }
             //If we got to the end, hit is false
             isHit = false; ;

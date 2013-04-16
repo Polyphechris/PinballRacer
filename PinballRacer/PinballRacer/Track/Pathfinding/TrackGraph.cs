@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace PinballRacer.Track
+namespace PinballRacer.Track.Pathfinding
 {
     class TrackGraph
     {
@@ -46,7 +46,6 @@ namespace PinballRacer.Track
             public float cost;
         }
 
-        GraphicsDeviceManager graphics;
         const float NODE_RADIUS = 0.5f;
         public Node Start;
         public Node End;
@@ -54,17 +53,20 @@ namespace PinballRacer.Track
         public Node StartWaypoint;
         public Node EndWaypoint;
 
+        public int height;
+        public int width;
         public List<Node> allNodes;
         //List<Node> openList;
         Node[,] openList;
         Node[,] closedList;
         //List<Node> closedList;
         
-        bool searchDone;        
+        public bool searchDone;        
 
-        public TrackGraph(Vector2 start, Vector2 end, GraphicsDeviceManager g)
+        public TrackGraph(Vector2 start, Vector2 end, int w, int h)
         {
-            graphics = g;
+            width = w;
+            height = h;
             Start = new Node(start);
             End = new Node(end);
             End.isGoal = true;
@@ -73,10 +75,7 @@ namespace PinballRacer.Track
             allNodes.Add(End);
             searchDone = false;
 
-            openList = new Node[15, 15];
-            closedList = new Node[15, 15];
-            //openList = new List<Node>();
-            //closedList = new List<Node>();
+            ResetLists();
         }
 
         public Node AddNode(Node n, float x, float y)
@@ -107,30 +106,44 @@ namespace PinballRacer.Track
             }
         }
 
-        //public Path AStarPath()
-        //{
-        //    Path bestPath = null;
-        //    if (!searchDone)
-        //    {
-        //        Node current = GetTopOpen();
-        //        if (current.isGoal)
-        //        {
-        //            searchDone = true; 
-        //            openList = new Node[15, 15];
-        //            closedList = new Node[15, 15];
-        //            foreach (Node n in allNodes)
-        //            {
-        //                n.visited = false;
-        //            }
-        //            return ConstructPath(current);
-        //        }
-        //        AddToOpen(current);
-        //        current.visited = true;
-        //        openList[(int)current.position.X, (int)current.position.Y] = null;
-        //        closedList[(int)current.position.X, (int)current.position.Y] = current;
-        //    } 
-        //    return bestPath;
-        //}
+        private void ResetLists()
+        {
+            openList = new Node[width, height];
+            closedList = new Node[width, height];
+            foreach (Node n in allNodes)
+            {
+                n.visited = false;
+            }
+        }
+
+        public Path AStarPath()
+        {
+            Path bestPath = null;
+            while (!searchDone)
+            {
+                Node current = GetTopOpen();
+                if (current == null)
+                {
+                    searchDone = true;
+                    ResetLists();
+                    Path p = ConstructPath(End);
+                    return p;
+                }
+                if (current.isGoal)
+                {
+                    searchDone = true;
+                    ResetLists();
+                    return ConstructPath(current);
+                }
+                AddToOpen(current);
+                current.visited = true;
+                // closedList.Add(current);
+                openList[(int)current.position.X, (int)current.position.Y] = null;
+                closedList[(int)current.position.X, (int)current.position.Y] = current;
+                //openList.RemoveAll(Node => Node.position.Equals(current.position));
+            }
+            return bestPath;
+        }
 
         public Node GetTopOpen()
         {
@@ -172,22 +185,22 @@ namespace PinballRacer.Track
                 }
             }
         }
-            
-        //public Path ConstructPath(Node goal)
-        //{
-        //    Path path = new Path();
-        //    List<Vector3> points = new List<Vector3>();
-        //    Node current = goal;
-        //    while (current != Start)
-        //    {
-        //        points.Add(new Vector3(current.position.X, current.position.Y, 0.5f));
-        //        current = current.previous;
-        //    }
-        //    points.Add(new Vector3(current.position.X, current.position.Y, 0.5f));
-        //    points.Reverse();
-        //    path.InitializePath(points);
-        //    return path;
-        //}
+
+        public Path ConstructPath(Node goal)
+        {
+            Path path = new Path();
+            List<Vector3> points = new List<Vector3>();
+            Node current = goal;
+            while (current != Start)
+            {
+                points.Add(new Vector3(current.position.X, current.position.Y, 0.5f));
+                current = current.previous;
+            }
+            points.Add(new Vector3(current.position.X, current.position.Y, 0.5f));
+            points.Reverse();
+            path.InitializePath(points);
+            return path;
+        }
 
         public void DrawClosed(Matrix view, Matrix projection, Model node)
         {
@@ -237,6 +250,169 @@ namespace PinballRacer.Track
                 }
             }
         }
+
+        public void InitializeGrid(int[,] board)
+        {
+            openList[(int)Start.position.X, (int)Start.position.Y] = Start;
+
+            Node[,] nodes = new Node[width, height];
+            nodes[(int)Start.position.X, (int)Start.position.Y] = Start;
+            nodes[(int)End.position.X, (int)End.position.Y] = End;
+
+            List<Node> toAdd = new List<Node>();
+            toAdd.Add(Start);
+
+            while (toAdd.Count != 0)
+            {
+                Node head = toAdd.First();
+                foreach (Node n in GridChildren(board, (int)head.position.X, (int)head.position.Y))
+                {
+                    if (nodes[(int)n.position.X, (int)n.position.Y] == null)
+                    {
+                        nodes[(int)n.position.X, (int)n.position.Y] = n;
+                        toAdd.Add(AddNode(head, (int)n.position.X, (int)n.position.Y));
+                    }
+                    else
+                    {
+                        if (n.position.X == End.position.X && n.position.Y == End.position.Y)
+                        {
+
+                        }
+                        head.Link(nodes[(int)n.position.X, (int)n.position.Y]);
+                        //head.children.Add(n);
+                    }
+                }
+                toAdd.Remove(head);
+            }
+        }
+
+        public List<Node> GridChildren(int[,] board, int x, int y)
+        {
+            List<Node> returnList = new List<Node>();
+            for (int i = x - 1; i < x + 2; ++i)
+            {
+                for (int j = y - 1; j < y + 2; ++j)
+                {
+
+                    if (!(x == i && j == y))
+                    {
+                        if (board[i, j] == 0)
+                        {
+                            Node newn = new Node(new Vector2(i, j));
+                            returnList.Add(newn);
+                        }
+                    }
+                }
+            }
+            return returnList;
+        }
+
+        public void InitializeNodes()
+        {
+            //ROOM 1
+            Node n61 = AddNode(Start, 6, 1);
+            Node n51 = AddNode(n61, 5, 1);
+            Node n31 = AddNode(n51, 3, 1);
+            Node n11 = AddNode(n31, 1, 1);
+            Node n22 = AddNode(n11, 2.5f, 2);
+            Node n43 = AddNode(n22, 4, 3);
+            Node n24 = AddNode(n43, 2.5f, 4);
+            Node n13 = AddNode(n24, 1, 3);
+            Node n15 = AddNode(n13, 1, 5);
+            n13.Link(n22);
+            n13.Link(n11);
+            n51.Link(n43);
+            //Node n71 = AddNode(n61, 7.5f, 1.5f);
+            //Dorrway UP
+            Node n35 = AddNode(n24, 3, 5);
+            //n51.Link(n35);
+
+            //Doorway RIGHT
+            Node n55 = AddNode(n35, 5, 5);
+            n51.Link(n55);
+            n55.Link(n43);
+            n35.Link(n15);
+            Node n105 = AddNode(n55, 10, 5);
+            Node n38 = AddNode(n35, 3, 8);
+
+            //CROSS ROAD LEFT
+            Node n39 = AddNode(n38, 3, 9);
+            Node n310 = AddNode(n39, 3, 10);
+            Node n313 = AddNode(n310, 3, 13);
+            Node n19 = AddNode(n39, 1, 9);
+            Node n49 = AddNode(n39, 4, 9);
+            Node n89 = AddNode(n49, 8, 9);
+
+            //Doorway LEFT
+            Node n99 = AddNode(n89, 9, 9);
+
+            //CROSS ROAD RIGHT
+            Node n115 = AddNode(n105, 11, 5);
+            Node n135 = AddNode(n115, 13, 5);
+            Node n116 = AddNode(n115, 11, 6);
+            Node n114 = AddNode(n115, 11, 4);
+            Node n111 = AddNode(n114, 11, 1);
+
+            //Doorway DOWN
+            Node n119 = AddNode(n116, 11, 9);
+            n119.Link(n99);
+
+            //ROOM 2
+            Node n1011 = AddNode(n119, 10, 11.5f);
+            Node n1211 = AddNode(n119, 12, 11.5f);
+            n99.Link(n1011);
+            Node n913 = AddNode(n1011, 9, 13);
+            Node n813 = AddNode(n913, 8, 13);
+            Node n1113 = AddNode(n1011, 11, 13);
+            End.Link(n813);
+
+            Node n1313 = AddNode(n1211, 13, 13);
+            n1313.Link(n1211);
+            Node n139 = AddNode(n1211, 13, 9);
+            n139.Link(n99);
+            n139.Link(n1313);
+        }
+
+        public void SetStart(Vector2 position)
+        {
+            float lowestDistance = float.MaxValue;
+            int count = 0;
+            int target = 0;
+            foreach (Node n in allNodes)
+            {
+                if (Vector2.Distance(position, n.position) < lowestDistance)
+                {
+                    lowestDistance = Vector2.Distance(position, n.position);
+                    target = count;
+                }
+                count++;
+            }
+
+            Start = allNodes.ElementAt(target);
+
+            openList[(int)Start.position.X, (int)Start.position.Y] = Start;
+            Start.open = true;
+        }
+
+        public void ResetGoal(Vector2 position)
+        {
+            End.isGoal = false;
+            float lowestDistance = float.MaxValue;
+            int count = 0;
+            int target = 0;
+            foreach (Node n in allNodes)
+            {
+                if (Vector2.Distance(position, n.position) < lowestDistance)
+                {
+                    lowestDistance = Vector2.Distance(position, n.position);
+                    target = count;
+                }
+                count++;
+            }
+            End = allNodes.ElementAt(target);
+            End.isGoal = true;
+        }
+
         public void Draw(Matrix view, Matrix projection, Model node, Model edge)
         {
             //Draw the lists over the actual nodes
@@ -263,7 +439,7 @@ namespace PinballRacer.Track
                     toAdd.AddRange(head.children);
                     foreach (Node child in head.children)
                     {
-                       // DrawLines(view, projection, head.position, child.position);
+                        DrawLines(view, projection, head.position, child.position);
                     }
                     foreach (ModelMesh mesh in node.Meshes)
                     {
@@ -291,136 +467,27 @@ namespace PinballRacer.Track
             }
         }
 
-        public void InitializeGrid()
+        private void DrawLines(Matrix view, Matrix projection, Vector2 start, Vector2 end)
         {
-            openList[(int)Start.position.X, (int)Start.position.Y] = Start;
-            Node[,] nodes = new Node[15,15];
-            List<Node> toAdd = new List<Node>();
-            nodes[(int)Start.position.X, (int)Start.position.Y] = Start;
-            toAdd.Add(Start);
+            VertexPositionColor[] primitiveList = new VertexPositionColor[2];
+            primitiveList[0] = new VertexPositionColor(new Vector3(start.X, start.Y, 0.07f), Color.Black);
+            primitiveList[1] = new VertexPositionColor(new Vector3(end.X, end.Y, 0.07f), Color.Black);
+            Game1.m_basicEffect.CurrentTechnique.Passes[0].Apply();
+            //Draws Lines Between Vertices
+            Game1.graphics.GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(
+                PrimitiveType.LineList,
+                primitiveList, 0,
+                1);
 
-            while (toAdd.Count != 0)
-            {
-                Node head = toAdd.First();
-                foreach (Node n in GridChildren((int)head.position.X, (int)head.position.Y))
-                {
-                    if (nodes[(int)n.position.X, (int)n.position.Y] == null)
-                    {
-                        nodes[(int)n.position.X, (int)n.position.Y] = n;
-                        toAdd.Add(AddNode(head, (int)n.position.X, (int)n.position.Y));
-                    }
-                    else
-                    {           
-                        head.Link(nodes[(int)n.position.X, (int)n.position.Y]);             
-                        //head.children.Add(n);
-                    }
-                }                
-                toAdd.Remove(head);
-            }
+            VertexPositionColor[] primitiveList1 = new VertexPositionColor[2];
+            primitiveList[0] = new VertexPositionColor(new Vector3(start.X, start.Y, 0.09f), Color.Black);
+            primitiveList[1] = new VertexPositionColor(new Vector3(end.X, end.Y, 0.09f), Color.Black);
+            Game1.m_basicEffect.CurrentTechnique.Passes[0].Apply();
+            //Draws Lines Between Vertices
+            Game1.graphics.GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(
+                PrimitiveType.LineList,
+                primitiveList, 0,
+                1);
         }
-
-        public List<Node> GridChildren(int x, int y)
-        {
-            List<Node> returnList = new List<Node>();
-            for (int i = x - 1; i < x + 2; ++i)
-            {
-                for (int j = y - 1; j < y + 2; ++j)
-                {
-
-                    if (!(x == i && j == y))
-                    {
-                        Node newn = new Node(new Vector2(i,j));
-                        returnList.Add(newn);                        
-                    }
-                }
-            }
-            return returnList;
-        }
-        
-        public void InitializeNodes()
-        {
-            //ROOM 1
-            Node n61 = AddNode(Start, 6, 1);
-            Node n51 = AddNode(n61, 5, 1);
-            Node n31 = AddNode(n51, 3, 1);
-            Node n11 = AddNode(n31, 1, 1);
-            Node n22 = AddNode(n11, 2.5f, 2);
-            Node n43 = AddNode(n22, 4, 3);
-            Node n24 = AddNode(n43, 2.5f, 4);
-            Node n13 = AddNode(n24, 1, 3);
-            Node n15 = AddNode(n13, 1, 5);
-            n13.Link(n22);
-            n13.Link(n11);
-            n51.Link(n43);
-            //Node n71 = AddNode(n61, 7.5f, 1.5f);
-            //Dorrway UP
-            Node n35 = AddNode(n24, 3, 5);
-            //n51.Link(n35);
-
-            //Doorway RIGHT
-            Node n55 = AddNode(n35, 5, 5);
-            n51.Link(n55);
-            n55.Link(n43);
-            n35.Link(n15);
-            Node n105= AddNode(n55, 10, 5);
-                Node n38= AddNode(n35, 3, 8);
-
-            //CROSS ROAD LEFT
-                Node n39= AddNode(n38, 3, 9);
-                Node n310 = AddNode(n39, 3, 10);
-                Node n313 = AddNode(n310, 3, 13);
-                Node n19 = AddNode(n39, 1, 9);
-                Node n49 = AddNode(n39, 4, 9);
-            Node n89 = AddNode(n49, 8, 9);
-
-            //Doorway LEFT
-            Node n99 = AddNode(n89, 9, 9);
-
-            //CROSS ROAD RIGHT
-            Node n115 = AddNode(n105, 11, 5);            
-            Node n135 = AddNode(n115, 13, 5);
-            Node n116 = AddNode(n115, 11, 6);
-            Node n114 = AddNode(n115, 11, 4);
-            Node n111 = AddNode(n114, 11, 1);
-
-            //Doorway DOWN
-            Node n119 = AddNode(n116, 11, 9);
-            n119.Link(n99);
-
-            //ROOM 2
-            Node n1011 = AddNode(n119, 10, 11.5f);
-            Node n1211 = AddNode(n119, 12, 11.5f);
-            n99.Link(n1011);
-            Node n913 = AddNode(n1011, 9, 13);
-            Node n813 = AddNode(n913, 8, 13);
-            Node n1113 = AddNode(n1011, 11, 13);
-            End.Link(n813);
-
-            Node n1313 = AddNode(n1211, 13, 13);
-            n1313.Link(n1211);
-            Node n139 = AddNode(n1211, 13, 9);
-            n139.Link(n99);
-            n139.Link(n1313);                
-        }
-
-        public void SetStart(Vector2 position)
-        {
-            float lowestDistance = float.MaxValue;
-            int count = 0;
-            int target = 0;
-            foreach (Node n in allNodes)
-            {
-                if (Vector2.Distance(position, n.position) < lowestDistance)
-                {
-                    lowestDistance = Vector2.Distance(position, n.position);
-                    target = count;
-                }
-                count++;
-            }
-
-            Start = allNodes.ElementAt(target);
-
-            openList[(int)Start.position.X, (int)Start.position.Y] = Start;
-        }    
     }
 }

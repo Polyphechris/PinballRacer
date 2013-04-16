@@ -11,13 +11,13 @@ namespace PinballRacer
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-        GraphicsDeviceManager graphics;
+        public static GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         TrackSpriteManager trackManager;
         PlayerSpriteManager playerManager;
         PlayerCollisionManager collisionManager;
 
-        BasicEffect m_basicEffect;
+        public static BasicEffect m_basicEffect;
 
         public static Matrix view = Matrix.CreateLookAt(new Vector3(20, 50, 70f), new Vector3(20, 50, 0), Vector3.UnitY);
         public static Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(70), 16 / 9, 1, 200);
@@ -56,7 +56,6 @@ namespace PinballRacer
             //graphics.PreferredBackBufferWidth = 800;
             //graphics.PreferredBackBufferHeight = 600;
             pressed = false;
-            //InitEffect();
         }
 
         /// <summary>
@@ -99,6 +98,7 @@ namespace PinballRacer
 
             collisionManager = new PlayerCollisionManager(Content, trackManager.track);
             collisionManager.InitializePlayers(playerManager.npcs, player);
+            InitEffect();
         }
 
         /// <summary>
@@ -198,7 +198,6 @@ namespace PinballRacer
 
         public void InitEffect()
         {
-
             m_basicEffect = new BasicEffect(graphics.GraphicsDevice);
             m_basicEffect.View = view;
             m_basicEffect.Projection = projection;
