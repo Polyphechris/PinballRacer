@@ -10,11 +10,13 @@ namespace PinballRacer.Track.Obstacles
 {
     class WallBumper : Wall
     {
-        public const float E = 2f;
+        const int SCORE = 1000;
+        public const float E = 1.5f;
         public const float RADIUS = 1f;
 
         public WallBumper(float x, float y, Model m)
         {
+            score = SCORE;
             model = m;
             position = new Vector3(x, y, 0);
             scale = new Vector3(1f);
@@ -28,7 +30,7 @@ namespace PinballRacer.Track.Obstacles
                 isHit = true;
                 Vector3 force = player - position;
                 force.Normalize();
-                isHit = true;
+                isHit = true;   p.score += score;
                 return new Vector3(force.X, force.Y,0) * E;
             }
             return Vector3.Zero;
@@ -47,6 +49,17 @@ namespace PinballRacer.Track.Obstacles
                     effect.View = view;
                     effect.Projection = projection;
                     //effect.Alpha = 0.8f;
+                    if (isHit)
+                    {
+                        effect.DirectionalLight1.SpecularColor = new Vector3(1f, 1f, 1f);
+                        effect.EmissiveColor = new Vector3(0.2f, 0.2f, 0.2f);
+                        effect.DirectionalLight0.DiffuseColor = new Vector3(0.9f, 0.9f, 0.9f);// Shinnyness/reflexive
+                    }
+                    else
+                    {
+                        effect.DirectionalLight1.SpecularColor = Vector3.Zero;
+                        effect.EmissiveColor = Vector3.Zero;
+                    }
                 }
                 mesh.Draw();
             }

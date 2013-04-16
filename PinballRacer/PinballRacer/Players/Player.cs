@@ -46,6 +46,8 @@ namespace PinballRacer.Players
 
         protected List<Vector4> impulses = new List<Vector4>();
         private Path path;
+        public int score;
+        public int rank;
 
         public void InitializeModel(Model aModel)
         {

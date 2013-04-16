@@ -10,9 +10,11 @@ namespace PinballRacer.Track.Walls
 {
     class WallRegular : Wall
     {
+        const int SCORE = 500;
         public const float E = 1f;
         public WallRegular(float x, float y, Model m)
         {
+            score = SCORE;
             model = m;
             scale = new Vector3(0.5f,  0.5f, 2f);
             position = new Vector3(x,  y, 0);
@@ -72,8 +74,11 @@ namespace PinballRacer.Track.Walls
                 {
                     impulse += new Vector3(0, -1, 0);
                 }
-                if(!impulse.Equals(Vector3.Zero))
+                if (!impulse.Equals(Vector3.Zero))
+                {
+                    p.score += score;
                     impulse.Normalize();
+                }
                 return impulse * E;
             }
             //If we got to the end, hit is false

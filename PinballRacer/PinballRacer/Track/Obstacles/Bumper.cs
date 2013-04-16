@@ -10,11 +10,13 @@ namespace PinballRacer.Track.Obstacles
 {
     public class Bumper : Obstacle
     {
+        const int SCORE = 5000;
         public const float RADIUS = 1.15f;
-        public const float E = 2f;
+        public const float E = 4f;
 
         public Bumper(float x, float y, Model m)
         {
+            score = SCORE;
             model = m;
             position = new Vector3(x, y, 0.5f);
             scale = new Vector3(0.7f, 0.7f, 0.025f);
@@ -30,6 +32,7 @@ namespace PinballRacer.Track.Obstacles
                 isHit = true;
                 Vector3 force = player - position;
                 force.Normalize();
+                p.score += score;
                 return new Vector3(force.X, force.Y, 0) * E;
             }
             return Vector3.Zero;

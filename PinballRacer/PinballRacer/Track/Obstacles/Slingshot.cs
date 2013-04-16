@@ -10,33 +10,46 @@ namespace PinballRacer.Track.Obstacles
 {
     class Slingshot : Obstacle
     {
-        public const float E = 1f;
+        const int SCORE = 10000;
+        public const float E = 2f;
         Matrix rotation;
+        bool inverted;
         Vector3[] vertices;
         Vector3[] lines; // (a,b,c)
         Vector3[] forces;
 
-        public Slingshot(Vector3 pos, Model m, Matrix r)
+        public Slingshot(Vector3 pos, Model m, Matrix r, bool i)
         {
+            score = SCORE;
+            inverted = i;
             rotation = r;
             model = m;
             position = pos;
-            scale = new Vector3(7f, 7f, 7f);
+            scale = new Vector3(8f, 8f, 8f);
             InitializeSegments();
-            CollisionBox = new Rectangle((int)(vertices[0].X - 1), (int)(vertices[2].Y - 1), 
-                (int)(vertices[2].X - vertices[0].X + 2), (int)(vertices[0].Y - vertices[2].Y + 2));
+            if(!inverted)
+                CollisionBox = new Rectangle((int)(vertices[0].X - 1), (int)(vertices[2].Y - 1), 
+                    (int)(vertices[2].X - vertices[0].X + 2), (int)(vertices[0].Y - vertices[2].Y + 2));
+            else
+                CollisionBox = new Rectangle((int)(vertices[2].X - 1), (int)(vertices[2].Y - 1),
+                    (int)(vertices[0].X - vertices[2].X + 2), (int)(vertices[0].Y - vertices[2].Y + 2));
         }
 
         public void InitializeSegments()
         {
             vertices = new Vector3[3];
-            vertices[0] = Vector3.Zero; //Top
-            vertices[1] = Vector3.Zero; //Bottom
-            vertices[2] = Vector3.Zero; //Right
-            ////TEST DATA
-            vertices[0] = Vector3.UnitY + 3*Vector3.One; //Top
-            vertices[1] = Vector3.Zero + 3 * Vector3.One; //Bottom
-            vertices[2] = Vector3.UnitX + 3 * Vector3.One; //Right
+            if (inverted)
+            {
+                vertices[0] = new Vector3(36.75f, 27f, 1f); //Top
+                vertices[1] = new Vector3(38.9f, 17f, 1f); //Bottom
+                vertices[2] = new Vector3(30.25f, 13.5f, 1f); //Right
+            }
+            else 
+            {
+                vertices[0] = new Vector3(9f, 27f, 1f); //Top
+                vertices[1] = new Vector3(7.25f, 17f, 1f); //Bottom
+                vertices[2] = new Vector3(15.5f, 13.5f, 1f); //Right
+            }
 
             //Line Equations for each side of the shape
             lines = new Vector3[3];
@@ -44,7 +57,7 @@ namespace PinballRacer.Track.Obstacles
             float b = -1f;
             float c = vertices[0].Y - a * vertices[0].X;
             //lines[0] = new Vector3(a,b,c); //0 - 1
-            lines[0] = new Vector3(1, 0, vertices[0].X); //0 - 1
+            lines[0] = new Vector3(1, 0, vertices[1].X); //0 - 1
 
             a = (vertices[2].Y - vertices[1].Y) / (vertices[2].X - vertices[1].X);
             b = -1f;
@@ -58,9 +71,18 @@ namespace PinballRacer.Track.Obstacles
 
             //Resulting force corresponding to a side
             forces = new Vector3[3];
-            forces[0] = Vector3.Cross(Vector3.UnitZ, vertices[0] - vertices[1]);
-            forces[1] = Vector3.Cross(Vector3.UnitZ, vertices[1] - vertices[2]);
-            forces[2] = Vector3.Cross(Vector3.UnitZ, vertices[2] - vertices[0]);
+            if (inverted)
+            {
+                forces[0] = Vector3.Cross(vertices[0] - vertices[1], Vector3.UnitZ);
+                forces[1] = Vector3.Cross(vertices[1] - vertices[2], Vector3.UnitZ);
+                forces[2] = Vector3.Cross(vertices[2] - vertices[0], Vector3.UnitZ);
+            }
+            else
+            {
+                forces[0] = Vector3.Cross(Vector3.UnitZ, vertices[0] - vertices[1]);
+                forces[1] = Vector3.Cross(Vector3.UnitZ, vertices[1] - vertices[2]);
+                forces[2] = Vector3.Cross(Vector3.UnitZ, vertices[2] - vertices[0]);
+            }
             forces[0].Normalize(); forces[1].Normalize(); forces[2].Normalize();
         }
 
@@ -82,16 +104,29 @@ namespace PinballRacer.Track.Obstacles
             for (int i = 0; i < 3; ++i)
             {    
                 int end = (i+1) % 3;
-                if (isBetween(vertices[i].X, vertices[end].X, player.X) &&
-                    isBetween(vertices[i].Y, vertices[end].Y, player.Y))
+                if (i != 0)
                 {
-                    float d = (lines[i].X * player.X + lines[i].Y * player.Y + lines[i].Z) / (float)(Math.Sqrt(Math.Pow(lines[i].X, 2) + Math.Pow(lines[i].Y, 2)));
-                    if (d <= Player.RADIUS)
+                    if (isBetween(vertices[i].X, vertices[end].X, player.X) &&
+                        isBetween(vertices[i].Y, vertices[end].Y, player.Y))
                     {
-                        isHit = true;
-                        return forces[i] * E;
+                        float d = (lines[i].X * player.X + lines[i].Y * player.Y + lines[i].Z) /
+                                            (float)(Math.Sqrt(Math.Pow(lines[i].X, 2) + Math.Pow(lines[i].Y, 2)));
+                        if (Math.Abs(d) <= Player.RADIUS)
+                        { isHit = true; p.score += score; return forces[i] * E; }
                     }
                 }
+                else
+                {
+                    if (isBetween(vertices[i].Y, vertices[end].Y, player.Y) &&
+                        isBetween(vertices[i].X, vertices[end].X, player.X))
+                    {
+                        if (inverted && player.X - Player.RADIUS < vertices[end].X)
+                        { isHit = true; p.score += score; return forces[i] * E; }
+                        else if (player.X + Player.RADIUS > vertices[end].X)
+                        { isHit = true; p.score += score; return forces[i] * E; }
+                    }
+                }
+                //}
             }
             return Vector3.Zero;
         }
@@ -114,6 +149,7 @@ namespace PinballRacer.Track.Obstacles
 
         public override void draw(Matrix view, Matrix projection)
         {
+            drawVertex(view, projection);
             foreach (ModelMesh mesh in model.Meshes)
             {
                 foreach (BasicEffect effect in mesh.Effects)
@@ -124,9 +160,42 @@ namespace PinballRacer.Track.Obstacles
                     effect.DirectionalLight0.DiffuseColor = new Vector3(0.9f, 0.9f, 0.9f);// Shinnyness/reflexive
                     effect.World = Matrix.CreateScale(scale) * rotation * Matrix.CreateTranslation(position);
                     effect.View = view;
-                    effect.Projection = projection; effect.EmissiveColor = Vector3.Zero;                    
+                    effect.Projection = projection;
+                    if (isHit)
+                    {
+                        effect.DirectionalLight1.SpecularColor = new Vector3(1f, 1f, 1f);
+                        effect.EmissiveColor = new Vector3(0.2f, 0.2f, 0.2f);
+                        effect.DirectionalLight0.DiffuseColor = new Vector3(0.9f, 0.9f, 0.9f);// Shinnyness/reflexive
+                    }
+                    else
+                    {
+                        effect.DirectionalLight1.SpecularColor = Vector3.Zero;
+                        effect.EmissiveColor = Vector3.Zero;
+                    }                      
                 }
                 mesh.Draw();
+            }
+        }
+
+        private void drawVertex(Matrix view, Matrix projection)
+        {
+            for (int i = 0; i < 3; ++i)
+            { 
+                foreach (ModelMesh mesh in model.Meshes)
+                {
+                    foreach (BasicEffect effect in mesh.Effects)
+                    {
+                        effect.EnableDefaultLighting();
+                        effect.AmbientLightColor = new Vector3(0.2f);
+                        effect.DirectionalLight0.Direction = new Vector3(0f, -1f, -1f);
+                        effect.DirectionalLight0.DiffuseColor = new Vector3(0.9f, 0.9f, 0.9f);// Shinnyness/reflexive
+                        effect.World = Matrix.CreateScale(scale * 1/20) * Matrix.CreateTranslation(vertices[i]);
+                        effect.View = view;
+                        effect.Projection = projection;
+                        effect.EmissiveColor = Vector3.Zero;             
+                    }
+                    mesh.Draw();
+                }
             }
         }
     }

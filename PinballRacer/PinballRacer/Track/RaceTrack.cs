@@ -102,11 +102,11 @@ namespace PinballRacer.Track
             {
                 AddWall(TRACK_WIDTH - 4, k);                
             }
-            for (int l = 10; l < 20; ++l)
+            for (int l = 10; l < 26; ++l)
             {
                 AddWall(5, l);
             } 
-            for (int r = 10; r < 20; ++r)
+            for (int r = 10; r < 26; ++r)
             {
                 AddWall(TRACK_WIDTH - 9, r);
             }
@@ -123,8 +123,8 @@ namespace PinballRacer.Track
            // bump.isHit = true;
             AddObstacle(bump);
 
-            AddObstacle(new Slingshot(new Vector3((TRACK_WIDTH - 4) / 2 - 10.7f, 23.1f, -0.3f), content.Load<Model>("slingshotright"), Matrix.CreateRotationZ(MathHelper.ToRadians(-127))));
-            AddObstacle(new Slingshot(new Vector3((TRACK_WIDTH - 4) / 2 + 11, 22.5f, 2.3f), content.Load<Model>("slingshotleft"), Matrix.CreateRotationZ(MathHelper.ToRadians(180))));
+            AddObstacle(new Slingshot(new Vector3((TRACK_WIDTH - 4) / 2 - 12.5f, 20.6f, -0.2f), content.Load<Model>("slingshotright"), Matrix.CreateRotationZ(MathHelper.ToRadians(-127)), false));
+            AddObstacle(new Slingshot(new Vector3((TRACK_WIDTH - 4) / 2 + 12.25f, 20.0f, 2.65f), content.Load<Model>("slingshotleft"), Matrix.CreateRotationZ(MathHelper.ToRadians(180)), true));
 
             AddObstacle(new Flipper((TRACK_WIDTH - 4) / 2 - 10, 10, content.Load<Model>("flipper"), 0f - 0.3f, false));
             AddObstacle(new Flipper((TRACK_WIDTH - 4) / 2 + 10, 10, content.Load<Model>("flipper"), (float)Math.PI + 0.3f, true));

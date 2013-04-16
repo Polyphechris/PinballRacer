@@ -44,7 +44,7 @@ namespace PinballRacer.Track.Obstacles
                 lanes[i] = new Vector4(bottomLeft.X + (i * 3) + 1.5f, bottomLeft.Y + LANE_HEIGHT / 2, -0.5f, 0);
             }
             InitializeWalls();
-            CollisionBox = new Rectangle((int)bottomLeft.X, (int)bottomLeft.Y, (int)LANE_WIDTH * 7, (int)LANE_HEIGHT);
+            CollisionBox = new Rectangle((int)bottomLeft.X - 1, (int)bottomLeft.Y - 1, (int)LANE_WIDTH * 10 + 2, (int)LANE_HEIGHT + 2);
         }
 
         private void InitializeWalls()
@@ -77,7 +77,7 @@ namespace PinballRacer.Track.Obstacles
                     {
                         lanes[lightIndex] += new Vector4(0, 0, 0, 1);
                         lightsOn++;
-                        if (lightsOn == 3) score = JACKPOT_VALUE;
+                        if (lightsOn == 3) { score = JACKPOT_VALUE; lightsOn = 0; lanes[0].W = 0; lanes[1].W = 0; lanes[2].W = 0; }
                     }
                     else
                     {
@@ -95,17 +95,13 @@ namespace PinballRacer.Track.Obstacles
         {
             Vector3 player = p.position;
             CheckLight(p);
-            Vector3 wallHit;
+            Vector3 wallHit = Vector3.Zero;
             foreach (Wall w in walls)
             {
-                wallHit = w.getResultingForce(p);
-                if (!wallHit.Equals(Vector3.Zero))
-                {
-                    return wallHit;
-                }
+                wallHit += w.getResultingForce(p);
             }
           //  throw new NotImplementedException();
-            return Vector3.Zero;
+            return wallHit;
         }
 
         public override void update(float time)

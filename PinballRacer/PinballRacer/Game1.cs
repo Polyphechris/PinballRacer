@@ -412,7 +412,7 @@ namespace PinballRacer
                 }
                 else if (keyboardState.IsKeyDown(Keys.I))
                 {
-                    gameState = states.instructions;
+                  //  gameState = states.instructions;
                 }
             }
             if (keyboardState.IsKeyUp(Keys.Space))
