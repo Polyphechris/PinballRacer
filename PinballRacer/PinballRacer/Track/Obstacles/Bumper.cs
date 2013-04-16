@@ -11,7 +11,7 @@ namespace PinballRacer.Track.Obstacles
     public class Bumper : Obstacle
     {
         public const float RADIUS = 1.15f;
-        public const float E = 5f;
+        public const float E = 2f;
 
         public Bumper(float x, float y, Model m)
         {

@@ -35,7 +35,6 @@ namespace PinballRacer.Track
                     hitTime = 0;
                 }
             }
-
         }
 
         public virtual void draw(Matrix view, Matrix projection)

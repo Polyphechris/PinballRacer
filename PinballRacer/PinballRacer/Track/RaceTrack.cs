@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using PinballRacer.Track.Walls;
 using PinballRacer.Track.Obstacles;
+using PinballRacer.Track.Pathfinding;
 
 namespace PinballRacer.Track
 {
@@ -26,17 +27,16 @@ namespace PinballRacer.Track
         public float springLevel;
 
         public Dictionary<int, Obstacle> obstacles;
+        public int[,] tiles;
         List<Wall> walls;
         List<Floor> floors;
 
-        TrackGraph TileGraph;
-        TrackGraph NodeGraph;
+        PathManager PathController;
 
         public float[,] TerrainMap;
         public enum squareStates { EMPTY = 0, WALL, PLAYER1, PLAYER2, OBSTACLE, GOAL1, LAST };
         public enum trackStates { PLAYING = 0, START, GAMEOVER };
         public squareStates[,] board;
-        public int[,] tiles;
 
         public RaceTrack(ContentManager c)
         {
@@ -51,6 +51,8 @@ namespace PinballRacer.Track
             InitializeInnerWalls();
             spring = content.Load<Model>("spring");
             springLevel = 0.5f;
+
+            PathController = new PathManager(obstacles, tiles);
         }
 
         private void InitializeFloor()
@@ -182,6 +184,7 @@ namespace PinballRacer.Track
 
         public void Draw(Matrix view, Matrix projection)
         {
+            PathController.Draw(view, projection, content.Load<Model>("ball"), content.Load<Model>("cube"));
             foreach (Floor f in floors)
             {
                 f.draw(view, projection);
