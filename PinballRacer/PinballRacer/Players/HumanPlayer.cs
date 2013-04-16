@@ -54,18 +54,14 @@ namespace PinballRacer.Players
             Vector3 previousRotation = rotation;            
             
             KeyboardState keyboardState = Keyboard.GetState();
-            Keys[] keys = keyboardState.GetPressedKeys();
+            CheckPitchRollChanges(keyboardState);
             
-            //  yaw(spin), pitch (forward/backward), roll (sideways)
-            foreach (Keys key in keys)
-            {             
-                CheckPitchRollChanges(key);
-            }
 
             if (impulses.Count > 0)
             {
                 velocity += acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
+            
             ApplyFriction(previousVelocity);
             UpdateRotation(previousRotation);
             
@@ -134,9 +130,47 @@ namespace PinballRacer.Players
             return rebalancedRotation;
         }
 
-        private void CheckPitchRollChanges(Keys key)
+
+        private void CheckPitchRollChanges(KeyboardState keyboardState)
         {
-            //  yaw(spin), pitch (forward/backward), roll (sideways)
+            if (keyboardState.IsKeyDown(forward))
+            {
+                if (velocity.Y < MAX_SPEED)
+                {
+                    velocity.Y += 2 * SPEED_UP;
+                }
+            }
+
+            if (keyboardState.IsKeyDown(reverse))
+            {
+                if (velocity.Y > -MAX_SPEED)
+                {
+                    velocity.Y += 2 * SLOW_DOWN;
+                }
+            }
+
+            if (keyboardState.IsKeyDown(leftRoll))
+            {
+                if (velocity.X > -MAX_SPEED)
+                {
+                    velocity.X += 2 * SLOW_DOWN;
+                }
+            }
+
+            if (keyboardState.IsKeyDown(rightRoll))
+            {
+
+                if (velocity.X < MAX_SPEED)
+                {
+                    velocity.X += 2 * SPEED_UP;
+                }
+            }
+        }
+
+
+
+        private void CheckPitchRollChanges(Keys key)
+        {            
             if (key.Equals(forward))
             {                
                 if (velocity.Y < MAX_SPEED)
