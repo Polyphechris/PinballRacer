@@ -189,9 +189,10 @@ namespace PinballRacer
                 spriteBatch.DrawString(font, "Use Q/E to move forward and backward", new Vector2(graphics.PreferredBackBufferWidth / 9, startInstruction + 85), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
                 spriteBatch.DrawString(font, "X to reset camera", new Vector2(graphics.PreferredBackBufferWidth / 9, startInstruction + 105), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
                 spriteBatch.DrawString(font, "Use I/J/K/L to move camera", new Vector2(graphics.PreferredBackBufferWidth / 9, startInstruction + 125), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(font, "Use 8/9/0 for 1st person/3rd person/overview camera", new Vector2(graphics.PreferredBackBufferWidth / 9, startInstruction + 145), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
                 
-                spriteBatch.DrawString(font, "Use Up/Down/Left/Right to move Ball", new Vector2(graphics.PreferredBackBufferWidth / 9, startInstruction + 165), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
-                spriteBatch.DrawString(font, "Space Next/Pause", new Vector2(graphics.PreferredBackBufferWidth / 9, startInstruction + 185), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(font, "Use Up/Down/Left/Right to move Ball", new Vector2(graphics.PreferredBackBufferWidth / 9, startInstruction + 185), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(font, "Space Next/Pause", new Vector2(graphics.PreferredBackBufferWidth / 9, startInstruction + 205), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
             } 
             spriteBatch.End();
         }
@@ -272,7 +273,7 @@ namespace PinballRacer
             {
                 cameraView = CameraView.THIRD_PERSON;
             }
-            if (keyboardState.IsKeyDown(Keys.D0))
+            if (keyboardState.IsKeyDown(Keys.D0) || keyboardState.IsKeyDown(Keys.X))
             {
                 cameraView = CameraView.OVERVIEW;
                 view = Matrix.CreateLookAt(new Vector3(20, 50, 70f), new Vector3(20, 50, 0), Vector3.UnitY);
