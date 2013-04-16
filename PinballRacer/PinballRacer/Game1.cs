@@ -234,7 +234,7 @@ namespace PinballRacer
             if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.Down) || 
                 keyboardState.IsKeyDown(Keys.Left) || keyboardState.IsKeyDown(Keys.Right))
             {                
-                UpdateCameraAngle(keyboardState);
+                //UpdateCameraAngle(keyboardState);
             }
 
             //accepts all th input and reacts to it
@@ -294,13 +294,27 @@ namespace PinballRacer
             }
             if (keyboardState.IsKeyDown(Keys.D))
             {
-                angleY = 0.01f;
-                view = view * Matrix.CreateRotationY(angleY);
+                if (cameraView == CameraView.OVERVIEW)
+                {
+                    angleY = 0.01f;
+                    view = view * Matrix.CreateRotationY(angleY);
+                }
+                else
+                {
+                    camAngle += 0.05f;
+                }
             }
             if (keyboardState.IsKeyDown(Keys.A))
             {
-                angleY = -0.01f;
-                view = view * Matrix.CreateRotationY(angleY);
+                if (cameraView == CameraView.OVERVIEW)
+                {
+                    angleY = -0.01f;
+                    view = view * Matrix.CreateRotationY(angleY);
+                }
+                else
+                {
+                    camAngle -= 0.05f;
+                }
             }
             if (keyboardState.IsKeyDown(Keys.E))
             {
@@ -430,8 +444,9 @@ namespace PinballRacer
             {
                 case CameraView.FIRST_PERSON:
                     // Update view to a 1st person view according to the player's position      
-                    view = Matrix.CreateLookAt(player.position, player.position + new Vector3(0,1,0), Vector3.UnitZ) * Matrix.CreateRotationY(camAngle);
-                    Vector3 test = player.velocity;
+                    //view = Matrix.CreateLookAt(player.position, player.position + new Vector3(0,1,0), Vector3.UnitZ) * Matrix.CreateRotationY(camAngle);
+                    view = Matrix.CreateLookAt(player.position + Vector3.TransformNormal(new Vector3(0, -0.1f, 15f), transform), 
+                        player.position, Vector3.UnitZ);// * Matrix.CreateRotationY(camAngle);
                     break;
                 case CameraView.THIRD_PERSON:
                     // Update view to a 3rd person view according to the player's position
