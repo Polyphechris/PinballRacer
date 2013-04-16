@@ -16,8 +16,8 @@ namespace PinballRacer.Track.Obstacles
         public WallBumper(float x, float y, Model m)
         {
             model = m;
-            position = new Vector3(x, y, 2f);
-            scale = new Vector3(0.1f, 0.1f, 0.05f);
+            position = new Vector3(x, y, 0);
+            scale = new Vector3(1f);
         }
 
         public override Vector3 getResultingForce(Player p)
