@@ -70,6 +70,20 @@ namespace PinballRacer
             pressed = false; showBoard = true; pressed2 = false;
         }
 
+        private void ResetGame()
+        {
+            trackManager = new TrackSpriteManager(this);
+            playerManager = new PlayerSpriteManager(this);
+            this.Components.Add(trackManager);
+            this.Components.Add(playerManager);
+            pressed = false; showBoard = true; pressed2 = false;
+
+            this.Initialize();
+            this.LoadContent();
+            camera.AspectRatio = (float)graphics.GraphicsDevice.Viewport.Width /
+                graphics.GraphicsDevice.Viewport.Height;
+        }
+
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
@@ -229,6 +243,7 @@ namespace PinballRacer
                 spriteBatch.Draw(smoke, new Vector2(0, 0), new Rectangle(0, 0, 2000, 2000), Color.FromNonPremultiplied(155, 155, 155, 155));            
                 spriteBatch.DrawString(font, "PAUSED", new Vector2((graphics.PreferredBackBufferWidth / 2) - 25, graphics.PreferredBackBufferHeight / 2), Color.White);
                 spriteBatch.DrawString(font, "(i)Instructions", new Vector2((graphics.PreferredBackBufferWidth / 2) - 25, graphics.PreferredBackBufferHeight / 2 + 30), Color.White);
+                spriteBatch.DrawString(font, "(x)Exit", new Vector2((graphics.PreferredBackBufferWidth / 2) - 25, graphics.PreferredBackBufferHeight / 2 + 60), Color.White);
             }
             if (gameState == states.main1)
             {
@@ -492,6 +507,11 @@ namespace PinballRacer
                 else if (keyboardState.IsKeyDown(Keys.I))
                 {
                     gameState = states.instructions;
+                }
+                else if (keyboardState.IsKeyDown(Keys.X))
+                {
+                    ResetGame();
+                    gameState = states.main1;
                 }
             }
             else if (gameState == states.instructions)

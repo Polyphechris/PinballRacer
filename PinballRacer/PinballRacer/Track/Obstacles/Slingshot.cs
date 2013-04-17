@@ -84,6 +84,7 @@ namespace PinballRacer.Track.Obstacles
                 forces[2] = Vector3.Cross(Vector3.UnitZ, vertices[2] - vertices[0]);
             }
             forces[0].Normalize(); forces[1].Normalize(); forces[2].Normalize();
+            forces[0] = forces[0] * 0.25f;
         }
 
         //Check is a point is in a triangle
