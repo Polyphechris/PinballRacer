@@ -10,7 +10,7 @@ namespace PinballRacer.Track.Pathfinding
 {
     public class PathManager
     {
-        public const int WAYPOINT_RADIUS = 7;
+        public const int WAYPOINT_RADIUS = 10;
         const float STEP_TIME = 200f;
         public Dictionary<int, Obstacle> obstacles;
         public int[,] tiles;
@@ -31,11 +31,41 @@ namespace PinballRacer.Track.Pathfinding
             BuildTileGraph();
         }
 
+        //Not use anymore
         private void SetWaypoint(Player p)
         {
             int quadNum;
-
-            if (p.position.X > RaceTrack.TRACK_WIDTH_OUT &&
+            //Top Left inner wall
+            if (p.position.X > 9 && p.position.X < RaceTrack.TRACK_WIDTH_OUT &&
+                p.position.Y > 65 && p.position.Y < RaceTrack.TRACK_HEIGHT)
+            {
+                quadNum = 2;
+            }
+             //Mid Left
+            else if (p.position.X > RaceTrack.TRACK_WIDTH_IN && p.position.X < RaceTrack.TRACK_WIDTH/2 - 2 &&
+                p.position.Y > RaceTrack.TRACK_HEIGHT_IN && p.position.Y < RaceTrack.TRACK_HEIGHT)
+            {
+                quadNum = 2;
+            }
+            //Mid Right
+            else if (p.position.X > RaceTrack.TRACK_WIDTH/2 - 2 && p.position.X < RaceTrack.TRACK_WIDTH_OUT &&
+                    p.position.Y > RaceTrack.TRACK_HEIGHT_IN && p.position.Y < RaceTrack.TRACK_HEIGHT)
+            {
+                quadNum = 1;
+            }
+            //Top Mid
+            else if (p.position.X > RaceTrack.TRACK_WIDTH_IN && p.position.X < RaceTrack.TRACK_WIDTH &&
+                p.position.Y > RaceTrack.TRACK_HEIGHT_OUT && p.position.Y < RaceTrack.TRACK_HEIGHT)
+            {
+                quadNum = 1;
+            }
+            //Top Mid inner
+            else if (p.position.X > RaceTrack.TRACK_WIDTH_IN && p.position.X < RaceTrack.TRACK_WIDTH_OUT &&
+                        p.position.Y > RaceTrack.TRACK_HEIGHT_OUT - 7 && p.position.Y < RaceTrack.TRACK_HEIGHT_OUT)
+            {
+                quadNum = 1;
+            }
+            else if (p.position.X > RaceTrack.TRACK_WIDTH_OUT &&
                 p.position.Y < RaceTrack.TRACK_HEIGHT_OUT)
             {
                 quadNum = 0;
@@ -43,27 +73,32 @@ namespace PinballRacer.Track.Pathfinding
             else if (p.position.X > RaceTrack.TRACK_WIDTH_IN &&
                      p.position.Y >= RaceTrack.TRACK_HEIGHT_OUT)
             {
-                quadNum = 1;
+                quadNum = 2;
             }
             else if (p.position.X <= RaceTrack.TRACK_WIDTH_IN &&
                      p.position.Y > RaceTrack.TRACK_HEIGHT_IN)
             {
-                quadNum = 2;
+                quadNum = 3;
             }
             else
             {
-                quadNum = 3;
+                quadNum = 4;
             }
 
             p.currentWaypoint = quadNum;
         }
 
-        private void AdjustWaypoint(Player player)
+        public void AdjustWaypoint(Player player)
         {
             float distance = Vector2.Distance(new Vector2(player.position.X, player.position.Y), Waypoints[player.currentWaypoint]);
             if (distance < WAYPOINT_RADIUS)
             {
                 player.SetPath(null);
+                player.currentWaypoint = (player.currentWaypoint + 1) % Waypoints.Count;
+                if (player.currentWaypoint == 0)
+                {
+                    player.currentLap++;
+                }
             }
         }
 
@@ -78,7 +113,7 @@ namespace PinballRacer.Track.Pathfinding
                 TileGraph.SetStart(new Vector2(player.position.X, player.position.Y));
                 //Get the correct goal(S)
                 //Aquire the waypoint
-                SetWaypoint(player);
+               // SetWaypoint(player);
                 TileGraph.ResetGoal(Waypoints[player.currentWaypoint]);
 
                 //Do the A*

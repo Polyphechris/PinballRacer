@@ -313,11 +313,11 @@ namespace PinballRacer.Track.Pathfinding
                     {
                         if(i < width && i > 0 && j < height && j > 0)
                         {
-                        //if (board[i, j] == 0)
-                        //{
-                            Node newn = new Node(new Vector2(i, j));
-                            returnList.Add(newn);
-                       // }
+                            if (board[i, j] <= 17)
+                            {
+                                Node newn = new Node(new Vector2(i, j));
+                                returnList.Add(newn);
+                            }
                         }
                     }
                 }

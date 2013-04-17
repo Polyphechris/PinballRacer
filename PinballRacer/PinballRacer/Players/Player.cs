@@ -49,9 +49,12 @@ namespace PinballRacer.Players
         public int score;
         public int rank;
         public int currentWaypoint;
+        public int currentLap;
 
         public void InitializeModel(Model aModel)
         {
+            currentWaypoint = 0;
+            currentLap = 0;
             model = aModel;
         }
 
@@ -112,6 +115,8 @@ namespace PinballRacer.Players
 
         public void Draw(Matrix view, Matrix projection)
         {
+            if(path != null)
+                path.Draw(view, projection, model);
             //  yaw(spin), pitch (forward/backward), roll (sideways)            
             Matrix world = Matrix.CreateScale(scale) *
                     Matrix.CreateFromYawPitchRoll(MathHelper.ToRadians(rotation.X), MathHelper.ToRadians(rotation.Y), MathHelper.ToRadians(rotation.Z)) *

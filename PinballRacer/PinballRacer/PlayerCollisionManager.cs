@@ -46,6 +46,10 @@ namespace PinballRacer
                 {
                     Track.PathController.Update(time.ElapsedGameTime.Milliseconds, p);
                 }
+                else
+                {
+                    Track.PathController.AdjustWaypoint(p);
+                }
 
                 //Check P2P collision
                 foreach (Player p2 in NPC)
@@ -54,6 +58,7 @@ namespace PinballRacer
                     {
                         if (Collision(p, p2))
                         {
+                            p.SetPath(null);
                             HandleCollision(p, p2);
                         }
                     }
@@ -84,6 +89,7 @@ namespace PinballRacer
                     Vector3 i = o.getResultingForce(p);
                     if (!i.Equals(Vector3.Zero))
                     {
+                        p.SetPath(null);
                         Impulses.Add(new Vector4(i.X, i.Y, i.Z, 0));
                     }
                 }

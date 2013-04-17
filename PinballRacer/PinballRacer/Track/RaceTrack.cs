@@ -21,7 +21,7 @@ namespace PinballRacer.Track
         public const int TRACK_HEIGHT_IN = 30;
         public const int TRACK_WIDTH_OUT = 32;
         public const int TRACK_HEIGHT_OUT = 80;
-        public const int WAYPOINT_RADIUS = 15;
+        public const int WAYPOINT_RADIUS = 12;
 
         ContentManager content;
         Model spring;
@@ -57,10 +57,11 @@ namespace PinballRacer.Track
             springLevel = 0.5f;
 
             Waypoints = new List<Vector2>();
-            Waypoints.Add(new Vector2(40, 90));
-            Waypoints.Add(new Vector2(TRACK_WIDTH_IN / 2, 90));
-            Waypoints.Add(new Vector2(TRACK_WIDTH_IN / 2, TRACK_HEIGHT_IN / 2));
-            Waypoints.Add(new Vector2(40, TRACK_HEIGHT_IN / 2));
+            Waypoints.Add(new Vector2(48, 98));
+            Waypoints.Add(new Vector2(TRACK_WIDTH/2 - 2, TRACK_HEIGHT/2 - 10));
+            Waypoints.Add(new Vector2(2, 98));
+            Waypoints.Add(new Vector2(TRACK_WIDTH_IN - 5, TRACK_HEIGHT_IN - 5));
+            Waypoints.Add(new Vector2(TRACK_WIDTH_OUT + 5, TRACK_HEIGHT_IN - 5));
 
             PathController = new PathManager(obstacles, tiles, Waypoints);
         }
@@ -137,6 +138,7 @@ namespace PinballRacer.Track
                 if (rowCounter >= 0 || i >= 0 || rowCounter <= TRACK_HEIGHT - 1 || i <= TRACK_WIDTH - 1)
                 {
                     AddWallBumper(i, rowCounter);
+                    AddWallBumper(i, rowCounter-1);
                     rowCounter += 1;
                 }
             }
@@ -197,17 +199,17 @@ namespace PinballRacer.Track
             AddObstacle(new Bumper(TRACK_WIDTH - 11, 60, content.Load<Model>("bumper_1")));
             AddObstacle(new Bumper(TRACK_WIDTH - 8, 40, content.Load<Model>("bumper_1")));
             AddObstacle(new Bumper(TRACK_WIDTH - 8, 70, content.Load<Model>("bumper_1")));
-            AddObstacle(new Bumper(TRACK_WIDTH - 14, 80, content.Load<Model>("bumper_1")));
+            AddObstacle(new Bumper(TRACK_WIDTH - 12, 75, content.Load<Model>("bumper_1")));
             AddObstacle(new Bumper(
                 TRACK_WIDTH_IN + ((TRACK_WIDTH_OUT - TRACK_WIDTH_IN) / 2), 
                 TRACK_HEIGHT_IN + 8, content.Load<Model>("bumper_1")));
             AddObstacle(new Bumper(
                 TRACK_WIDTH_IN + ((TRACK_WIDTH_OUT - TRACK_WIDTH_IN) / 2),
                 TRACK_HEIGHT_IN - 8, content.Load<Model>("bumper_1")));
-            AddObstacle(new Bumper(3, 80, content.Load<Model>("bumper_1")));
+            AddObstacle(new Bumper(5, 80, content.Load<Model>("bumper_1")));
             AddObstacle(new Bumper(10, 50, content.Load<Model>("bumper_1")));
             AddObstacle(new Bumper(7, 60, content.Load<Model>("bumper_1")));
-            var bump = new Bumper(4, 40, content.Load<Model>("bumper_1"));
+            var bump = new Bumper(5, 40, content.Load<Model>("bumper_1"));
            // bump.isHit = true;
             AddObstacle(bump);
 

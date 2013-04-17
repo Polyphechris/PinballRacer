@@ -27,15 +27,15 @@ namespace PinballRacer.Players
             base.Initialize();
 
             InitializeHumanPlayer();
-            human.color = new Vector3(1, 0.4f, 0.3f);
+            human.color = new Vector3(0.1f, 1f, 0.1f);
             npcs = new List<NpcPlayer>();
 
-            numberOfNpcs = 2;
+            numberOfNpcs = 1;
             for (int i = 0; i < numberOfNpcs; ++i)
             {
                 NpcPlayer p = new NpcPlayer();
-                if (i == 0) p.color = new Vector3(1, 0.7f, 0.75f);
-                else p.color = new Vector3(0.3f, 0.4f, 1);
+                if (i == 0) p.color = new Vector3(1, 0.75f, 0.8f);
+                else p.color = new Vector3(0.1f, 0.4f, 1);
                 p.InitializeModel(ball);
                 p.InitializePosition(new Vector3(15.0f +  i * 2, 10.0f, Player.RADIUS / 2), Vector3.Zero, Player.RADIUS, Vector3.Zero);
                 npcs.Add(p);
@@ -63,7 +63,7 @@ namespace PinballRacer.Players
         }
 
         public override void Update(GameTime gameTime)
-        {
+        {            
             base.Update(gameTime);
             human.Update(gameTime);
             foreach (Player p in npcs)
