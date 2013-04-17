@@ -4,19 +4,11 @@ Content\bumper_2.xnb
 Content\spring.xnb
 Content\flipper.xnb
 Content\ball.xnb
-<<<<<<< HEAD
-=======
 Content\Score.xnb
 Content\smoke.xnb
->>>>>>> 622511044136bbf8eaea2f60f7511f3f896c17c0
+Content\testBall.xnb
 Content\slingshotleft.xnb
 Content\slingshotright.xnb
 Content\tirestack.xnb
-Content\testBall.xnb
-<<<<<<< HEAD
-Content\Score.xnb
-Content\smoke.xnb
-=======
->>>>>>> 622511044136bbf8eaea2f60f7511f3f896c17c0
 Content\plane.xnb
 Content\MenuFont.xnb
