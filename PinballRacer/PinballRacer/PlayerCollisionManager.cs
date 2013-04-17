@@ -117,10 +117,13 @@ namespace PinballRacer
             //Recompute a path, apply bounce forces, steer
             Vector3 ImpulseDirection = p1.position - p2.position;
             ImpulseDirection.Normalize();
-
+            List<Vector4> newList = new List<Vector4>();
+            newList.Add(new Vector4(ImpulseDirection.X, ImpulseDirection.Y, 0, 0));
+            List<Vector4> newList1 = new List<Vector4>();
+            newList1.Add(new Vector4(-ImpulseDirection.X, -ImpulseDirection.Y, 0, 0));
             //Add impulses to each player
-            // p1.impulses.Add(ImpulseDirection);
-           // p2.impulses.Add(-ImpulseDirection);
+            p1.AddImpulses(newList);
+            p2.AddImpulses(newList1);
         }
     }
 }
