@@ -50,12 +50,19 @@ namespace PinballRacer.Players
         public int rank;
         public int currentWaypoint;
         public int currentLap;
+        public float progress;
+        public string name;
 
         public void InitializeModel(Model aModel)
         {
             currentWaypoint = 0;
             currentLap = 0;
             model = aModel;
+        }
+
+        public int ImpulseCount()
+        {
+            return impulses.Count;
         }
 
         public bool CheckCollision()
@@ -157,6 +164,11 @@ namespace PinballRacer.Players
         public void SetPath(Path p)
         {
             path = p;
+        }
+                
+        public Vector2 TrackToMap()
+        {
+            return Vector2.Zero;
         }
     }
 }

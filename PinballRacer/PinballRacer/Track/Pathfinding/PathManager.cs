@@ -106,7 +106,7 @@ namespace PinballRacer.Track.Pathfinding
         {
             AdjustWaypoint(player);
             //Reseting a player's path once goal is reached or collision is found
-            if (player.NullPath())
+            if (player.NullPath() && player.ImpulseCount() == 0)
             {
                 TileGraph.searchDone = false;
 

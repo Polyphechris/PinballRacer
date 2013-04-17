@@ -165,7 +165,7 @@ namespace PinballRacer.Track.Pathfinding
 
         public Node GetTopOpen()
         {
-            float value = 100000;            
+            float value = 1000000;            
             Node node = null;
 
             foreach (Node n in openList)
@@ -191,6 +191,7 @@ namespace PinballRacer.Track.Pathfinding
                     {
                         openList[(int)child.position.X, (int)child.position.Y] = child; 
                         child.previous = n;
+                        child.cost = n.cost + Vector2.Distance(n.position, child.position);
                     }
                     else
                     {

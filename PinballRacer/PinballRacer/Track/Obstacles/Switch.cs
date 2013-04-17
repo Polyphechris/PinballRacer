@@ -85,7 +85,7 @@ namespace PinballRacer.Track.Obstacles
                         lanes[lightIndex] -= new Vector4(0, 0, 0, 1);
                     }
                     //Give player a score
-                    //TO DO
+                    player.score += score;
                 }
             }
             return false;

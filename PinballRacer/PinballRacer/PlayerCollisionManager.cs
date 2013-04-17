@@ -128,8 +128,30 @@ namespace PinballRacer
             List<Vector4> newList1 = new List<Vector4>();
             newList1.Add(new Vector4(-ImpulseDirection.X, -ImpulseDirection.Y, 0, 0));
             //Add impulses to each player
+            p1.score -= 1000;
+            p2.score -= 1000;
             p1.AddImpulses(newList);
             p2.AddImpulses(newList1);
+        }
+
+
+        //List sorted by points
+        public List<Player> GetLeadersPoints()
+        {
+            NPC = (from p in NPC orderby p.score descending select p).ToList();
+            return NPC;
+        }
+
+        //List sorter by race pole position
+        public List<Player> GetLeadersRank()
+        {
+            foreach (Player p in NPC)
+            {
+                float distance = Vector2.Distance(new Vector2(p.position.X, p.position.Y), Track.Waypoints[p.currentWaypoint]);
+                p.progress = (p.currentLap * 10) + p.currentWaypoint - (distance / 100);
+            }
+            NPC = (from p in NPC orderby p.progress descending select p).ToList();
+            return NPC;
         }
     }
 }

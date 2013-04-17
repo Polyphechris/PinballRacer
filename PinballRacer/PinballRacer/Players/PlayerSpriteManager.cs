@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PinballRacer.Players
 {
@@ -15,8 +16,7 @@ namespace PinballRacer.Players
 
         int numberOfNpcs;
         bool runUpdates = false;
-
-
+        
         public PlayerSpriteManager(Game1 game)
             : base(game)
         {
@@ -29,14 +29,15 @@ namespace PinballRacer.Players
 
             InitializeHumanPlayer();
             human.color = new Vector3(0.1f, 1f, 0.1f);
+            human.name = "YOU";
             npcs = new List<NpcPlayer>();
 
-            numberOfNpcs = 1;
+            numberOfNpcs = 2;
             for (int i = 0; i < numberOfNpcs; ++i)
             {
                 NpcPlayer p = new NpcPlayer();
-                if (i == 0) p.color = new Vector3(1, 0.75f, 0.8f);
-                else p.color = new Vector3(0.1f, 0.4f, 1);
+                if (i == 0) { p.color = new Vector3(1, 0.75f, 0.8f); p.name = "Nimble Nimbus"; }
+                else { p.color = new Vector3(0.1f, 0.4f, 1); p.name = "The Gobbler"; }
                 p.InitializeModel(ball);
                 p.InitializePosition(new Vector3(47.5f, 2.5f + i, Player.RADIUS / 2), Vector3.Zero, Player.RADIUS, Vector3.Zero);
                 npcs.Add(p);
