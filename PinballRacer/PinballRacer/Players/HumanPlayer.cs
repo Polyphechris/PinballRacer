@@ -64,9 +64,7 @@ namespace PinballRacer.Players
             
             ApplyFriction(previousVelocity);
             UpdateRotation(previousRotation);
-            
-            position += velocity;
-            
+            position += velocity;            
         }
 
         private void ApplyFriction(Vector3 aPreviousVelocity)

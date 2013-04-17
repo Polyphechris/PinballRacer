@@ -21,7 +21,7 @@ namespace PinballRacer.Track.Obstacles
             position = new Vector3(x, y, 0.5f);
             scale = new Vector3(0.7f, 0.7f, 0.025f);
             isHit = false;            
-            CollisionBox = new Rectangle((int)(x - (RADIUS * 2)),(int)( y - (RADIUS * 2)), (int)RADIUS * 4, (int)RADIUS * 4);
+            CollisionBox = new Rectangle((int)(x - (RADIUS/2)),(int)( y - (RADIUS/2)), (int)RADIUS * 2, (int)RADIUS * 2);
         }
 
         public override Vector3 getResultingForce(Player p)

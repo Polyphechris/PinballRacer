@@ -44,7 +44,7 @@ namespace PinballRacer.Track.Obstacles
                 lanes[i] = new Vector4(bottomLeft.X + (i * 3) + 1.5f, bottomLeft.Y + LANE_HEIGHT / 2, -0.5f, 0);
             }
             InitializeWalls();
-            CollisionBox = new Rectangle((int)bottomLeft.X - 1, (int)bottomLeft.Y - 1, (int)LANE_WIDTH * 10 + 2, (int)LANE_HEIGHT + 2);
+            CollisionBox = new Rectangle((int)bottomLeft.X - 1, (int)bottomLeft.Y - 1, (int)LANE_WIDTH * 10 + 1, (int)LANE_HEIGHT + 2);
         }
 
         private void InitializeWalls()

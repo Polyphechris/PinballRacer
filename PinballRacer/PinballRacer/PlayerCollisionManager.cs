@@ -13,7 +13,7 @@ namespace PinballRacer
     class PlayerCollisionManager
     {
         const float DETECTION_LENGTH = 3f;
-
+        public Player human;
         public List<Player> NPC;
         RaceTrack Track;
         ContentManager content;
@@ -29,6 +29,7 @@ namespace PinballRacer
 
         public void InitializePlayers(List<NpcPlayer> players, Player human)
         {
+            this.human = human;
             foreach (NpcPlayer npc in players)
             {
                 npc.model = human.model;
@@ -41,6 +42,11 @@ namespace PinballRacer
         {
             foreach (Player p in NPC)
             {
+                if (p != human)
+                {
+                    Track.PathController.Update(time.ElapsedGameTime.Milliseconds, p);
+                }
+
                 //Check P2P collision
                 foreach (Player p2 in NPC)
                 {

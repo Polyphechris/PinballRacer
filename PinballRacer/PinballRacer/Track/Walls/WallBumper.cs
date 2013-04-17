@@ -12,7 +12,7 @@ namespace PinballRacer.Track.Obstacles
     {
         const int SCORE = 1000;
         public const float E = 1.5f;
-        public const float RADIUS = 1f;
+        public const float RADIUS = 0.55f;
 
         public WallBumper(float x, float y, Model m)
         {

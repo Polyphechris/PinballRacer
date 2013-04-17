@@ -22,8 +22,8 @@ namespace PinballRacer.Track.Walls
 
         public bool Collides(Player player)
         {
-            Matrix world1 = Matrix.CreateScale(0.5f) * Matrix.CreateTranslation(player.position);
-            Matrix world2 = Matrix.CreateScale(0.5f) * Matrix.CreateTranslation(position);
+            Matrix world1 = Matrix.CreateScale(player.scale) * Matrix.CreateTranslation(player.position);
+            Matrix world2 = Matrix.CreateScale(scale) * Matrix.CreateTranslation(position);
             //Check bounding spheres
             for (int meshIndex1 = 0; meshIndex1 < player.model.Meshes.Count; meshIndex1++)
             {
@@ -50,10 +50,10 @@ namespace PinballRacer.Track.Walls
                 float playerTop = player.Y + Player.RADIUS;
                 float playerBottom = player.Y - Player.RADIUS;
 
-                float wallRight = position.X + 0.5f;
-                float wallLeft = position.X - 0.5f;
-                float wallTop = position.Y + 0.5f;
-                float wallBottom = position.Y - 0.5f;
+                float wallRight = position.X + scale.X;
+                float wallLeft = position.X - scale.X;
+                float wallTop = position.Y + scale.Y;
+                float wallBottom = position.Y - scale.Y;
 
                 //Assume a hit until the end
                 isHit = true;

@@ -21,9 +21,7 @@ namespace PinballRacer.Track.Pathfinding
         public bool done;
 
         int currentPoint;
-        int currentBezier;
         public List<Vector3> points = new List<Vector3>();
-        List<Vector3> BezierPoints = new List<Vector3>();
 
         public Path()
         {
@@ -47,7 +45,6 @@ namespace PinballRacer.Track.Pathfinding
             done = false;
             currentPoint = 0;
             points = list;
-
         }
 
         public Vector3 getStartPoint()
@@ -106,20 +103,6 @@ namespace PinballRacer.Track.Pathfinding
             dir.Normalize();
 
             return dir;
-        }
-
-        private Vector3 interpolate(Vector3 p1, Vector3 p2, float t)
-        {
-            return p1 + t * (p2 - p1);
-        }
-        private Vector3 BezierApproxPoint(float t)
-        {
-            Vector3 q0 = interpolate(BezierPoints[currentBezier], BezierPoints[currentBezier + 1], t);
-            Vector3 q1 = interpolate(BezierPoints[currentBezier + 1], BezierPoints[currentBezier + 2], t);
-            Vector3 q2 = interpolate(BezierPoints[currentBezier + 2], BezierPoints[currentBezier + 3], t);
-            Vector3 r0 = interpolate(q0, q1, t);
-            Vector3 r1 = interpolate(q1, q2, t);
-            return interpolate(r0, r1, t);
         }
 
         public Vector3 getNextPoint0(float time)

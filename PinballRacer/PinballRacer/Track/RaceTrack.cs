@@ -21,6 +21,7 @@ namespace PinballRacer.Track
         public const int TRACK_HEIGHT_IN = 30;
         public const int TRACK_WIDTH_OUT = 32;
         public const int TRACK_HEIGHT_OUT = 80;
+        public const int WAYPOINT_RADIUS = 15;
 
         ContentManager content;
         Model spring;
@@ -30,8 +31,9 @@ namespace PinballRacer.Track
         public int[,] tiles;
         List<Wall> walls;
         List<Floor> floors;
+        public List<Vector2> Waypoints;
 
-        PathManager PathController;
+        public PathManager PathController;
 
         public float[,] TerrainMap;
         public enum squareStates { EMPTY = 0, WALL, PLAYER1, PLAYER2, OBSTACLE, GOAL1, LAST };
@@ -52,7 +54,13 @@ namespace PinballRacer.Track
             spring = content.Load<Model>("spring");
             springLevel = 0.5f;
 
-            PathController = new PathManager(obstacles, tiles);
+            Waypoints = new List<Vector2>();
+            Waypoints.Add(new Vector2(40, 90));
+            Waypoints.Add(new Vector2(TRACK_WIDTH_IN / 2, 90));
+            Waypoints.Add(new Vector2(TRACK_WIDTH_IN / 2, TRACK_HEIGHT_IN / 2));
+            Waypoints.Add(new Vector2(40, TRACK_HEIGHT_IN / 2));
+
+            PathController = new PathManager(obstacles, tiles, Waypoints);
         }
 
         private void InitializeFloor()

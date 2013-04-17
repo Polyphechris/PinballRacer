@@ -41,13 +41,14 @@ namespace PinballRacer.Players
         //  Model attributes
         public Model model { get; set; }        
         public Vector3 color { get; set; }
-        protected float scale { get; set; }
+        public float scale { get; protected set; }
         protected Vector3 rotation;        
 
         protected List<Vector4> impulses = new List<Vector4>();
         private Path path;
         public int score;
         public int rank;
+        public int currentWaypoint;
 
         public void InitializeModel(Model aModel)
         {
@@ -76,6 +77,18 @@ namespace PinballRacer.Players
 
         public virtual void Update(GameTime gameTime)
         {
+            Console.WriteLine(currentWaypoint);
+            if (path != null)
+            {
+                //Gets the desired direction
+                path.getDirection(gameTime.ElapsedGameTime.Milliseconds, position);
+
+                if (path.checkEnd())
+                {
+                    path = null;
+                }
+            }
+
             acceleration = Vector3.Zero;
             for (int i = 0; i < impulses.Count; ++i)
             {

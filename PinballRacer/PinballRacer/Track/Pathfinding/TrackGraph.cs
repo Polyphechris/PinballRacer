@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using PinballRacer.Players;
 
 namespace PinballRacer.Track.Pathfinding
 {
@@ -89,7 +90,7 @@ namespace PinballRacer.Track.Pathfinding
             return newNode;
         }
         
-        public void ComputeHeuristics()
+        public void ComputeHeuristics(Player p)
         {
             List<Node> queue = new List<Node>();
             queue.Add(Start);
@@ -198,6 +199,7 @@ namespace PinballRacer.Track.Pathfinding
             }
             points.Add(new Vector3(current.position.X, current.position.Y, 0.5f));
             points.Reverse();
+            //Add waypoint to the end of the path
             path.InitializePath(points);
             return path;
         }
@@ -322,55 +324,8 @@ namespace PinballRacer.Track.Pathfinding
             n13.Link(n22);
             n13.Link(n11);
             n51.Link(n43);
-            //Node n71 = AddNode(n61, 7.5f, 1.5f);
             //Dorrway UP
             Node n35 = AddNode(n24, 3, 5);
-            //n51.Link(n35);
-
-            //Doorway RIGHT
-            Node n55 = AddNode(n35, 5, 5);
-            n51.Link(n55);
-            n55.Link(n43);
-            n35.Link(n15);
-            Node n105 = AddNode(n55, 10, 5);
-            Node n38 = AddNode(n35, 3, 8);
-
-            //CROSS ROAD LEFT
-            Node n39 = AddNode(n38, 3, 9);
-            Node n310 = AddNode(n39, 3, 10);
-            Node n313 = AddNode(n310, 3, 13);
-            Node n19 = AddNode(n39, 1, 9);
-            Node n49 = AddNode(n39, 4, 9);
-            Node n89 = AddNode(n49, 8, 9);
-
-            //Doorway LEFT
-            Node n99 = AddNode(n89, 9, 9);
-
-            //CROSS ROAD RIGHT
-            Node n115 = AddNode(n105, 11, 5);
-            Node n135 = AddNode(n115, 13, 5);
-            Node n116 = AddNode(n115, 11, 6);
-            Node n114 = AddNode(n115, 11, 4);
-            Node n111 = AddNode(n114, 11, 1);
-
-            //Doorway DOWN
-            Node n119 = AddNode(n116, 11, 9);
-            n119.Link(n99);
-
-            //ROOM 2
-            Node n1011 = AddNode(n119, 10, 11.5f);
-            Node n1211 = AddNode(n119, 12, 11.5f);
-            n99.Link(n1011);
-            Node n913 = AddNode(n1011, 9, 13);
-            Node n813 = AddNode(n913, 8, 13);
-            Node n1113 = AddNode(n1011, 11, 13);
-            End.Link(n813);
-
-            Node n1313 = AddNode(n1211, 13, 13);
-            n1313.Link(n1211);
-            Node n139 = AddNode(n1211, 13, 9);
-            n139.Link(n99);
-            n139.Link(n1313);
         }
 
         public void SetStart(Vector2 position)
@@ -439,7 +394,7 @@ namespace PinballRacer.Track.Pathfinding
                     toAdd.AddRange(head.children);
                     foreach (Node child in head.children)
                     {
-                        DrawLines(view, projection, head.position, child.position);
+                      // DrawLines(view, projection, head.position, child.position);
                     }
                     foreach (ModelMesh mesh in node.Meshes)
                     {
@@ -465,29 +420,6 @@ namespace PinballRacer.Track.Pathfinding
             {
                 n.visited = false;
             }
-        }
-
-        private void DrawLines(Matrix view, Matrix projection, Vector2 start, Vector2 end)
-        {
-            VertexPositionColor[] primitiveList = new VertexPositionColor[2];
-            primitiveList[0] = new VertexPositionColor(new Vector3(start.X, start.Y, 0.07f), Color.Black);
-            primitiveList[1] = new VertexPositionColor(new Vector3(end.X, end.Y, 0.07f), Color.Black);
-            Game1.m_basicEffect.CurrentTechnique.Passes[0].Apply();
-            //Draws Lines Between Vertices
-            Game1.graphics.GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(
-                PrimitiveType.LineList,
-                primitiveList, 0,
-                1);
-
-            VertexPositionColor[] primitiveList1 = new VertexPositionColor[2];
-            primitiveList[0] = new VertexPositionColor(new Vector3(start.X, start.Y, 0.09f), Color.Black);
-            primitiveList[1] = new VertexPositionColor(new Vector3(end.X, end.Y, 0.09f), Color.Black);
-            Game1.m_basicEffect.CurrentTechnique.Passes[0].Apply();
-            //Draws Lines Between Vertices
-            Game1.graphics.GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(
-                PrimitiveType.LineList,
-                primitiveList, 0,
-                1);
         }
     }
 }

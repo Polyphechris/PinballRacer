@@ -8,51 +8,71 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace PinballRacer.Track.Pathfinding
 {
-    class PathManager
+    public class PathManager
     {
         public const int HEIGHT = 15;
         public const int WIDTH = 15;
         public Dictionary<int, Obstacle> obstacles;
         public int[,] tiles;
+        public List<Vector2> Waypoints;        
         
         TrackGraph TileGraph;
         TrackGraph NodeGraph;
         Random random;
 
-        public PathManager(Dictionary<int, Obstacle> o, int[,] t)
+        public PathManager(Dictionary<int, Obstacle> o, int[,] t, List<Vector2> w)
         {
+            Waypoints = w;
             obstacles = o;
             tiles = t;
             BuildTileGraph();
+        }
+
+        private void SetWaypoint(Player p)
+        {
+            int quadNum;
+
+            if (p.position.X > RaceTrack.TRACK_WIDTH_OUT &&
+                p.position.Y < RaceTrack.TRACK_HEIGHT_OUT)
+            {
+                quadNum = 0;
+            }
+            else if (p.position.X > RaceTrack.TRACK_WIDTH_IN &&
+                     p.position.Y >= RaceTrack.TRACK_HEIGHT_OUT)
+            {
+                quadNum = 1;
+            }
+            else if (p.position.X <= RaceTrack.TRACK_WIDTH_IN &&
+                     p.position.Y > RaceTrack.TRACK_HEIGHT_IN)
+            {
+                quadNum = 2;
+            }
+            else
+            {
+                quadNum = 3;
+            }
+
+            p.currentWaypoint = quadNum;
         }
 
         public void Update(float time, Player player)
         {
             //Reseting a player's path once goal is reached or collision is found
             if (player.NullPath())
-            {
+            {                
                 TileGraph.searchDone = false;
 
                 TileGraph.SetStart(new Vector2(player.position.X, player.position.Y));
-                int randX = (int)TileGraph.Start.position.X;
-                int randY = (int)TileGraph.Start.position.Y;
-                TileGraph.ResetGoal(new Vector2(randX, randY));
-
-                while (TileGraph.End.position.X == TileGraph.Start.position.X &&
-                    TileGraph.End.position.Y == TileGraph.Start.position.Y)
-                {
-                    //Reaquire a new goal
-                    randX = random.Next(0, WIDTH - 1);
-                    randY = random.Next(0, HEIGHT - 1);
-                    TileGraph.ResetGoal(new Vector2(randX, randY));
-                }
-
+                //Get the correct goal(S)
+                //Aquire the waypoint
+                SetWaypoint(player);
+                TileGraph.ResetGoal(Waypoints[player.currentWaypoint]);
+                
                 //Do the A*
-                TileGraph.ComputeHeuristics();
+                TileGraph.ComputeHeuristics(player);
                 Path path = null;
-
-                    path = TileGraph.AStarPath();
-                   // path = NodeGraph.AStarPath();
+              //  path = TileGraph.AStarPath();
+                // path = NodeGraph.AStarPath();
 
                 if (path != null)
                 {
@@ -68,7 +88,7 @@ namespace PinballRacer.Track.Pathfinding
 
         public void Draw(Matrix view, Matrix projection, Model node, Model edge)
         {
-            //TileGraph.Draw(view, projection, node, edge);
+           // TileGraph.Draw(view, projection, node, edge);
         }
 
         private void BuildTileGraph()
