@@ -25,6 +25,7 @@ namespace PinballRacer.Track
 
         ContentManager content;
         Model spring;
+        Model floor;
         public float springLevel;
 
         public Dictionary<int, Obstacle> obstacles;
@@ -52,6 +53,7 @@ namespace PinballRacer.Track
             InitializeOutterWalls();
             InitializeInnerWalls();
             spring = content.Load<Model>("spring");
+            floor = content.Load<Model>("plane");
             springLevel = 0.5f;
 
             Waypoints = new List<Vector2>();
@@ -72,7 +74,7 @@ namespace PinballRacer.Track
             {
                 for (int j = 0; j < TRACK_HEIGHT; ++j)
                 {
-                    floors.Add(new Floor(i, j, m));
+                 //   floors.Add(new Floor(i, j, m));
                 }
             }
         }
@@ -273,6 +275,7 @@ namespace PinballRacer.Track
         public void Draw(Matrix view, Matrix projection)
         {
             PathController.Draw(view, projection, content.Load<Model>("ball"), content.Load<Model>("cube"));
+            DrawFloor();
             foreach (Floor f in floors)
             {
                 f.draw(view, projection);
@@ -288,6 +291,28 @@ namespace PinballRacer.Track
                 o.draw(view, projection);
             }
             DrawSpring();
+        }
+
+        public void DrawFloor()
+        {
+            foreach (ModelMesh mesh in floor.Meshes)
+            {
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+                    effect.LightingEnabled = true;
+                    effect.EnableDefaultLighting();
+                    effect.DirectionalLight0.Enabled = true;
+                    effect.DirectionalLight0.Direction = new Vector3(0, 0, -1);
+                    effect.AmbientLightColor = new Vector3(0.55f);
+                    effect.DirectionalLight0.DiffuseColor = new Vector3(1, 1, 1);// Shinnyness/reflexive
+                    effect.World = Matrix.CreateScale(new Vector3(TRACK_WIDTH/2,TRACK_HEIGHT/2,1)) *
+                        Matrix.CreateTranslation(new Vector3(TRACK_WIDTH/2, TRACK_HEIGHT/2, 0));
+                    effect.View = Game1.view;
+                    effect.Projection = Game1.projection;
+                    //effect.Alpha = 0.8f;
+                }
+                mesh.Draw();
+            }
         }
 
         public void DrawSpring()

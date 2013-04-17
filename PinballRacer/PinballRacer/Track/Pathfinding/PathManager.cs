@@ -10,8 +10,8 @@ namespace PinballRacer.Track.Pathfinding
 {
     public class PathManager
     {
-        public const int HEIGHT = 15;
-        public const int WIDTH = 15;
+        public const int WAYPOINT_RADIUS = 7;
+        const float STEP_TIME = 200f;
         public Dictionary<int, Obstacle> obstacles;
         public int[,] tiles;
         public List<Vector2> Waypoints;        
@@ -19,9 +19,12 @@ namespace PinballRacer.Track.Pathfinding
         TrackGraph TileGraph;
         TrackGraph NodeGraph;
         Random random;
-
+        public bool aStar;
+        float timer;
         public PathManager(Dictionary<int, Obstacle> o, int[,] t, List<Vector2> w)
         {
+            timer = 0;
+            aStar = true;
             Waypoints = w;
             obstacles = o;
             tiles = t;
@@ -55,11 +58,21 @@ namespace PinballRacer.Track.Pathfinding
             p.currentWaypoint = quadNum;
         }
 
+        private void AdjustWaypoint(Player player)
+        {
+            float distance = Vector2.Distance(new Vector2(player.position.X, player.position.Y), Waypoints[player.currentWaypoint]);
+            if (distance < WAYPOINT_RADIUS)
+            {
+                player.SetPath(null);
+            }
+        }
+
         public void Update(float time, Player player)
         {
+            AdjustWaypoint(player);
             //Reseting a player's path once goal is reached or collision is found
             if (player.NullPath())
-            {                
+            {
                 TileGraph.searchDone = false;
 
                 TileGraph.SetStart(new Vector2(player.position.X, player.position.Y));
@@ -67,33 +80,36 @@ namespace PinballRacer.Track.Pathfinding
                 //Aquire the waypoint
                 SetWaypoint(player);
                 TileGraph.ResetGoal(Waypoints[player.currentWaypoint]);
-                
+
                 //Do the A*
                 TileGraph.ComputeHeuristics(player);
                 Path path = null;
-              //  path = TileGraph.AStarPath();
+                path = TileGraph.AStarPath();
                 // path = NodeGraph.AStarPath();
 
                 if (path != null)
                 {
-                   // player.done = false;
-                   // player.aStar = false;
+                    // player.done = false;
+                    // player.aStar = false;
                     if (path.points.Count > 1)
                         player.SetPath(path);
                     //else
-                       // player.done = true;
+                    // player.done = true;
                 }
             }
         }
 
         public void Draw(Matrix view, Matrix projection, Model node, Model edge)
         {
-           // TileGraph.Draw(view, projection, node, edge);
+            TileGraph.Draw(view, projection, node, edge);
         }
 
         private void BuildTileGraph()
         {
-            TileGraph = new TrackGraph(new Vector2(1, 1), new Vector2(1, 1), tiles.GetLength(0), (int)tiles.GetLength(1));            
+            TileGraph = new TrackGraph(new Vector2(1, 1), new Vector2(40, 15), tiles.GetLength(0), (int)tiles.GetLength(1));
+
+            TileGraph.SetStart(new Vector2(1, 1));
+            TileGraph.ResetGoal(Waypoints[0]);
             TileGraph.InitializeGrid(tiles);            
            // TileGraph.SetStart(new Vector2(new Vector2(0, 0), new Vector2(0,0));
         }

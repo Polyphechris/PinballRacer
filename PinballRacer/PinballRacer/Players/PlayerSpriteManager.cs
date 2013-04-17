@@ -30,7 +30,7 @@ namespace PinballRacer.Players
 
             npcs = new List<NpcPlayer>();
 
-            numberOfNpcs = 4;
+            numberOfNpcs = 2;
             for (int i = 0; i < numberOfNpcs; ++i)
             {
                 NpcPlayer p = new NpcPlayer();
@@ -64,12 +64,20 @@ namespace PinballRacer.Players
         {
             base.Update(gameTime);
             human.Update(gameTime);
+            foreach (Player p in npcs)
+            {
+                p.Update(gameTime);
+            }
         }
 
         public override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
             human.Draw(Game1.view, Game1.projection);
+            foreach (Player p in npcs)
+            {
+                p.Draw(Game1.view, Game1.projection);
+            }
         }
 
         public Player GetHumanPlayer()

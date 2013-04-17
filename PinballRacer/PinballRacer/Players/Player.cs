@@ -81,7 +81,7 @@ namespace PinballRacer.Players
             if (path != null)
             {
                 //Gets the desired direction
-                path.getDirection(gameTime.ElapsedGameTime.Milliseconds, position);
+                velocity = MAX_SPEED * path.getDirection(gameTime.ElapsedGameTime.Milliseconds, position);
 
                 if (path.checkEnd())
                 {

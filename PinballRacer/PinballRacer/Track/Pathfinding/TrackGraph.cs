@@ -69,16 +69,17 @@ namespace PinballRacer.Track.Pathfinding
             width = w;
             height = h;
             Start = new Node(start);
-            End = new Node(end);
-            End.isGoal = true;
+          //  End = new Node(end);
+          //  End.isGoal = true;
             allNodes = new List<Node>();
             allNodes.Add(Start);
-            allNodes.Add(End);
+           // allNodes.Add(End);
             searchDone = false;
 
             ResetLists();
         }
 
+        //Creates a new node with n as parent at x,y
         public Node AddNode(Node n, float x, float y)
         {
             Node newNode = new Node(new Vector2(x, y));
@@ -86,25 +87,39 @@ namespace PinballRacer.Track.Pathfinding
             allNodes.Add(newNode);
             newNode.children.Add(n);
             newNode.heuristic = Vector2.Distance(new Vector2(x, y), End.position);
-            if (x == End.position.X && y == End.position.Y) newNode.isGoal = true;
+          //  if (x == End.position.X && y == End.position.Y) newNode.isGoal = true;
             return newNode;
         }
         
         public void ComputeHeuristics(Player p)
         {
-            List<Node> queue = new List<Node>();
-            queue.Add(Start);
-            while (queue.Count != 0)
+
+            foreach (Node n in allNodes)
             {
-                Node current = queue.First();
-                if (current.visited == false)
-                {
-                    current.heuristic = Vector2.Distance(current.position, End.position);
-                    queue.AddRange(current.children);
-                    current.visited = true;
-                }
-                queue.Remove(current);
-            }
+                n.visited = false; n.open = false;
+                n.heuristic = Vector2.Distance(n.position, End.position);
+            } 
+            //List<Node> queue = new List<Node>();
+            //foreach (Node n in allNodes)
+            //{
+            //    n.visited = false;
+            //}
+            //queue.Add(Start);
+            //while (queue.Count != 0)
+            //{
+            //    Node current = queue.First();
+            //    if (current.visited == false)
+            //    {
+            //        current.heuristic = Vector2.Distance(current.position, End.position);
+            //        queue.AddRange(current.children);
+            //        current.visited = true;
+            //    }
+            //    queue.Remove(current);
+            //}
+            //foreach (Node n in allNodes)
+            //{
+            //    n.visited = false;
+            //}
         }
 
         private void ResetLists()
@@ -120,6 +135,7 @@ namespace PinballRacer.Track.Pathfinding
         public Path AStarPath()
         {
             Path bestPath = null;
+            Node previous = null;
             while (!searchDone)
             {
                 Node current = GetTopOpen();
@@ -141,6 +157,7 @@ namespace PinballRacer.Track.Pathfinding
                 // closedList.Add(current);
                 openList[(int)current.position.X, (int)current.position.Y] = null;
                 closedList[(int)current.position.X, (int)current.position.Y] = current;
+                previous = current;
                 //openList.RemoveAll(Node => Node.position.Equals(current.position));
             }
             return bestPath;
@@ -259,7 +276,7 @@ namespace PinballRacer.Track.Pathfinding
 
             Node[,] nodes = new Node[width, height];
             nodes[(int)Start.position.X, (int)Start.position.Y] = Start;
-            nodes[(int)End.position.X, (int)End.position.Y] = End;
+           // nodes[(int)End.position.X, (int)End.position.Y] = End;
 
             List<Node> toAdd = new List<Node>();
             toAdd.Add(Start);
@@ -271,17 +288,13 @@ namespace PinballRacer.Track.Pathfinding
                 {
                     if (nodes[(int)n.position.X, (int)n.position.Y] == null)
                     {
-                        nodes[(int)n.position.X, (int)n.position.Y] = n;
-                        toAdd.Add(AddNode(head, (int)n.position.X, (int)n.position.Y));
+                        Node newNode = AddNode(head, (int)n.position.X, (int)n.position.Y);
+                        nodes[(int)n.position.X, (int)n.position.Y] = newNode;
+                        toAdd.Add(newNode);
                     }
                     else
                     {
-                        if (n.position.X == End.position.X && n.position.Y == End.position.Y)
-                        {
-
-                        }
                         head.Link(nodes[(int)n.position.X, (int)n.position.Y]);
-                        //head.children.Add(n);
                     }
                 }
                 toAdd.Remove(head);
@@ -298,10 +311,13 @@ namespace PinballRacer.Track.Pathfinding
 
                     if (!(x == i && j == y))
                     {
-                        if (board[i, j] == 0)
+                        if(i < width && i > 0 && j < height && j > 0)
                         {
+                        //if (board[i, j] == 0)
+                        //{
                             Node newn = new Node(new Vector2(i, j));
                             returnList.Add(newn);
+                       // }
                         }
                     }
                 }
@@ -351,7 +367,7 @@ namespace PinballRacer.Track.Pathfinding
 
         public void ResetGoal(Vector2 position)
         {
-            End.isGoal = false;
+            if(End != null) End.isGoal = false;
             float lowestDistance = float.MaxValue;
             int count = 0;
             int target = 0;
@@ -394,7 +410,7 @@ namespace PinballRacer.Track.Pathfinding
                     toAdd.AddRange(head.children);
                     foreach (Node child in head.children)
                     {
-                      // DrawLines(view, projection, head.position, child.position);
+                        //DrawLines(view, projection, head.position, child.position);
                     }
                     foreach (ModelMesh mesh in node.Meshes)
                     {
