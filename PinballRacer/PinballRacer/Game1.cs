@@ -38,6 +38,11 @@ namespace PinballRacer
         float angleY = 0;
         float zoom = 0;
 
+        // Spring timer
+        float timer = 0;
+        float timeToShoot = 5000;
+        float timeToCloseLoader = 6000;
+
         public Game1()
         {
             //  Initialize drawable game components
@@ -130,11 +135,13 @@ namespace PinballRacer
                 cameraMotion(keyboardState);
                 trackManager.track.Update(gameTime.ElapsedGameTime.Milliseconds);
                 collisionManager.update(gameTime);
+ 
+                // Update camera
+                Player player = playerManager.GetHumanPlayer();
+                UpdatePlayerCamera(player);
             }
 
-            // Update camera
-            Player player = playerManager.GetHumanPlayer();
-            UpdatePlayerCamera(player);
+            UpdateLoader(gameTime);
 
             base.Update(gameTime);
         }
@@ -240,7 +247,7 @@ namespace PinballRacer
             //accepts all th input and reacts to it
             if (keyboardState.IsKeyDown(Keys.Space))
             {
-                trackManager.track.springLevel -= 0.01f;
+                //trackManager.track.springLevel -= 0.01f;
             }
             if (keyboardState.IsKeyDown(Keys.D1))
             {
@@ -433,6 +440,47 @@ namespace PinballRacer
             if (keyboardState.IsKeyUp(Keys.Space))
             {
                 pressed = false;
+            }
+        }
+
+        private void UpdateLoader(GameTime gameTime)
+        {
+            if (!trackManager.track.springShot || !trackManager.track.closeLoader)
+            {
+                if (!trackManager.track.springShot)
+                {
+                    timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                    trackManager.track.springLevel += 0.0001f;
+                    playerManager.GetHumanPlayer().velocity = new Vector3(0, 0.001f, 0);
+                    foreach (NpcPlayer n in playerManager.npcs)
+                    {
+                        n.velocity = new Vector3(0, 0.001f, 0);
+                    }
+
+                    if (timer > timeToShoot)
+                    {
+                        trackManager.track.springLevel = trackManager.track.maxSpringLevel;
+                        playerManager.GetHumanPlayer().velocity += new Vector3(0, trackManager.track.maxSpringLevel * 5, 0);
+                        foreach (NpcPlayer n in playerManager.npcs)
+                        {
+                            n.velocity += new Vector3(0, trackManager.track.maxSpringLevel * 5, 0);
+                        }
+                        trackManager.track.springShot = true;
+                    }
+                }
+                else
+                {
+                    if (trackManager.track.springLevel > trackManager.track.stableSpringLevel)
+                    {
+                        trackManager.track.springLevel -= 0.05f;
+                    }
+
+                    timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                    if (timer > timeToCloseLoader)
+                    {
+                        trackManager.track.closeLoader = true;
+                    }
+                }
             }
         }
 
