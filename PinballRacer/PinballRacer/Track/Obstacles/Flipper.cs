@@ -62,9 +62,9 @@ namespace PinballRacer.Track.Obstacles
             velocities = new Vector3[5];
             sphereRadii[0] = 1.15f;
             sphereRadii[1] = 1.05f;
-            sphereRadii[2] = 0.95f;
-            sphereRadii[3] = 0.875f;
-            sphereRadii[4] = 0.60f;
+            sphereRadii[2] = 0.85f;
+            sphereRadii[3] = 0.75f;
+            sphereRadii[4] = 0.50f;
 
             for (int i = 0; i < spherePositions.Length; ++i)
             {
@@ -87,9 +87,6 @@ namespace PinballRacer.Track.Obstacles
         public bool Collides(Player player, Matrix sphereWorld)
         {
             Matrix playerWorld = Matrix.CreateScale(player.scale) * Matrix.CreateTranslation(player.position);
-            
-
-            Vector3 test = sphereWorld.Translation;
             
             //Check bounding spheres
             for (int meshIndex1 = 0; meshIndex1 < player.model.Meshes.Count; meshIndex1++)
@@ -122,33 +119,32 @@ namespace PinballRacer.Track.Obstacles
                 if (Collides(p, sphereWorld))
                 {
                     Vector3 sphereWorldPosition = sphereWorld.Translation;
-                    
+                    Vector3 direction = p.position - sphereWorldPosition;
+                    direction.Z = 0.0f;                    
+
+                    Vector3 flipperVelocity = w * (-direction) / 100;//angular velocity * distance from anchor
+                    direction.Normalize();
+
                     if (state == states.FIRING)
                     {
-                        if (p.position.Y > sphereWorldPosition.Y)
+                        if (direction.Y > 0.0f)
                         {
-                            p.velocity += velocities[i];
+                            p.velocity += velocities[i] * direction;
                         }
                         else
                         {
-                            p.velocity = -p.velocity;
+                            p.velocity = -p.velocity + Vector3.Multiply(flipperVelocity, direction);
                         }
                     }
                     else if (state == states.RELOAD)
                     {
-                        if (p.position.Y > sphereWorldPosition.Y)
-                        {
-                            p.velocity = -p.velocity;
-                        }
-                        else
-                        {
-
-                        }
+                        p.velocity = direction * 0.15f;                        
                     }
                     else if (state == states.IDLE)
                     {
-                        p.velocity = -p.velocity;
+                        p.velocity = direction * 0.15f;
                     }
+
                     break;
                 }
             }
@@ -210,7 +206,6 @@ namespace PinballRacer.Track.Obstacles
                 mesh.Draw();
             }
 
-            
             //for (int i = 0; i < sphereRadii.Length; i++)
             //{
             //    DrawSphereCollisions(view, projection, sphereRadii[i], spherePositions[i]);
