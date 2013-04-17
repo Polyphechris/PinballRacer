@@ -46,7 +46,9 @@ namespace PinballRacer
         // Spring timer
         float timer = 0;
         float timeToShoot = 5000;
-        float timeToCloseLoader = 6000;        
+        float timeToCloseLoader = 6000;
+        public static bool launched = false;
+        public static bool closeLoader = false;
 
         public Game1()
         {
@@ -525,12 +527,12 @@ namespace PinballRacer
 
         private void UpdateLoader(GameTime gameTime)
         {
-            if (!trackManager.track.springShot || !trackManager.track.closeLoader)
+            if ((!trackManager.track.springShot || !closeLoader) && gameState == states.play)
             {
                 if (!trackManager.track.springShot)
                 {
                     timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-                    trackManager.track.springLevel += 0.0001f;
+                    //trackManager.track.springLevel += 0.0001f;
                     playerManager.GetHumanPlayer().velocity = new Vector3(0, 0.001f, 0);
                     foreach (NpcPlayer n in playerManager.npcs)
                     {
@@ -546,19 +548,21 @@ namespace PinballRacer
                             n.velocity += new Vector3(0, trackManager.track.maxSpringLevel * 5, 0);
                         }
                         trackManager.track.springShot = true;
+                        launched = true;
                     }
                 }
                 else
                 {
                     if (trackManager.track.springLevel > trackManager.track.stableSpringLevel)
                     {
-                        trackManager.track.springLevel -= 0.05f;
+                        trackManager.track.springLevel -= 0.05f;                        
                     }
 
                     timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+
                     if (timer > timeToCloseLoader)
                     {
-                        trackManager.track.closeLoader = true;
+                        closeLoader = true;
                     }
                 }
             }
