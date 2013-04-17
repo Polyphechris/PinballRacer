@@ -4,6 +4,11 @@ Content\bumper_2.xnb
 Content\spring.xnb
 Content\flipper.xnb
 Content\ball.xnb
+<<<<<<< HEAD
+=======
+Content\Score.xnb
+Content\smoke.xnb
+>>>>>>> 0888434d2a17a98b1b7f5afd7005953b5d24828e
 Content\slingshotleft.xnb
 Content\slingshotright.xnb
 Content\tirestack.xnb
