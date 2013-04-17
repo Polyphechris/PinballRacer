@@ -31,6 +31,7 @@ namespace PinballRacer.Track.Obstacles
 
         float[] sphereRadii;
         float[] spherePositions;
+        Vector3[] velocities;
 
         public Flipper(float x, float y, Model m, float a, bool i)
         {
@@ -58,7 +59,7 @@ namespace PinballRacer.Track.Obstacles
         {
             sphereRadii = new float[5];
             spherePositions = new float[5];
-
+            velocities = new Vector3[5];
             sphereRadii[0] = 1.15f;
             sphereRadii[1] = 1.05f;
             sphereRadii[2] = 0.95f;
@@ -75,6 +76,12 @@ namespace PinballRacer.Track.Obstacles
                     positions += 1;
                 }
             }
+
+            velocities[0] = new Vector3(0.0f, 0.25f, 0.0f);
+            velocities[1] = new Vector3(0.0f, 0.50f, 0.0f); 
+            velocities[2] = new Vector3(0.0f, 0.75f, 0.0f);
+            velocities[3] = new Vector3(0.0f, 1.0f, 0.0f);
+            velocities[4] = new Vector3(0.0f, 1.25f, 0.0f);
         }
 
         public bool Collides(Player player, int sphere)
@@ -84,6 +91,8 @@ namespace PinballRacer.Track.Obstacles
                 Matrix.CreateTranslation(new Vector3(spherePositions[sphere], 0.0f, 0.0f)) * 
                 Matrix.CreateRotationZ(angle) * 
                 Matrix.CreateTranslation(position);
+
+            Vector3 test = sphereWorld.Translation;
             
             //Check bounding spheres
             for (int meshIndex1 = 0; meshIndex1 < player.model.Meshes.Count; meshIndex1++)
@@ -110,7 +119,18 @@ namespace PinballRacer.Track.Obstacles
             {
                 if (Collides(p, i))
                 {
-                    p.velocity = -p.velocity;
+                    if (state == states.FIRING)
+                    {
+                        p.velocity += velocities[i];
+                    }
+                    else if (state == states.RELOAD)
+                    {
+
+                    }
+                    else if (state == states.IDLE)
+                    {
+
+                    }
                     break;
                 }
             }
