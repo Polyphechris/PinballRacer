@@ -90,6 +90,10 @@ namespace PinballRacer
                     if (!i.Equals(Vector3.Zero))
                     {
                         p.SetPath(null);
+
+                        // Before applying impulses, resolve collision
+                        p.position = new Vector3(p.previousPosition.X, p.previousPosition.Y, p.previousPosition.Z);
+
                         Impulses.Add(new Vector4(i.X, i.Y, i.Z, 0));
                     }
                 }
@@ -97,7 +101,6 @@ namespace PinballRacer
 
                 p.Update(time);
             }    
-
         }
 
         public void draw(Matrix view, Matrix projection)

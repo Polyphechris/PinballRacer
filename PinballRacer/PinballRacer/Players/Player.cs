@@ -30,6 +30,7 @@ namespace PinballRacer.Players
 
         //  Movement attributes
         public Vector3 position { get; set; }
+        public Vector3 previousPosition { get; set; }
         protected Vector3 direction { get; set; }
         public Vector3 velocity;
         protected Vector3 acceleration { get; set; }        
