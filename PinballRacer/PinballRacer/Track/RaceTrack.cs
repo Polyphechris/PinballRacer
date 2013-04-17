@@ -94,10 +94,15 @@ namespace PinballRacer.Track
                 {
                     if (j == TRACK_HEIGHT_IN || i == TRACK_WIDTH_IN || j == TRACK_HEIGHT_OUT - 1 || i == TRACK_WIDTH_OUT - 1)
                     {
-                        AddWallBumper(i, j);
+                        if (!(j == TRACK_HEIGHT_OUT - 1 && i >= TRACK_WIDTH_IN + 1 && i <= TRACK_WIDTH_IN + 5)
+                            && !(i == TRACK_WIDTH_IN && j <= TRACK_HEIGHT_OUT - 8 && j >= TRACK_HEIGHT_OUT - 14))
+                        {
+                            AddWallBumper(i, j);
+                        }
                     }
                 }
             }
+
             for (int k = 1; k < TRACK_HEIGHT_OUT-5; ++k)
             {
                 AddWall(TRACK_WIDTH - 4, k);                
@@ -110,6 +115,70 @@ namespace PinballRacer.Track
             {
                 AddWall(TRACK_WIDTH - 9, r);
             }
+
+            int limit = 10;
+            int limit2 = 15;
+            int limit3 = 6;
+            int rowCounter = TRACK_HEIGHT_OUT;
+
+            // Diagonal line on the right of the inner track
+            for (int i = TRACK_WIDTH_OUT; i < TRACK_WIDTH_OUT + limit; ++i)
+            {
+                if (rowCounter >= 0 || i >= 0 || rowCounter <= TRACK_HEIGHT - 1 || i <= TRACK_WIDTH - 1)
+                {
+                    AddWallBumper(i, rowCounter);
+                    rowCounter += 1;
+                }
+            }
+
+            // Vertical line extending the left side of the inner track
+            for (int j = TRACK_HEIGHT_OUT; j < TRACK_HEIGHT - 1; ++j)
+            {
+                if ((TRACK_WIDTH_IN >= 0 || j >= 0 || TRACK_WIDTH_IN <= TRACK_WIDTH - 1 || j <= TRACK_HEIGHT - 1))
+                {
+                   AddWallBumper(TRACK_WIDTH_IN, j);
+                }
+            }
+
+            limit = 8;
+
+            // Vertical line on the left of the inner track
+            for (int j = TRACK_HEIGHT_OUT - limit2; j < TRACK_HEIGHT - limit; ++j)
+            {
+                if ((TRACK_WIDTH_IN >= 0 || j >= 0 || TRACK_WIDTH_IN <= TRACK_WIDTH - 1 || j <= TRACK_HEIGHT - 1))
+                {
+                    AddWallBumper(TRACK_WIDTH_IN - limit3, j);
+                }
+            }
+
+            // Horizontal line on the inside of the inner track 
+            for (int i = TRACK_WIDTH_IN; i <= TRACK_WIDTH_OUT - limit - 1; ++i)
+            {
+                if (TRACK_HEIGHT_OUT - limit >= 0 || i >= 0 || TRACK_HEIGHT_OUT - limit <= TRACK_HEIGHT - 1 || i <= TRACK_WIDTH_OUT - 1)
+                {
+                    AddWallBumper(i, TRACK_HEIGHT_OUT - limit);
+                }
+            }           
+
+            limit = limit += 1;
+            // Horizontal line on the left of the inner track
+            for (int i = TRACK_WIDTH_IN - limit3; i <= TRACK_WIDTH_IN; ++i)
+            {
+                if (TRACK_HEIGHT_OUT - limit >= 0 || i >= 0 || TRACK_HEIGHT_OUT - limit <= TRACK_HEIGHT - 1 || i <= TRACK_WIDTH_OUT - 1)
+                {
+                    AddWallBumper(i, TRACK_HEIGHT_OUT - limit2);
+                }
+            }
+
+            // Vertical line in the middle of inner track
+            int newColumn = TRACK_WIDTH_IN + ((TRACK_WIDTH_OUT - TRACK_WIDTH_IN) / 2);
+            for (int j = TRACK_HEIGHT_OUT - limit; j >= TRACK_HEIGHT_IN + limit2; --j)
+            {
+                if (newColumn >= 0 || j >= 0 || newColumn <= TRACK_WIDTH - 1 || j <= TRACK_WIDTH - 1)
+                {
+                    AddWallBumper(newColumn, j);
+                }
+            }
         }
 
         private void InitializeObstacles()
@@ -117,6 +186,15 @@ namespace PinballRacer.Track
             AddObstacle(new Bumper(TRACK_WIDTH - 14, 50, content.Load<Model>("bumper_1")));
             AddObstacle(new Bumper(TRACK_WIDTH - 11, 60, content.Load<Model>("bumper_1")));
             AddObstacle(new Bumper(TRACK_WIDTH - 8, 40, content.Load<Model>("bumper_1")));
+            AddObstacle(new Bumper(TRACK_WIDTH - 8, 70, content.Load<Model>("bumper_1")));
+            AddObstacle(new Bumper(TRACK_WIDTH - 14, 80, content.Load<Model>("bumper_1")));
+            AddObstacle(new Bumper(
+                TRACK_WIDTH_IN + ((TRACK_WIDTH_OUT - TRACK_WIDTH_IN) / 2), 
+                TRACK_HEIGHT_IN + 8, content.Load<Model>("bumper_1")));
+            AddObstacle(new Bumper(
+                TRACK_WIDTH_IN + ((TRACK_WIDTH_OUT - TRACK_WIDTH_IN) / 2),
+                TRACK_HEIGHT_IN - 8, content.Load<Model>("bumper_1")));
+            AddObstacle(new Bumper(3, 80, content.Load<Model>("bumper_1")));
             AddObstacle(new Bumper(10, 50, content.Load<Model>("bumper_1")));
             AddObstacle(new Bumper(7, 60, content.Load<Model>("bumper_1")));
             var bump = new Bumper(4, 40, content.Load<Model>("bumper_1"));
