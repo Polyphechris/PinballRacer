@@ -16,7 +16,6 @@ namespace PinballRacer.Track.Pathfinding
             //used to keep track of path in A*
             public Node previous;
 
-            //Node parent;
             public Node(Vector2 p)
             {
                 children = new List<Node>();
@@ -50,17 +49,13 @@ namespace PinballRacer.Track.Pathfinding
         const float NODE_RADIUS = 0.5f;
         public Node Start;
         public Node End;
-
-        public Node StartWaypoint;
-        public Node EndWaypoint;
-
+        
         public int height;
         public int width;
+
         public List<Node> allNodes;
-        //List<Node> openList;
         Node[,] openList;
         Node[,] closedList;
-        //List<Node> closedList;
         
         public bool searchDone;        
 
@@ -99,27 +94,6 @@ namespace PinballRacer.Track.Pathfinding
                 n.visited = false; n.open = false;
                 n.heuristic = Vector2.Distance(n.position, End.position);
             } 
-            //List<Node> queue = new List<Node>();
-            //foreach (Node n in allNodes)
-            //{
-            //    n.visited = false;
-            //}
-            //queue.Add(Start);
-            //while (queue.Count != 0)
-            //{
-            //    Node current = queue.First();
-            //    if (current.visited == false)
-            //    {
-            //        current.heuristic = Vector2.Distance(current.position, End.position);
-            //        queue.AddRange(current.children);
-            //        current.visited = true;
-            //    }
-            //    queue.Remove(current);
-            //}
-            //foreach (Node n in allNodes)
-            //{
-            //    n.visited = false;
-            //}
         }
 
         private void ResetLists()
@@ -148,17 +122,19 @@ namespace PinballRacer.Track.Pathfinding
                 }
                 if (current.isGoal)
                 {
-                    searchDone = true;
-                    ResetLists();
-                    return ConstructPath(current);
+                    Node top = GetTopOpen();
+                    if (top.cost >= current.cost)
+                    {
+                        searchDone = true;
+                        ResetLists();
+                        return ConstructPath(current);
+                    }
                 }
                 AddToOpen(current);
                 current.visited = true;
-                // closedList.Add(current);
                 openList[(int)current.position.X, (int)current.position.Y] = null;
                 closedList[(int)current.position.X, (int)current.position.Y] = current;
                 previous = current;
-                //openList.RemoveAll(Node => Node.position.Equals(current.position));
             }
             return bestPath;
         }
@@ -221,56 +197,6 @@ namespace PinballRacer.Track.Pathfinding
             path.InitializePath(points);
             return path;
         }
-
-        public void DrawClosed(Matrix view, Matrix projection, Model node)
-        {
-            foreach (Node n in closedList)
-            {
-                if (n != null)
-                {
-                    foreach (ModelMesh mesh in node.Meshes)
-                    {
-                        foreach (BasicEffect effect in mesh.Effects)
-                        {
-                            effect.EnableDefaultLighting();
-                            effect.AmbientLightColor = new Vector3(0.8f, 0.3f, 0.1f);
-                            effect.DiffuseColor = new Vector3(1f, 0.1f, 0.1f);
-                            effect.DirectionalLight0.Direction = new Vector3(0, 0, 1);
-                            effect.DirectionalLight0.DiffuseColor = new Vector3(0.8f, 0.5f, 0.22f);// Shinnyness/reflexive
-                            effect.World = Matrix.CreateScale(0.25f) * Matrix.CreateTranslation(n.position.X, n.position.Y, 0);
-                            effect.View = view;
-                            effect.Projection = projection;
-                        }
-                        mesh.Draw();
-                    }
-                }
-            }
-        }
-        public void DrawOpen(Matrix view, Matrix projection, Model node)
-        {
-            foreach (Node n in openList)
-            {
-                if(n!= null)
-                {
-                    foreach (ModelMesh mesh in node.Meshes)
-                    {
-                        foreach (BasicEffect effect in mesh.Effects)
-                        {
-                            effect.EnableDefaultLighting();
-                            effect.AmbientLightColor = new Vector3(0.8f, 0.3f, 0.1f);
-                            effect.DiffuseColor = new Vector3(0.1f, 1f, 0.1f);
-                            effect.DirectionalLight0.Direction = new Vector3(0, 0, 1);
-                            effect.DirectionalLight0.DiffuseColor = new Vector3(0.8f, 0.5f, 0.22f);// Shinnyness/reflexive
-                            effect.World = Matrix.CreateScale(0.25f) * Matrix.CreateTranslation(n.position.X, n.position.Y, 0);
-                            effect.View = view;
-                            effect.Projection = projection;
-                        }
-                        mesh.Draw();
-                    }
-                }
-            }
-        }
-
         public void InitializeGrid(int[,] board)
         {
             openList[(int)Start.position.X, (int)Start.position.Y] = Start;
@@ -438,5 +364,55 @@ namespace PinballRacer.Track.Pathfinding
                 n.visited = false;
             }
         }
+
+        public void DrawClosed(Matrix view, Matrix projection, Model node)
+        {
+            foreach (Node n in closedList)
+            {
+                if (n != null)
+                {
+                    foreach (ModelMesh mesh in node.Meshes)
+                    {
+                        foreach (BasicEffect effect in mesh.Effects)
+                        {
+                            effect.EnableDefaultLighting();
+                            effect.AmbientLightColor = new Vector3(0.8f, 0.3f, 0.1f);
+                            effect.DiffuseColor = new Vector3(1f, 0.1f, 0.1f);
+                            effect.DirectionalLight0.Direction = new Vector3(0, 0, 1);
+                            effect.DirectionalLight0.DiffuseColor = new Vector3(0.8f, 0.5f, 0.22f);// Shinnyness/reflexive
+                            effect.World = Matrix.CreateScale(0.25f) * Matrix.CreateTranslation(n.position.X, n.position.Y, 0);
+                            effect.View = view;
+                            effect.Projection = projection;
+                        }
+                        mesh.Draw();
+                    }
+                }
+            }
+        }
+        public void DrawOpen(Matrix view, Matrix projection, Model node)
+        {
+            foreach (Node n in openList)
+            {
+                if (n != null)
+                {
+                    foreach (ModelMesh mesh in node.Meshes)
+                    {
+                        foreach (BasicEffect effect in mesh.Effects)
+                        {
+                            effect.EnableDefaultLighting();
+                            effect.AmbientLightColor = new Vector3(0.8f, 0.3f, 0.1f);
+                            effect.DiffuseColor = new Vector3(0.1f, 1f, 0.1f);
+                            effect.DirectionalLight0.Direction = new Vector3(0, 0, 1);
+                            effect.DirectionalLight0.DiffuseColor = new Vector3(0.8f, 0.5f, 0.22f);// Shinnyness/reflexive
+                            effect.World = Matrix.CreateScale(0.25f) * Matrix.CreateTranslation(n.position.X, n.position.Y, 0);
+                            effect.View = view;
+                            effect.Projection = projection;
+                        }
+                        mesh.Draw();
+                    }
+                }
+            }
+        }
+
     }
 }
