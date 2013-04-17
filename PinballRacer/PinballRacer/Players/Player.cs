@@ -123,7 +123,7 @@ namespace PinballRacer.Players
                 {
                     effect.EnableDefaultLighting();
                     effect.AmbientLightColor = Color.Red.ToVector3();//new Vector3(0.2f, 0.2f, 0.2f);
-                    //effect.DiffuseColor = color;
+                    effect.DiffuseColor = color;
                     effect.World = world;
                     effect.View = view;
                     effect.Projection = projection;
