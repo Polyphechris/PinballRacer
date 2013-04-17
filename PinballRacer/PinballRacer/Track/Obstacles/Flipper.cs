@@ -10,6 +10,7 @@ namespace PinballRacer.Track.Obstacles
 {
     class Flipper : Obstacle
     {
+        public static Model flipperSphere;
         public const float E = 1f;
         public const float INTERVAL = 1000f;
         public float W1 = 3f;
@@ -28,6 +29,9 @@ namespace PinballRacer.Track.Obstacles
         public enum states { FIRING, IDLE, RELOAD }; //Shooting the ball, doing nothing, going back down
         states state;
 
+        float[] sphereRadii;
+        float[] spherePositions;
+
         public Flipper(float x, float y, Model m, float a, bool i)
         {
             w = 0;
@@ -38,11 +42,79 @@ namespace PinballRacer.Track.Obstacles
             model = m;
             position = new Vector3(x, y, 0f);
             scale = new Vector3(0.7f);
+            if (!inverted)
+            {
+                CollisionBox = new Rectangle(13, 5, 20 - 13, (int)(13 - 5.5));
+            }
+            else
+            {
+                CollisionBox = new Rectangle(26, 5, 34 - 26, (int)(13 - 5.5));
+            }
+
+            InitializeSphereDetectors();
         }
-        
+
+        private void InitializeSphereDetectors()
+        {
+            sphereRadii = new float[5];
+            spherePositions = new float[5];
+
+            sphereRadii[0] = 1.15f;
+            sphereRadii[1] = 1.05f;
+            sphereRadii[2] = 0.95f;
+            sphereRadii[3] = 0.875f;
+            sphereRadii[4] = 0.60f;
+
+            for (int i = 0; i < spherePositions.Length; ++i)
+            {
+                int positions = 0;
+                spherePositions[i] = 0.0f;
+                while (positions < i)
+                {
+                    spherePositions[i] += sphereRadii[positions] * 1.65f;
+                    positions += 1;
+                }
+            }
+        }
+
+        public bool Collides(Player player, int sphere)
+        {
+            Matrix playerWorld = Matrix.CreateScale(player.scale) * Matrix.CreateTranslation(player.position);
+            Matrix sphereWorld = Matrix.CreateScale(sphereRadii[sphere]) * 
+                Matrix.CreateTranslation(new Vector3(spherePositions[sphere], 0.0f, 0.0f)) * 
+                Matrix.CreateRotationZ(angle) * 
+                Matrix.CreateTranslation(position);
+            
+            //Check bounding spheres
+            for (int meshIndex1 = 0; meshIndex1 < player.model.Meshes.Count; meshIndex1++)
+            {
+                BoundingSphere sphere1 = player.model.Meshes[meshIndex1].BoundingSphere;
+                sphere1 = sphere1.Transform(playerWorld);
+
+                for (int meshIndex2 = 0; meshIndex1 < flipperSphere.Meshes.Count; meshIndex1++)
+                {
+                    BoundingSphere sphere2 = flipperSphere.Meshes[meshIndex2].BoundingSphere;
+                    sphere2 = sphere2.Transform(sphereWorld);
+                    if (sphere2.Intersects(sphere1))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         public override Vector3 getResultingForce(Player p)
         {
-            Vector3 player = p.position;
+            for (int i = 0; i < sphereRadii.Length; ++i)
+            {
+                if (Collides(p, i))
+                {
+                    p.velocity = -p.velocity;
+                    break;
+                }
+            }
+            
             return Vector3.Zero;
         }
 
@@ -99,7 +171,33 @@ namespace PinballRacer.Track.Obstacles
                 }
                 mesh.Draw();
             }
+
+            
+            for (int i = 0; i < sphereRadii.Length; i++)
+            {
+                DrawSphereCollisions(view, projection, sphereRadii[i], spherePositions[i]);
+            }
         }
+
+        public void DrawSphereCollisions(Matrix view, Matrix projection, float sphereRadius, float spherePosition)
+        {            
+            foreach (ModelMesh mesh in flipperSphere.Meshes)
+            {
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+                    effect.EnableDefaultLighting();
+                    effect.DirectionalLight0.Direction = new Vector3(0f, -1f, -1f);
+                    effect.DirectionalLight0.DiffuseColor = new Vector3(0.9f, 0.9f, 0.9f);// Shinnyness/reflexive
+                    effect.World = Matrix.CreateScale(sphereRadius) * Matrix.CreateTranslation(new Vector3(spherePosition, 0.0f, 0.0f)) * Matrix.CreateRotationZ(angle) * Matrix.CreateTranslation(position);
+                    effect.View = view;
+                    effect.Projection = projection;
+                    //effect.Alpha = 0.8f;
+                }
+                mesh.Draw();
+            }
+
+        }
+
 
         //Method obtained from online discussion boards at Stack Overflow
         //http://gamedev.stackexchange.com/questions/2438/how-do-i-create-bounding-boxes-with-xna-4-0

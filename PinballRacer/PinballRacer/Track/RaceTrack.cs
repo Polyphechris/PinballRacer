@@ -214,6 +214,7 @@ namespace PinballRacer.Track
 
             AddObstacle(new Flipper((TRACK_WIDTH - 4) / 2 - 10, 10, content.Load<Model>("flipper"), 0f - 0.3f, false));
             AddObstacle(new Flipper((TRACK_WIDTH - 4) / 2 + 10, 10, content.Load<Model>("flipper"), (float)Math.PI + 0.3f, true));
+            Flipper.flipperSphere = content.Load<Model>("ball");
 
             AddObstacle(new Switch(new Vector2(TRACK_WIDTH / 2 - 4, TRACK_HEIGHT - 15), content.Load<Model>("ball"), content.Load<Model>("cube")));
         }
