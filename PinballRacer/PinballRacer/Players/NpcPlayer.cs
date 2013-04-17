@@ -50,6 +50,7 @@ namespace PinballRacer.Players
             ApplyFriction(previousVelocity);
             UpdateRotation(previousRotation);
 
+            previousPosition = new Vector3(position.X, position.Y, position.Z);
             position += velocity * gameTime.ElapsedGameTime.Milliseconds / 1000;
         }
 
