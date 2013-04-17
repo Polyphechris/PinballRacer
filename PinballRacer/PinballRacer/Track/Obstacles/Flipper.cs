@@ -84,13 +84,10 @@ namespace PinballRacer.Track.Obstacles
             velocities[4] = new Vector3(0.0f, 1.25f, 0.0f);
         }
 
-        public bool Collides(Player player, int sphere)
+        public bool Collides(Player player, Matrix sphereWorld)
         {
             Matrix playerWorld = Matrix.CreateScale(player.scale) * Matrix.CreateTranslation(player.position);
-            Matrix sphereWorld = Matrix.CreateScale(sphereRadii[sphere]) * 
-                Matrix.CreateTranslation(new Vector3(spherePositions[sphere], 0.0f, 0.0f)) * 
-                Matrix.CreateRotationZ(angle) * 
-                Matrix.CreateTranslation(position);
+            
 
             Vector3 test = sphereWorld.Translation;
             
@@ -117,19 +114,40 @@ namespace PinballRacer.Track.Obstacles
         {
             for (int i = 0; i < sphereRadii.Length; ++i)
             {
-                if (Collides(p, i))
+                Matrix sphereWorld = Matrix.CreateScale(sphereRadii[i]) *
+                    Matrix.CreateTranslation(new Vector3(spherePositions[i], 0.0f, 0.0f)) *
+                    Matrix.CreateRotationZ(angle) *
+                    Matrix.CreateTranslation(position);
+
+                if (Collides(p, sphereWorld))
                 {
+                    Vector3 sphereWorldPosition = sphereWorld.Translation;
+                    
                     if (state == states.FIRING)
                     {
-                        p.velocity += velocities[i];
+                        if (p.position.Y > sphereWorldPosition.Y)
+                        {
+                            p.velocity += velocities[i];
+                        }
+                        else
+                        {
+                            p.velocity = -p.velocity;
+                        }
                     }
                     else if (state == states.RELOAD)
                     {
+                        if (p.position.Y > sphereWorldPosition.Y)
+                        {
+                            p.velocity = -p.velocity;
+                        }
+                        else
+                        {
 
+                        }
                     }
                     else if (state == states.IDLE)
                     {
-
+                        p.velocity = -p.velocity;
                     }
                     break;
                 }
@@ -193,10 +211,10 @@ namespace PinballRacer.Track.Obstacles
             }
 
             
-            for (int i = 0; i < sphereRadii.Length; i++)
-            {
-                DrawSphereCollisions(view, projection, sphereRadii[i], spherePositions[i]);
-            }
+            //for (int i = 0; i < sphereRadii.Length; i++)
+            //{
+            //    DrawSphereCollisions(view, projection, sphereRadii[i], spherePositions[i]);
+            //}
         }
 
         public void DrawSphereCollisions(Matrix view, Matrix projection, float sphereRadius, float spherePosition)

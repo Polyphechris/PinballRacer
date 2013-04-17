@@ -14,6 +14,7 @@ namespace PinballRacer.Players
         Model ball;
 
         int numberOfNpcs;
+        bool runUpdates = false;
 
 
         public PlayerSpriteManager(Game1 game)
@@ -37,7 +38,7 @@ namespace PinballRacer.Players
                 if (i == 0) p.color = new Vector3(1, 0.75f, 0.8f);
                 else p.color = new Vector3(0.1f, 0.4f, 1);
                 p.InitializeModel(ball);
-                p.InitializePosition(new Vector3(15.0f +  i * 2, 10.0f, Player.RADIUS / 2), Vector3.Zero, Player.RADIUS, Vector3.Zero);
+                p.InitializePosition(new Vector3(47.5f, 2.5f + i, Player.RADIUS / 2), Vector3.Zero, Player.RADIUS, Vector3.Zero);
                 npcs.Add(p);
             }
 
@@ -48,7 +49,7 @@ namespace PinballRacer.Players
             human = new HumanPlayer();
             human.InitializeModel(ball);
             float scale = Player.RADIUS;
-            Vector3 position = new Vector3(10.0f, 10.0f, Player.RADIUS / 2);
+            Vector3 position = new Vector3(47.5f, 4.5f, Player.RADIUS / 2);
             Vector3 direction = new Vector3(0.0f, 0.0f, 0.0f);
             Vector3 rotation = new Vector3(0.0f, 0.0f, 0.0f);
             
@@ -65,10 +66,13 @@ namespace PinballRacer.Players
         public override void Update(GameTime gameTime)
         {            
             base.Update(gameTime);
-            human.Update(gameTime);
-            foreach (Player p in npcs)
+            if (runUpdates)
             {
-                p.Update(gameTime);
+                human.Update(gameTime);
+                foreach (Player p in npcs)
+                {
+                    p.Update(gameTime);
+                }
             }
         }
 
@@ -80,11 +84,21 @@ namespace PinballRacer.Players
             {
                 p.Draw(Game1.view, Game1.projection);
             }
+
+            foreach (NpcPlayer n in npcs)
+            {
+                n.Draw(Game1.view, Game1.projection);
+            }
         }
 
         public Player GetHumanPlayer()
         {
             return human;
+        }
+
+        public void SetRunUpdates(bool value)
+        {
+             runUpdates = value;
         }
     }
 }

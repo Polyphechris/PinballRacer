@@ -27,6 +27,11 @@ namespace PinballRacer.Track
         Model spring;
         Model floor;
         public float springLevel;
+        public float stableSpringLevel;
+        public float minSpringLevel;
+        public float maxSpringLevel;
+        public bool springShot = false;
+        public bool closeLoader = false;
 
         public Dictionary<int, Obstacle> obstacles;
         public int[,] tiles;
@@ -55,6 +60,10 @@ namespace PinballRacer.Track
             spring = content.Load<Model>("spring");
             floor = content.Load<Model>("plane");
             springLevel = 0.5f;
+            minSpringLevel = 0.3f;
+            maxSpringLevel = 0.9f;
+            stableSpringLevel = 0.5f;
+            springLevel = minSpringLevel;
 
             Waypoints = new List<Vector2>();
             Waypoints.Add(new Vector2(48, 98));
@@ -266,8 +275,33 @@ namespace PinballRacer.Track
             }
         }
 
+        public void SetSpringLevel(float newSpringLevel)
+        {
+            if (newSpringLevel >= minSpringLevel && newSpringLevel <= maxSpringLevel)
+            {
+                springLevel = newSpringLevel;
+            }
+            else
+            {
+                if (newSpringLevel < minSpringLevel)
+                {
+                    newSpringLevel = minSpringLevel;
+                }
+                else
+                {
+                    newSpringLevel = maxSpringLevel;
+                }
+            }
+        }
+
         public void Update(float time)
         {
+            if (closeLoader)
+            {
+                AddWall(TRACK_WIDTH - 2, TRACK_HEIGHT - 26);
+                AddWall(TRACK_WIDTH - 3, TRACK_HEIGHT - 26);
+            }
+
             foreach (Obstacle o in obstacles.Values)
             {
                 o.update(time);
