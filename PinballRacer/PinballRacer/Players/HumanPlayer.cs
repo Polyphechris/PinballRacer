@@ -49,23 +49,27 @@ namespace PinballRacer.Players
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            //  Setting necessary parameters            
-            Vector3 previousVelocity = velocity;
-            Vector3 previousRotation = rotation;            
-            
-            KeyboardState keyboardState = Keyboard.GetState();
-            CheckPitchRollChanges(keyboardState);
-            
 
-            if (impulses.Count > 0)
+            if (Game1.launched)
             {
-                velocity += acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                //  Setting necessary parameters            
+                Vector3 previousVelocity = velocity;
+                Vector3 previousRotation = rotation;
+
+                KeyboardState keyboardState = Keyboard.GetState();
+                CheckPitchRollChanges(keyboardState);
+
+
+                if (impulses.Count > 0)
+                {
+                    velocity += acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                }
+
+                ApplyFriction(previousVelocity);
+                UpdateRotation(previousRotation);
+                previousPosition = new Vector3(position.X, position.Y, position.Z);
+                position += velocity;
             }
-            
-            ApplyFriction(previousVelocity);
-            UpdateRotation(previousRotation);
-            previousPosition = new Vector3(position.X, position.Y, position.Z);
-            position += velocity;            
         }
 
         private void ApplyFriction(Vector3 aPreviousVelocity)

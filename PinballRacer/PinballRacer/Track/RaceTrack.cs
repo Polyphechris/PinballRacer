@@ -31,7 +31,6 @@ namespace PinballRacer.Track
         public float minSpringLevel;
         public float maxSpringLevel;
         public bool springShot = false;
-        public bool closeLoader = false;
 
         public Dictionary<int, Obstacle> obstacles;
         public int[,] tiles;
@@ -296,7 +295,7 @@ namespace PinballRacer.Track
 
         public void Update(float time)
         {
-            if (closeLoader)
+            if (Game1.closeLoader)
             {
                 AddWall(TRACK_WIDTH - 2, TRACK_HEIGHT - 26);
                 AddWall(TRACK_WIDTH - 3, TRACK_HEIGHT - 26);

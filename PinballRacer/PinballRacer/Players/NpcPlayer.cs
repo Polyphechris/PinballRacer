@@ -20,38 +20,48 @@ namespace PinballRacer.Players
 
         public override void Update(GameTime gameTime)
         {
-            base.Update(gameTime); 
+            base.Update(gameTime);
 
-            //  Setting necessary parameters            
-            Vector3 previousVelocity = velocity;
-            Vector3 previousRotation = rotation;
-            bool up = false;
-            bool down = false;
-            bool left = false;
-            bool right = false;
-
-            // TODO: Get the direction of where to head next (using the strategies)
-           
-            // Set the direction booleans as needed
-            /*
-            if (direction.X > 0) { right = true; }
-            if (direction.X < 0) { left = true; }
-            if (direction.Y > 0) { up = true; }
-            if (direction.Y < 0) { down = true; }
-            */
-
-            //  yaw(spin), pitch (forward/backward), roll (sideways)
-            CheckPitchRollChanges(up, down, left, right);
-
-            if (impulses.Count > 0)
+            if (Game1.launched)
             {
-                velocity += acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            }
-            ApplyFriction(previousVelocity);
-            UpdateRotation(previousRotation);
+                //  Setting necessary parameters            
+                Vector3 previousVelocity = velocity;
+                Vector3 previousRotation = rotation;
+                bool up = false;
+                bool down = false;
+                bool left = false;
+                bool right = false;
 
-            previousPosition = new Vector3(position.X, position.Y, position.Z);
-            position += velocity * gameTime.ElapsedGameTime.Milliseconds / 1000;
+                // TODO: Get the direction of where to head next (using the strategies)
+
+                // Set the direction booleans as needed
+                /*
+                if (direction.X > 0) { right = true; }
+                if (direction.X < 0) { left = true; }
+                if (direction.Y > 0) { up = true; }
+                if (direction.Y < 0) { down = true; }
+                */
+
+                //  yaw(spin), pitch (forward/backward), roll (sideways)
+                if (Game1.closeLoader)
+                {
+                    CheckPitchRollChanges(up, down, left, right);
+
+                    if (impulses.Count > 0)
+                    {
+                        velocity += acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    }
+                    ApplyFriction(previousVelocity);
+                    UpdateRotation(previousRotation);
+                    previousPosition = new Vector3(position.X, position.Y, position.Z);
+                    position += velocity * gameTime.ElapsedGameTime.Milliseconds / 1000;
+                }
+                else
+                {
+                    velocity = new Vector3(0, 1.4f, 0) - new Vector3(0, gameTime.ElapsedGameTime.Milliseconds / 100, 0);
+                    position += velocity;
+                }                
+            }
         }
 
         private void ApplyFriction(Vector3 aPreviousVelocity)
