@@ -15,6 +15,7 @@ namespace PinballRacer
         const float DETECTION_LENGTH = 3f;
         public Player human;
         public List<Player> NPC;
+        public List<Player> finishedPlayers;
         RaceTrack Track;
         ContentManager content;
         Model wall;
@@ -29,10 +30,10 @@ namespace PinballRacer
 
         public void InitializePlayers(List<NpcPlayer> players, Player human)
         {
+            finishedPlayers = new List<Player>();
             this.human = human;
             foreach (NpcPlayer npc in players)
-            {
-                npc.model = human.model;
+            {                
                 NPC.Add(npc);
             }
             NPC.Add(human);
@@ -146,8 +147,17 @@ namespace PinballRacer
         //List sorted by points
         public List<Player> GetLeadersPoints()
         {
-            NPC = (from p in NPC orderby p.score descending select p).ToList();
-            return NPC;
+            if (NPC.Count > 0)
+            {
+                NPC = (from p in NPC orderby p.score descending select p).ToList();
+                return NPC;
+            }
+            else
+            {
+                finishedPlayers = (from p in finishedPlayers orderby p.score descending select p).ToList();
+                return finishedPlayers;
+            }
+            
         }
 
         //List sorter by race pole position
@@ -162,9 +172,9 @@ namespace PinballRacer
             return NPC;
         }
 
-        public Player RaceFinished(int numberOfLaps)
+        public bool SomeoneFinished(int numberOfLaps)
         {
-            Player someoneFinished = null;
+            List<Player> finished = new List<Player>();
             foreach (Player p in NPC)
             {
                 //  Winning condition
@@ -174,12 +184,25 @@ namespace PinballRacer
                     {
                         if (p.position.Y > 89)
                         {
-                            someoneFinished = p;
+                            finished.Add(p);
                         }
                     }
                 }
             }
-            return someoneFinished;
+
+            //  In case more than 
+            if (finished.Count > 0)
+            {                
+                finished = (from p in finished orderby p.position.Y descending select p).ToList();
+
+                foreach (Player p in finished)
+                {
+                    NPC.Remove(p);
+                    finishedPlayers.Add(p);
+                }
+            }
+
+            return (finishedPlayers.Count > 0);
         }
     }
 }

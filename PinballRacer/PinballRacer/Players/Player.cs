@@ -40,7 +40,7 @@ namespace PinballRacer.Players
         protected float timer { get; set; }        
 
         //  Model attributes
-        public Model model { get; set; }        
+        public Model model { get; private set; }        
         public Vector3 color { get; set; }
         public float scale { get; protected set; }
         protected Vector3 rotation;        
@@ -110,9 +110,7 @@ namespace PinballRacer.Players
         }
 
         public void Draw(Matrix view, Matrix projection)
-        {
-            if(path != null)
-                path.Draw(view, projection, model);
+        {            
             //  yaw(spin), pitch (forward/backward), roll (sideways)            
             Matrix world = Matrix.CreateScale(scale) *
                     Matrix.CreateFromYawPitchRoll(MathHelper.ToRadians(rotation.X), MathHelper.ToRadians(rotation.Y), MathHelper.ToRadians(rotation.Z)) *
@@ -123,14 +121,16 @@ namespace PinballRacer.Players
                 foreach (BasicEffect effect in mesh.Effects)
                 {
                     effect.EnableDefaultLighting();
-                    effect.AmbientLightColor = Color.Red.ToVector3();//new Vector3(0.2f, 0.2f, 0.2f);
-                    effect.DiffuseColor = color;
+                    effect.AmbientLightColor = color;// Color.Red.ToVector3();//new Vector3(0.2f, 0.2f, 0.2f);
+                    //effect.DiffuseColor = color;
                     effect.World = world;
                     effect.View = view;
                     effect.Projection = projection;
                 }
                 mesh.Draw();
             }
+            //if(path != null)
+            //    path.Draw(view, projection, model);
 
         }
 
@@ -158,6 +158,11 @@ namespace PinballRacer.Players
         public Vector2 TrackToMap()
         {
             return Vector2.Zero;
+        }
+
+        public void PlayerFinishedRace(int ranking)
+        {
+            rank = ranking;            
         }
     }
 }

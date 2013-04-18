@@ -13,7 +13,7 @@ namespace PinballRacer.Players
         HumanPlayer human;
         public List<NpcPlayer> npcs;
 
-        Model ball;
+        Model[] models;
 
         int numberOfNpcs;
         bool runUpdates = false;
@@ -39,7 +39,7 @@ namespace PinballRacer.Players
                 NpcPlayer p = new NpcPlayer();
                 if (i == 0) { p.color = new Vector3(1, 0.75f, 0.8f); p.name = "Nimble Nimbus"; p.pickStrategy = new FinishFirstStrategy(); }
                 else { p.color = new Vector3(0.1f, 0.4f, 1); p.name = "The Gobbler"; p.pickStrategy = new MostPointsStrategy(); }
-                p.InitializeModel(ball);
+                p.InitializeModel(models[i]);
                 p.InitializePosition(new Vector3(47.5f, 2.5f + i, Player.RADIUS / 2), Vector3.Zero, Player.RADIUS, Vector3.Zero);
                 npcs.Add(p);
             }
@@ -49,7 +49,7 @@ namespace PinballRacer.Players
         private void InitializeHumanPlayer()
         {
             human = new HumanPlayer();
-            human.InitializeModel(ball);
+            human.InitializeModel(models[2]);
             float scale = Player.RADIUS;
             Vector3 position = new Vector3(47.5f, 4.5f, Player.RADIUS / 2);
             Vector3 direction = new Vector3(0.0f, 0.0f, 0.0f);
@@ -61,7 +61,11 @@ namespace PinballRacer.Players
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(Game.GraphicsDevice);
-            ball = Game.Content.Load<Model>("testBall");
+            models = new Model[4];
+            models[0] = Game.Content.Load<Model>("testBall");
+            models[1] = Game.Content.Load<Model>("ballSkin1");
+            models[2] = Game.Content.Load<Model>("ballSkin2");
+            models[3] = Game.Content.Load<Model>("ballSkin3");
             base.LoadContent();
         }
 
@@ -82,10 +86,10 @@ namespace PinballRacer.Players
         {
             base.Draw(gameTime);
             human.Draw(Game1.view, Game1.projection);
-            foreach (Player p in npcs)
-            {
-                p.Draw(Game1.view, Game1.projection);
-            }
+            //foreach (Player p in npcs)
+            //{
+            //    p.Draw(Game1.view, Game1.projection);
+            //}
 
             foreach (NpcPlayer n in npcs)
             {
