@@ -11,7 +11,7 @@ namespace PinballRacer.Track.Obstacles
     class Flipper : Obstacle
     {
         public static Model flipperSphere;
-        public const float E = 1f;
+        public const float E = 2f;
         public const int SCORE = 2500;
 
         public const float INTERVAL = 1000f;
@@ -80,11 +80,11 @@ namespace PinballRacer.Track.Obstacles
                 }
             }
 
-            velocities[0] = new Vector3(0.0f, 0.25f, 0.0f);
-            velocities[1] = new Vector3(0.0f, 0.50f, 0.0f); 
-            velocities[2] = new Vector3(0.0f, 0.75f, 0.0f);
-            velocities[3] = new Vector3(0.0f, 1.0f, 0.0f);
-            velocities[4] = new Vector3(0.0f, 1.25f, 0.0f);
+            velocities[0] = new Vector3(0.0f, 0.25f * E, 0.0f);
+            velocities[1] = new Vector3(0.0f, 0.50f * E, 0.0f);
+            velocities[2] = new Vector3(0.0f, 0.75f * E, 0.0f);
+            velocities[3] = new Vector3(0.0f, 1.0f * E, 0.0f);
+            velocities[4] = new Vector3(0.0f, 1.25f * E, 0.0f);
         }
 
         public bool Collides(Player player, Matrix sphereWorld)

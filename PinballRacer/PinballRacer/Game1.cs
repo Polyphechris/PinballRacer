@@ -133,7 +133,7 @@ namespace PinballRacer
             smoke = Content.Load<Texture2D>("smoke");
             countdown = Content.Load<Texture2D>("Countdown");
 
-            GraphicsDevice.RasterizerState = RasterizerState.CullNone;
+            //GraphicsDevice.RasterizerState = RasterizerState.CullNone;
 
             // Music / Effects
             MusicDictionary songs = new MusicDictionary();

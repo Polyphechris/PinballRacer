@@ -56,7 +56,7 @@ namespace PinballRacer.Players.Strategies
             distanceH = Math.Min(distanceH, 100);
             scoreH = Math.Min(scoreH, 100);
 
-            float randomMultiple = random.Next(60, 140);
+            float randomMultiple = random.Next(80, 120);
             heuristic = (scoreH * points_value) + (distanceH * distance_value);
             heuristic = heuristic * randomMultiple / 100;
             return heuristic;
