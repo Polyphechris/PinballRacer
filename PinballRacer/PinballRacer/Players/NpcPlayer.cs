@@ -49,17 +49,20 @@ namespace PinballRacer.Players
                     SetSteering();
                    // if (impulses.Count > 0)
                    // {
-                    velocity += acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                   // velocity += acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    velocity += acceleration;
                     //}
                     ApplyFriction(previousVelocity);
                     UpdateRotation(previousRotation);
                     previousPosition = new Vector3(position.X, position.Y, position.Z);
-                    velocity = truncate(velocity, MAX_SPEED);
-                    position += velocity * gameTime.ElapsedGameTime.Milliseconds / 1000;
+                    velocity = truncate(velocity, SPEED_UP * 1000);
+                    position += velocity * (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000;
+                    //position += velocity;
                 }
                 else
                 {
                     velocity = new Vector3(0, 1.4f, 0) - new Vector3(0, gameTime.ElapsedGameTime.Milliseconds / 100, 0);
+                    previousPosition = new Vector3(position.X, position.Y, position.Z);
                     position += velocity;
                 }                
             }
@@ -173,18 +176,19 @@ namespace PinballRacer.Players
                 {
                     path = null;
                 }
+            
+                Vector3 steering = desiredVelocity - velocity;
+                steering.Z = 0;
+                steering = Vector3.Normalize(steering) * MAX_ACC;            
+                acceleration += steering;
+                // acceleration += truncate(acceleration + steering, MAX_ACC);
             }
-            Vector3 steering = desiredVelocity - velocity;
-            steering.Z = 0;
-            steering = Vector3.Normalize(steering) * MAX_ACC;            
-            acceleration += steering;
-           // acceleration += truncate(acceleration + steering, MAX_ACC);
         }
 
         private Vector3 truncate(Vector3 velocity, float max)
         {
             velocity.Z = 0;
-            velocity = Vector3.Normalize(velocity) * MAX_SPEED;
+            velocity = Vector3.Normalize(velocity) * max;
             return velocity;
         }
     }
