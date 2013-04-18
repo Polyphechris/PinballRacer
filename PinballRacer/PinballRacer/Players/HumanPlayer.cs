@@ -137,8 +137,19 @@ namespace PinballRacer.Players
         private void CheckPitchRollChanges(KeyboardState keyboardState)
         {
             var gamepadState = GamePad.GetState(PlayerIndex.One);
-            velocity.X += 2 * SPEED_UP * gamepadState.ThumbSticks.Left.X;
-            velocity.Y += 2 * SPEED_UP * gamepadState.ThumbSticks.Left.Y;
+
+            Vector3 incrementTopply = Vector3.Zero;
+            //velocity.X += 2 * SPEED_UP * gamepadState.ThumbSticks.Left.X;
+            //velocity.Y += 2 * SPEED_UP * gamepadState.ThumbSticks.Left.Y;
+            incrementTopply.X += 2 * SPEED_UP * gamepadState.ThumbSticks.Left.X;
+            incrementTopply.Y += 2 * SPEED_UP * gamepadState.ThumbSticks.Left.Y;
+
+            if (Game1.cameraView == CameraView.THIRD_PERSON)
+            {
+                incrementTopply = Vector3.Transform(incrementTopply,
+                    Matrix.CreateFromAxisAngle(Vector3.UnitZ, Game1.camAngle));
+            }
+            velocity += incrementTopply;
 
             if (keyboardState.IsKeyDown(forward))
             {

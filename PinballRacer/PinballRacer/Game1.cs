@@ -42,8 +42,8 @@ namespace PinballRacer
 
         //Camera attributes
         ChaseCamera camera;
-        CameraView cameraView;
-        float camAngle = 0;
+        public static CameraView cameraView;
+        public static float camAngle = 0;
         float angleX = 0;
         float angleY = 0;
         float zoom = 0;
@@ -289,7 +289,7 @@ namespace PinballRacer
 
                     int count = 1;
                     //Leaderboards
-                    spriteBatch.Draw(smoke, new Vector2(990, 0), new Rectangle(0, 0, 2000, 2000), Color.FromNonPremultiplied(148, 0, 211, 150));
+                    spriteBatch.Draw(smoke, new Vector2(graphics.PreferredBackBufferWidth - 290, 0), new Rectangle(0, 0, 2000, 2000), Color.FromNonPremultiplied(148, 0, 211, 150));
 
                     if (mode == modes.POINTS_RACE)
                     {
