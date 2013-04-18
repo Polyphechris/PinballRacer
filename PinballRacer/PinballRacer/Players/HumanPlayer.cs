@@ -136,6 +136,10 @@ namespace PinballRacer.Players
 
         private void CheckPitchRollChanges(KeyboardState keyboardState)
         {
+            var gamepadState = GamePad.GetState(PlayerIndex.One);
+            velocity.X += 2 * SPEED_UP * gamepadState.ThumbSticks.Left.X;
+            velocity.Y += 2 * SPEED_UP * gamepadState.ThumbSticks.Left.Y;
+
             if (keyboardState.IsKeyDown(forward))
             {
                 if (velocity.Y < MAX_SPEED)

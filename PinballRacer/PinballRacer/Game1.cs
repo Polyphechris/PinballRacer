@@ -50,6 +50,9 @@ namespace PinballRacer
         public static bool launched = false;
         public static bool closeLoader = false;
 
+        private GamePadState gamePadState;
+        private GamePadState previousGamePadState;
+
         public Game1()
         {
             //  Initialize drawable game components
@@ -145,10 +148,11 @@ namespace PinballRacer
         protected override void Update(GameTime gameTime)
         {
             KeyboardState keyboardState = Keyboard.GetState();
+            previousGamePadState = gamePadState;
+            gamePadState = GamePad.GetState(PlayerIndex.One);
 
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-                keyboardState.IsKeyDown(Keys.Escape))
+            if (keyboardState.IsKeyDown(Keys.Escape))
                 this.Exit();
             
             handleGameState(keyboardState);
@@ -163,6 +167,9 @@ namespace PinballRacer
                 UpdatePlayerCamera(player);
                 UpdateLoader(gameTime);
             }
+
+            previousGamePadState = GamePad.GetState(PlayerIndex.One);
+
             base.Update(gameTime);
         }
 
@@ -321,11 +328,28 @@ namespace PinballRacer
 
         public void cameraMotion(KeyboardState keyboardState)
         {
-
             if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.Down) || 
                 keyboardState.IsKeyDown(Keys.Left) || keyboardState.IsKeyDown(Keys.Right))
             {                
                 //UpdateCameraAngle(keyboardState);
+            }
+
+            if (gamePadState.IsButtonDown(Buttons.Y) && !previousGamePadState.IsButtonDown(Buttons.Y))
+            {
+                if (cameraView == CameraView.FIRST_PERSON)
+                {
+                    cameraView = CameraView.THIRD_PERSON;
+                }
+                else if (cameraView == CameraView.THIRD_PERSON)
+                {
+                    cameraView = CameraView.OVERVIEW;
+                    view = Matrix.CreateLookAt(new Vector3(20, 50, 70f), new Vector3(20, 50, 0), Vector3.UnitY);
+                    projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(70), 16 / 9, 1, 200);
+                }
+                else
+                {
+                    cameraView = CameraView.FIRST_PERSON;
+                }
             }
 
             //accepts all th input and reacts to it
@@ -457,8 +481,7 @@ namespace PinballRacer
         public void handleGameState(KeyboardState keyboardState)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-               keyboardState.IsKeyDown(Keys.Escape))
+            if (keyboardState.IsKeyDown(Keys.Escape))
                 this.Exit();
 
             // Switch Full Screen
@@ -471,15 +494,16 @@ namespace PinballRacer
             }
             if (gameState == states.main1)
             {
-                if (keyboardState.IsKeyDown(Keys.Up))
+                if (keyboardState.IsKeyDown(Keys.Up) || gamePadState.ThumbSticks.Left.Y > 0.5f)
                 {
                     mode = modes.POINTS_RACE;
                 }
-                if (keyboardState.IsKeyDown(Keys.Down))
+                if (keyboardState.IsKeyDown(Keys.Down) || gamePadState.ThumbSticks.Left.Y < -0.5f)
                 {
                     mode = modes.RACE;
                 }
-                if (keyboardState.IsKeyDown(Keys.Space) && !pressed)
+                if ((keyboardState.IsKeyDown(Keys.Space) && !pressed) ||
+                    (gamePadState.IsButtonDown(Buttons.A) && !pressed))
                 {
                     pressed = true;
                     gameState = states.play;
@@ -491,7 +515,8 @@ namespace PinballRacer
             }
             else if (gameState == states.victory)
             {
-                if (keyboardState.IsKeyDown(Keys.Space) && !pressed)
+                if ((keyboardState.IsKeyDown(Keys.Space) && !pressed) ||
+                    (gamePadState.IsButtonDown(Buttons.A) && !pressed))
                 {
                     pressed = true;
                     gameState = states.main1;
@@ -499,16 +524,19 @@ namespace PinballRacer
             }
             else if (gameState == states.pause)
             {
-                if (keyboardState.IsKeyDown(Keys.Space) && !pressed)
+                if ((keyboardState.IsKeyDown(Keys.Space) && !pressed) ||
+                    (gamePadState.IsButtonDown(Buttons.Start) && !previousGamePadState.IsButtonDown(Buttons.Start)))
                 {
                     pressed = true;
                     gameState = states.play;
                 }
-                else if (keyboardState.IsKeyDown(Keys.I))
+                else if (keyboardState.IsKeyDown(Keys.I) ||
+                         gamePadState.IsButtonDown(Buttons.Back) && !previousGamePadState.IsButtonDown(Buttons.Back))
                 {
                     gameState = states.instructions;
                 }
-                else if (keyboardState.IsKeyDown(Keys.X))
+                else if (keyboardState.IsKeyDown(Keys.X) ||
+                         gamePadState.IsButtonDown(Buttons.X))
                 {
                     ResetGame();
                     gameState = states.main1;
@@ -516,7 +544,8 @@ namespace PinballRacer
             }
             else if (gameState == states.instructions)
             {
-                if (keyboardState.IsKeyDown(Keys.Space) && !pressed)
+                if ((keyboardState.IsKeyDown(Keys.Space) && !pressed) ||
+                    (gamePadState.IsButtonDown(Buttons.Start) && !previousGamePadState.IsButtonDown(Buttons.Start)))
                 {
                     pressed = true;
                     gameState = states.pause;
@@ -524,7 +553,8 @@ namespace PinballRacer
             }
             else if (gameState == states.play)
             {
-                if (keyboardState.IsKeyDown(Keys.Space) && !pressed)
+                if ((keyboardState.IsKeyDown(Keys.Space) && !pressed) ||
+                    (gamePadState.IsButtonDown(Buttons.Start) && !previousGamePadState.IsButtonDown(Buttons.Start)))
                 {
                     pressed = true;
                     gameState = states.pause;
@@ -535,7 +565,8 @@ namespace PinballRacer
                     showBoard = !showBoard;
                 }
             }
-            if (keyboardState.IsKeyUp(Keys.Space))
+            if (keyboardState.IsKeyUp(Keys.Space) ||
+                gamePadState.IsButtonUp(Buttons.Start))
             {
                 pressed = false;
             }

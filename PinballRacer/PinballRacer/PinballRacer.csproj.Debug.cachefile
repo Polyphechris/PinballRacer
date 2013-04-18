@@ -4,12 +4,17 @@ Content\bumper_2.xnb
 Content\spring.xnb
 Content\flipper.xnb
 Content\ball.xnb
+Content\Score.xnb
+Content\smoke.xnb
 Content\slingshotleft.xnb
 Content\slingshotright.xnb
 Content\tirestack.xnb
 Content\testBall.xnb
+<<<<<<< HEAD
 Content\Score.xnb
 Content\smoke.xnb
+=======
+>>>>>>> 72c0ec752e0e22e3f2744e392d816c88e48a4d8c
 Content\plane.xnb
 Content\MenuFont.xnb
 Content\Countdown.xnb
