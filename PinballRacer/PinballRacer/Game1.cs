@@ -59,10 +59,6 @@ namespace PinballRacer
         private GamePadState gamePadState;
         private GamePadState previousGamePadState;
 
-        //  Winning Conditions
-        static int ranking;
-
-
         public Game1()
         {
             //  Initialize drawable game components
@@ -85,8 +81,11 @@ namespace PinballRacer
 
         private void ResetGame()
         {
-            this.Components.Remove(playerManager);
             this.Components.Remove(trackManager);
+            this.Components.Remove(playerManager);
+
+            //this.Components.Remove(playerManager);
+            //this.Components.Remove(trackManager);
 
             trackManager = new TrackSpriteManager(this);
             playerManager = new PlayerSpriteManager(this);
@@ -114,9 +113,6 @@ namespace PinballRacer
             // Set up aspect ratio
             camera.AspectRatio = (float)graphics.GraphicsDevice.Viewport.Width /
                 graphics.GraphicsDevice.Viewport.Height;
-
-            // Sets the game rank
-            ranking = 1;
         }
 
         /// <summary>
@@ -199,23 +195,27 @@ namespace PinballRacer
 
                 if (collisionManager.SomeoneFinished(3))
                 {
-                    if (collisionManager.NPC.Count > 0)
+                    int whoFinished = collisionManager.CountWhoFinished();
+                    if (whoFinished != 4)
                     {
                         foreach (Player p in collisionManager.NPC)
                         {
-                            p.score -= (int)Math.Pow(4, collisionManager.finishedPlayers.Count);
+                            if (!p.doneRace)
+                            {
+                                p.score -= (int)Math.Pow(4, whoFinished);
+                            }
                         }
                     }
                     else
                     {
                         gameState = states.victory;
                         cameraView = CameraView.THIRD_PERSON;
+                        UpdatePlayerCamera(player);
                         //  Game's over, show the scoreboard
-                        foreach (Player p in collisionManager.finishedPlayers)
-                        {
-                            p.rank = ranking;
+                        foreach (Player p in collisionManager.NPC)
+                        {                            
                             p.score += 10000 / p.rank;
-                            ++ranking;
+                            
                         }
                     }
                 }

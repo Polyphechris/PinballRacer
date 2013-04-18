@@ -100,9 +100,9 @@ namespace PinballRacer.Track
             Model m = content.Load<Model>("cube");
             
             //Setting up the finishing line
-            int row = 89;
+            int row = 88;
             Vector3 colour;
-            for (int i = 42; i < 49; ++i)
+            for (int i = 42; i < 50; ++i)
             {
                 if (i % 2 == 1)
                 {
