@@ -142,11 +142,11 @@ namespace PinballRacer.Track.Obstacles
                     }
                     else if (state == states.RELOAD)
                     {
-                        p.velocity = direction * 0.15f;                        
+                        p.velocity = direction * 0.1f;                        
                     }
                     else if (state == states.IDLE)
                     {
-                        p.velocity = direction * 0.15f;
+                        p.velocity = direction * 0.1f;
                     }
 
                     break;

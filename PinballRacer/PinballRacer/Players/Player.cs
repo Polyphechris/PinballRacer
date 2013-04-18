@@ -40,7 +40,7 @@ namespace PinballRacer.Players
         protected float timer { get; set; }        
 
         //  Model attributes
-        public Model model { get; set; }        
+        public Model model { get; private set; }        
         public Vector3 color { get; set; }
         public float scale { get; protected set; }
         protected Vector3 rotation;        
@@ -123,9 +123,8 @@ namespace PinballRacer.Players
                 foreach (BasicEffect effect in mesh.Effects)
                 {
                     effect.EnableDefaultLighting();
-                    effect.AmbientLightColor = Color.Red.ToVector3();//new Vector3(0.2f, 0.2f, 0.2f);
-                   // effect.AmbientLightColor = color;
-                    effect.DiffuseColor = color;
+                    effect.AmbientLightColor = color;// Color.Red.ToVector3();//new Vector3(0.2f, 0.2f, 0.2f);
+                    //effect.DiffuseColor = color;
                     effect.World = world;
                     effect.View = view;
                     effect.Projection = projection;
@@ -158,6 +157,11 @@ namespace PinballRacer.Players
         public Vector2 TrackToMap()
         {
             return Vector2.Zero;
+        }
+
+        public void PlayerFinishedRace(int ranking)
+        {
+            rank = ranking;            
         }
     }
 }

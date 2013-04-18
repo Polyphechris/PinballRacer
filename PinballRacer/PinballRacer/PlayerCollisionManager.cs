@@ -15,6 +15,7 @@ namespace PinballRacer
         const float DETECTION_LENGTH = 3f;
         public Player human;
         public List<Player> NPC;
+        public List<Player> finishedPlayers;
         RaceTrack Track;
         ContentManager content;
         Model wall;
@@ -29,10 +30,10 @@ namespace PinballRacer
 
         public void InitializePlayers(List<NpcPlayer> players, Player human)
         {
+            finishedPlayers = new List<Player>();
             this.human = human;
             foreach (NpcPlayer npc in players)
-            {
-                npc.model = human.model;
+            {                
                 NPC.Add(npc);
             }
             NPC.Add(human);
@@ -56,7 +57,7 @@ namespace PinballRacer
                 {
                     if (p2 != p)
                     {
-                        if (Collision(p, p2))
+                        if (Collision(p, p2) && Game1.enableCollisionDetection)
                         {
                             p.SetPath(null);
                             HandleCollision(p, p2);
@@ -147,8 +148,17 @@ namespace PinballRacer
         //List sorted by points
         public List<Player> GetLeadersPoints()
         {
-            NPC = (from p in NPC orderby p.score descending select p).ToList();
-            return NPC;
+            if (NPC.Count > 0)
+            {
+                NPC = (from p in NPC orderby p.score descending select p).ToList();
+                return NPC;
+            }
+            else
+            {
+                finishedPlayers = (from p in finishedPlayers orderby p.score descending select p).ToList();
+                return finishedPlayers;
+            }
+            
         }
 
         //List sorter by race pole position
@@ -161,6 +171,39 @@ namespace PinballRacer
             }
             NPC = (from p in NPC orderby p.progress descending select p).ToList();
             return NPC;
+        }
+
+        public bool SomeoneFinished(int numberOfLaps)
+        {
+            List<Player> finished = new List<Player>();
+            foreach (Player p in NPC)
+            {
+                //  Winning condition
+                if (p.currentLap >= numberOfLaps)
+                {
+                    if (p.currentWaypoint == 1)
+                    {
+                        if (p.position.Y > 89)
+                        {
+                            finished.Add(p);
+                        }
+                    }
+                }
+            }
+
+            //  In case more than 
+            if (finished.Count > 0)
+            {                
+                finished = (from p in finished orderby p.position.Y descending select p).ToList();
+
+                foreach (Player p in finished)
+                {
+                    NPC.Remove(p);
+                    finishedPlayers.Add(p);
+                }
+            }
+
+            return (finishedPlayers.Count > 0);
         }
     }
 }

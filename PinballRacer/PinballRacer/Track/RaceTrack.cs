@@ -52,7 +52,7 @@ namespace PinballRacer.Track
 
             content = c;
             InitializeObstacles();
-            InitializeFloor();
+            InitializeFinishingLine();
             InitializeOutterWalls();
             InitializeInnerWalls();
             spring = content.Load<Model>("spring");
@@ -73,18 +73,35 @@ namespace PinballRacer.Track
             PathController = new PathManager(obstacles, tiles, Waypoints);
         }
 
-        private void InitializeFloor()
+        private void InitializeFinishingLine()
         {
             floors = new List<Floor>();
             Model m = content.Load<Model>("cube");
-            //Setting up the floor
-            for (int i = 0; i < TRACK_WIDTH; ++i)
+            
+            //Setting up the finishing line
+            int row = 89;
+            Vector3 colour;
+            for (int i = 42; i < 49; ++i)
             {
-                for (int j = 0; j < TRACK_HEIGHT; ++j)
+                if (i % 2 == 1)
                 {
-                 //   floors.Add(new Floor(i, j, m));
+                    colour = Color.Black.ToVector3();
                 }
+                else
+                {
+                    colour = Color.White.ToVector3();
+                }
+                
+                floors.Add(new Floor(i, row, m, colour));
             }
+
+            //for (int i = 0; i < TRACK_WIDTH; ++i)
+            //{
+            //    for (int j = 0; j < TRACK_HEIGHT; ++j)
+            //    {
+            //        floors.Add(new Floor(i, j, m));
+            //    }
+            //}
         }
 
         private void InitializeOutterWalls()
@@ -151,7 +168,7 @@ namespace PinballRacer.Track
                 if (rowCounter >= 0 || i >= 0 || rowCounter <= TRACK_HEIGHT - 1 || i <= TRACK_WIDTH - 1)
                 {
                     AddWallBumper(i, rowCounter);
-                    AddWallBumper(i, rowCounter-1);
+                    AddWallBumper(i, rowCounter - 1);
                     rowCounter += 1;
                 }
             }
@@ -322,10 +339,12 @@ namespace PinballRacer.Track
         {
             PathController.Draw(view, projection, content.Load<Model>("ball"), content.Load<Model>("cube"));
             DrawFloor();
+
             DrawWalls(view, projection, content.Load<Model>("cube"));
             foreach (Floor f in floors)
             {
                 f.draw(view, projection);
+                
             }
 
             //foreach (Wall w in walls)
@@ -454,6 +473,8 @@ namespace PinballRacer.Track
                 mesh.Draw();
             }
         }
+
+
 
     }
 }
