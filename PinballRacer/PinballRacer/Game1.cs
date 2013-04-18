@@ -45,8 +45,8 @@ namespace PinballRacer
 
         // Spring timer
         float timer = 0;
-        float timeToShoot = 5000;
-        float timeToCloseLoader = 6000;
+        float timeToShoot = 1000;
+        float timeToCloseLoader = 2000;
         public static bool launched = false;
         public static bool closeLoader = false;
 
@@ -75,6 +75,9 @@ namespace PinballRacer
 
         private void ResetGame()
         {
+            this.Components.Remove(trackManager);
+            this.Components.Remove(playerManager);
+
             trackManager = new TrackSpriteManager(this);
             playerManager = new PlayerSpriteManager(this);
             this.Components.Add(trackManager);
