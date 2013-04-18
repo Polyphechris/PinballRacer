@@ -5,7 +5,17 @@ using System.Text;
 
 namespace PinballRacer.Players.Strategies
 {
-    public class FinishFirstStrategy// : Strategy
+    public class FinishFirstStrategy : Strategy
     {
+        public FinishFirstStrategy()
+        {
+            Initialize();
+        }
+
+        protected virtual void Initialize()
+        {
+             points_value = 0.1f;
+             distance_value= 0.9f;
+        }
     }
 }

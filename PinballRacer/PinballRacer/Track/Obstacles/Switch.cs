@@ -15,7 +15,7 @@ namespace PinballRacer.Track.Obstacles
         const float LANE_HEIGHT = 4;
         const float LIGHT_RADIUS = 0.75f;
         const int LIGHT_VALUE = 1000;
-        const int JACKPOT_VALUE = 1000000;
+        const int JACKPOT_VALUE = 100000;
         const float IMMUNE_TIME = 1000f;
 
         //X, Y , Z, ON(0)/OFF(1)
@@ -45,6 +45,7 @@ namespace PinballRacer.Track.Obstacles
             }
             InitializeWalls();
             CollisionBox = new Rectangle((int)bottomLeft.X - 1, (int)bottomLeft.Y - 1, (int)LANE_WIDTH * 10 + 1, (int)LANE_HEIGHT + 2);
+            score = (lightsOn / 3) * (JACKPOT_VALUE + LIGHT_VALUE) / 2;
         }
 
         private void InitializeWalls()
@@ -84,6 +85,7 @@ namespace PinballRacer.Track.Obstacles
                         lightsOn--;
                         lanes[lightIndex] -= new Vector4(0, 0, 0, 1);
                     }
+                    score = (lightsOn / 3) * (JACKPOT_VALUE + LIGHT_VALUE) / 2;
                     //Give player a score
                     player.score += score;
                 }

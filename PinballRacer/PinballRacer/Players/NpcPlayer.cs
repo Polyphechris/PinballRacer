@@ -6,7 +6,7 @@ namespace PinballRacer.Players
 {
     public class NpcPlayer : Player
     {
-        Strategy pickStrategy;
+        public Strategy pickStrategy;
 
         #region Initialization Methods
         public void InitializePosition(Vector3 aPosition, Vector3 aDirection, float aScale, Vector3 aRotation)
@@ -54,8 +54,8 @@ namespace PinballRacer.Players
                     ApplyFriction(previousVelocity);
                     UpdateRotation(previousRotation);
                     previousPosition = new Vector3(position.X, position.Y, position.Z);
-                    velocity = truncate(velocity, MAX_SPEED);
-                    position += velocity * gameTime.ElapsedGameTime.Milliseconds / 1000;
+                    velocity = truncate(velocity, 2* SPEED_UP);
+                    position += velocity;
                 }
                 else
                 {
@@ -184,7 +184,7 @@ namespace PinballRacer.Players
         private Vector3 truncate(Vector3 velocity, float max)
         {
             velocity.Z = 0;
-            velocity = Vector3.Normalize(velocity) * MAX_SPEED;
+            velocity = Vector3.Normalize(velocity) * max;
             return velocity;
         }
     }

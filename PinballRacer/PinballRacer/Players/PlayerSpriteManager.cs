@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
+using PinballRacer.Players.Strategies;
 
 namespace PinballRacer.Players
 {
@@ -36,8 +37,8 @@ namespace PinballRacer.Players
             for (int i = 0; i < numberOfNpcs; ++i)
             {
                 NpcPlayer p = new NpcPlayer();
-                if (i == 0) { p.color = new Vector3(1, 0.75f, 0.8f); p.name = "Nimble Nimbus"; }
-                else { p.color = new Vector3(0.1f, 0.4f, 1); p.name = "The Gobbler"; }
+                if (i == 0) { p.color = new Vector3(1, 0.75f, 0.8f); p.name = "Nimble Nimbus"; p.pickStrategy = new FinishFirstStrategy(); }
+                else { p.color = new Vector3(0.1f, 0.4f, 1); p.name = "The Gobbler"; p.pickStrategy = new MostPointsStrategy(); }
                 p.InitializeModel(ball);
                 p.InitializePosition(new Vector3(47.5f, 2.5f + i, Player.RADIUS / 2), Vector3.Zero, Player.RADIUS, Vector3.Zero);
                 npcs.Add(p);

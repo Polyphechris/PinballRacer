@@ -117,7 +117,7 @@ namespace PinballRacer.Track.Pathfinding
                 TileGraph.ResetGoal(Waypoints[player.currentWaypoint]);
 
                 //Do the A*
-                TileGraph.ComputeHeuristics(player);
+                TileGraph.ComputeHeuristics(player, obstacles, tiles);
                 Path path = null;
                 path = TileGraph.AStarPath();
                 // path = NodeGraph.AStarPath();
