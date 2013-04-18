@@ -47,18 +47,18 @@ namespace PinballRacer.Players
                 {
                     CheckPitchRollChanges(up, down, left, right);
                     SetSteering();
-                   // if (impulses.Count > 0)
-                   // {
-                   // velocity += acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    velocity += acceleration;
+                    //if (impulses.Count > 0)
+                    //{
+                    velocity += acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds;
                     //}
+                    //velocity += acceleration;
+                    
                     ApplyFriction(previousVelocity);
                     UpdateRotation(previousRotation);
                     previousPosition = new Vector3(position.X, position.Y, position.Z);
-
-                    velocity = truncate(velocity, SPEED_UP * 1000);
-                    position += velocity * (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000;
-
+                    velocity = truncate(velocity, SPEED_UP * 38);
+                    position += velocity;
+                    //position += velocity;
                 }
                 else
                 {
