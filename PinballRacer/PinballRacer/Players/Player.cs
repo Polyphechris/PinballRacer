@@ -53,9 +53,11 @@ namespace PinballRacer.Players
         public int currentLap;
         public float progress;
         public string name;
+        public bool doneRace;
 
         public void InitializeModel(Model aModel)
         {
+            doneRace = false;
             currentWaypoint = 0;
             currentLap = 0;
             model = aModel;
