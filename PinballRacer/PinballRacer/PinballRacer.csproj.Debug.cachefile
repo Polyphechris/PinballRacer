@@ -4,17 +4,20 @@ Content\bumper_2.xnb
 Content\spring.xnb
 Content\flipper.xnb
 Content\ball.xnb
-Content\Score.xnb
-Content\smoke.xnb
 Content\slingshotleft.xnb
 Content\slingshotright.xnb
 Content\tirestack.xnb
 Content\testBall.xnb
-<<<<<<< HEAD
+Content\plane.xnb
 Content\Score.xnb
 Content\smoke.xnb
-=======
->>>>>>> 72c0ec752e0e22e3f2744e392d816c88e48a4d8c
-Content\plane.xnb
 Content\MenuFont.xnb
 Content\Countdown.xnb
+Content\music\mainmenu.xnb
+Content\music\race.xnb
+Content\sound\bumperbounce.xnb
+Content\sound\flipperbounce.xnb
+Content\sound\tirebounce.xnb
+Content\sound\wallbounce.xnb
+Content\music\mainmenu.wma
+Content\music\race.wma

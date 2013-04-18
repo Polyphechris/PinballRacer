@@ -333,6 +333,7 @@ namespace PinballRacer.Track
 
             foreach (Obstacle o in obstacles.Values)
             {
+               // if(o.GetType() != Wall)
                 o.draw(view, projection);
             }
             DrawSpring();
