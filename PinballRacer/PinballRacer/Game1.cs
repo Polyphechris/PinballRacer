@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
 using PinballRacer.Track;
 using PinballRacer.Players;
+using System;
 
 namespace PinballRacer
 {
@@ -58,6 +59,10 @@ namespace PinballRacer
         private GamePadState gamePadState;
         private GamePadState previousGamePadState;
 
+        //  Winning Conditions
+        static int ranking;
+
+
         public Game1()
         {
             //  Initialize drawable game components
@@ -80,8 +85,8 @@ namespace PinballRacer
 
         private void ResetGame()
         {
-            this.Components.Remove(trackManager);
             this.Components.Remove(playerManager);
+            this.Components.Remove(trackManager);
 
             trackManager = new TrackSpriteManager(this);
             playerManager = new PlayerSpriteManager(this);
@@ -109,6 +114,9 @@ namespace PinballRacer
             // Set up aspect ratio
             camera.AspectRatio = (float)graphics.GraphicsDevice.Viewport.Width /
                 graphics.GraphicsDevice.Viewport.Height;
+
+            // Sets the game rank
+            ranking = 1;
         }
 
         /// <summary>
@@ -188,6 +196,29 @@ namespace PinballRacer
                 Player player = playerManager.GetHumanPlayer();
                 UpdatePlayerCamera(player);
                 UpdateLoader(gameTime);
+
+                if (collisionManager.SomeoneFinished(1))
+                {
+                    if (collisionManager.NPC.Count > 0)
+                    {
+                        foreach (Player p in collisionManager.NPC)
+                        {
+                            p.score -= (int)Math.Pow(10, collisionManager.finishedPlayers.Count);
+                        }
+                    }
+                    else
+                    {
+                        gameState = states.victory;
+                        cameraView = CameraView.THIRD_PERSON;
+                        //  Game's over, show the scoreboard
+                        foreach (Player p in collisionManager.finishedPlayers)
+                        {
+                            p.rank = ranking;
+                            p.score += 10000 / p.rank;
+                            ++ranking;
+                        }
+                    }
+                }
             }
 
             previousGamePadState = GamePad.GetState(PlayerIndex.One);
@@ -268,7 +299,27 @@ namespace PinballRacer
 
                     }
                 }
-            }                  
+            }
+            if (gameState == states.victory)
+            {
+                Vector2 startLeaderboard1 = new Vector2(graphics.PreferredBackBufferWidth - 500, 25);                
+
+                int count = 1;
+                //Leaderboards
+                spriteBatch.Draw(smoke, new Vector2(990, 0), new Rectangle(0, 0, 2000, 2000), Color.FromNonPremultiplied(148, 0, 211, 150));
+
+                if (mode == modes.POINTS_RACE)
+                {
+                    spriteBatch.DrawString(font, " - SCORES -", startLeaderboard1 + new Vector2(50, 0), Color.Black, 0f, Vector2.Zero, 0.75f, SpriteEffects.None, 0f);
+                    foreach (Player p in collisionManager.GetLeadersPoints())
+                    {
+                        //SCORES
+                        spriteBatch.DrawString(font, p.name, startLeaderboard1 + new Vector2(0, count * 30), Color.Black, 0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0f);
+                        spriteBatch.DrawString(font, p.score.ToString(), startLeaderboard1 + new Vector2(170, count * 30), Color.Black, 0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0f);
+                        ++count;
+                    }
+                }
+            }
             if (gameState == states.pause)
             {
                 spriteBatch.Draw(smoke, new Vector2(0, 0), new Rectangle(0, 0, 2000, 2000), Color.FromNonPremultiplied(155, 155, 155, 155));            

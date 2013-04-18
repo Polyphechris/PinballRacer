@@ -65,7 +65,12 @@ namespace PinballRacer.Players
                     velocity = new Vector3(0, 1.4f, 0) - new Vector3(0, gameTime.ElapsedGameTime.Milliseconds / 100, 0);
                     previousPosition = new Vector3(position.X, position.Y, position.Z);
                     position += velocity;
-                }                
+                }
+
+                if (float.IsNaN(position.X) || float.IsNaN(position.Y) || float.IsNaN(position.Z))
+                {
+                    position = previousPosition;
+                }
             }
         }
 

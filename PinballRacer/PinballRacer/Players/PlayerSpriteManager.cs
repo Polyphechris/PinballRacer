@@ -13,7 +13,7 @@ namespace PinballRacer.Players
         HumanPlayer human;
         public List<NpcPlayer> npcs;
 
-        Model ball;
+        Model[] models;
 
         int numberOfNpcs;
         bool runUpdates = false;
@@ -55,7 +55,7 @@ namespace PinballRacer.Players
                     p.name = "The Gobbler"; 
                     p.pickStrategy = new MostPointsStrategy();
                 }
-                p.InitializeModel(ball);
+                p.InitializeModel(models[i]);
                 p.InitializePosition(new Vector3(47.5f, 2.5f + i + (numberOfNpcs*0.05f), Player.RADIUS / 2), Vector3.Zero, Player.RADIUS, Vector3.Zero);
                 npcs.Add(p);
             }
@@ -65,7 +65,7 @@ namespace PinballRacer.Players
         private void InitializeHumanPlayer()
         {
             human = new HumanPlayer();
-            human.InitializeModel(ball);
+            human.InitializeModel(models[3]);
             float scale = Player.RADIUS;
             Vector3 position = new Vector3(47.5f, 2.5f + numberOfNpcs + (numberOfNpcs*0.05f), Player.RADIUS / 2);
             Vector3 direction = new Vector3(0.0f, 0.0f, 0.0f);
@@ -77,7 +77,11 @@ namespace PinballRacer.Players
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(Game.GraphicsDevice);
-            ball = Game.Content.Load<Model>("testBall");
+            models = new Model[4];            
+            models[0] = Game.Content.Load<Model>("ballSkin1");
+            models[1] = Game.Content.Load<Model>("ballSkin2");
+            models[2] = Game.Content.Load<Model>("ballSkin3");
+            models[3] = Game.Content.Load<Model>("testBall");
             base.LoadContent();
         }
 
@@ -98,9 +102,14 @@ namespace PinballRacer.Players
         {
             base.Draw(gameTime);
             human.Draw(Game1.view, Game1.projection);
+            //foreach (Player p in npcs)
+            //{
+            //    p.Draw(Game1.view, Game1.projection);
+            //}
             foreach (Player p in npcs)
             {
                 p.Draw(Game1.view, Game1.projection);
+
             }
         }
 
