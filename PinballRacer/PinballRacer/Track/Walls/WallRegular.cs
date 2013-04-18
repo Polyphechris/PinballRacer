@@ -10,8 +10,8 @@ namespace PinballRacer.Track.Walls
 {
     class WallRegular : Wall
     {
-        const int SCORE = 50;
-        public const float E = 2f;
+        const int SCORE = 500;
+        public const float E = 5f;
         public WallRegular(float x, float y, Model m)
         {
             score = SCORE;
