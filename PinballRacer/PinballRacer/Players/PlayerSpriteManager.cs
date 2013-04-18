@@ -28,12 +28,12 @@ namespace PinballRacer.Players
         {
             base.Initialize();
 
+            numberOfNpcs = 3;
             InitializeHumanPlayer();
             human.color = new Vector3(0.1f, 1f, 0.1f);
             human.name = "YOU";
             npcs = new List<NpcPlayer>();
-
-            numberOfNpcs = 2;
+            
             for (int i = 0; i < numberOfNpcs; ++i)
             {
                 NpcPlayer p = new NpcPlayer();
@@ -51,7 +51,7 @@ namespace PinballRacer.Players
             human = new HumanPlayer();
             human.InitializeModel(ball);
             float scale = Player.RADIUS;
-            Vector3 position = new Vector3(47.5f, 4.5f, Player.RADIUS / 2);
+            Vector3 position = new Vector3(47.5f, 2.5f + numberOfNpcs, Player.RADIUS / 2);
             Vector3 direction = new Vector3(0.0f, 0.0f, 0.0f);
             Vector3 rotation = new Vector3(0.0f, 0.0f, 0.0f);
             
