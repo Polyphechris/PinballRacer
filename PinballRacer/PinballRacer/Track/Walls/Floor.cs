@@ -16,7 +16,7 @@ namespace PinballRacer.Track.Walls
         {
             isHit = false;
             model = m;
-            position = new Vector3(x,  y, -0.5f);
+            position = new Vector3(x,  y, -0.9f);
             scale = new Vector3(0.5f);
             colour = c;
         }

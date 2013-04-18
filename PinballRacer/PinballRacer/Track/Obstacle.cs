@@ -18,6 +18,8 @@ namespace PinballRacer.Track
         protected Vector3 position;
         protected Vector3 scale;
         public bool isHit;
+        protected Matrix world;
+
         //Box for what tiles in the collision grid gets populated
         public Rectangle CollisionBox;
 
@@ -50,7 +52,7 @@ namespace PinballRacer.Track
                     effect.DirectionalLight0.Direction = new Vector3(0, 0, -1);
                     effect.AmbientLightColor = new Vector3(0.5f);
                     effect.DirectionalLight0.DiffuseColor = new Vector3(1, 1, 1);// Shinnyness/reflexive
-                    effect.World = Matrix.CreateScale(scale) * Matrix.CreateTranslation(position);
+                    effect.World = world;
                     effect.View = view;
                     effect.Projection = projection;
                     //effect.Alpha = 0.8f;

@@ -26,6 +26,9 @@ namespace PinballRacer.Players.Strategies
 
         protected float points_value;
         protected float distance_value;
+        public float rankModifier;
+        public float pointModifier;
+
         Random random;
 
         public float GenerateHeuristic(Vector2 nodePosition, Vector2 goalPosition, Obstacle obstacle)

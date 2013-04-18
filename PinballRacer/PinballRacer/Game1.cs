@@ -272,6 +272,7 @@ namespace PinballRacer
                         spriteBatch.DrawString(font, " - SCORES -", startLeaderboard1 + new Vector2(50, 0), Color.White, 0f, Vector2.Zero, 0.75f, SpriteEffects.None, 0f);
                         foreach (Player p in collisionManager.GetLeadersPoints())
                         {
+                            p.pointRank = count;  
                             //SCORES
                             spriteBatch.DrawString(font, p.name, startLeaderboard1 + new Vector2(0, count * 30), Color.White, 0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0f);
                             spriteBatch.DrawString(font, p.score.ToString(), startLeaderboard1 + new Vector2(170, count * 30), Color.White, 0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0f);
@@ -284,6 +285,7 @@ namespace PinballRacer
                         count = 1;
                         foreach (Player p in collisionManager.GetLeadersRank())
                         {
+                            p.rank = count;                            
                             //RANKS
                             spriteBatch.DrawString(font, p.name, startLeaderboard2 + new Vector2(0, count * 30), Color.White, 0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0f);
                             spriteBatch.DrawString(font, count.ToString(), startLeaderboard2 + new Vector2(170, count * 30), Color.White, 0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0f);

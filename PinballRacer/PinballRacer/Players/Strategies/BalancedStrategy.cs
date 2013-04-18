@@ -14,7 +14,7 @@ namespace PinballRacer.Players.Strategies
         }
 
         protected virtual void Initialize()
-        {
+        {           
             points_value = 1f;
             distance_value = 0.6f;
         }
