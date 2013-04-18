@@ -48,8 +48,8 @@ namespace PinballRacer
 
         // Spring timer
         float timer = 0;
-        float timeToShoot = 1000;
-        float timeToCloseLoader = 2000;
+        float timeToShoot = 5000;
+        float timeToCloseLoader = 6000;
         public static bool launched = false;
         public static bool closeLoader = false;
 
