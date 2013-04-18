@@ -233,6 +233,14 @@ namespace PinballRacer
                         }
                     }
                 }
+
+                foreach (Player p in collisionManager.NPC)
+                {
+                    if (p.score < 0)
+                    {
+                        p.score = 0;
+                    }
+                }
             }
 
             previousGamePadState = GamePad.GetState(PlayerIndex.One);
