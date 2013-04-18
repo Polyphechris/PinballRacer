@@ -50,8 +50,10 @@ namespace PinballRacer
         float timer = 0;
         float timeToShoot = 1000;
         float timeToCloseLoader = 2000;
+        float timeToEnableCollisionDetection = 3000;
         public static bool launched = false;
         public static bool closeLoader = false;
+        public static bool enableCollisionDetection = false;
 
         private GamePadState gamePadState;
         private GamePadState previousGamePadState;
@@ -599,12 +601,11 @@ namespace PinballRacer
 
         private void UpdateLoader(GameTime gameTime)
         {
-            if ((!trackManager.track.springShot || !closeLoader) && gameState == states.play)
+            if ((!trackManager.track.springShot || !closeLoader || !enableCollisionDetection) && gameState == states.play)
             {
                 if (!trackManager.track.springShot)
                 {
                     timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-                    //trackManager.track.springLevel += 0.0001f;
                     playerManager.GetHumanPlayer().velocity = new Vector3(0, 0.001f, 0);
                     foreach (NpcPlayer n in playerManager.npcs)
                     {
@@ -635,6 +636,10 @@ namespace PinballRacer
                     if (timer > timeToCloseLoader)
                     {
                         closeLoader = true;
+                    }
+                    if (timer > timeToEnableCollisionDetection)
+                    {
+                        enableCollisionDetection = true;
                     }
                 }
             }
