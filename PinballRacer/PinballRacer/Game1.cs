@@ -48,10 +48,11 @@ namespace PinballRacer
         float zoom = 0;
 
         // Spring timer
-        float timer = 0;
-        float timeToShoot = 1000;
-        float timeToCloseLoader = 2000;
-        float timeToEnableCollisionDetection = 3000;
+        float timer;
+        float timeToShoot;
+        float timeToCloseLoader;
+        float timeToEnableCollisionDetection;
+
         public static bool launched = false;
         public static bool closeLoader = false;
         public static bool enableCollisionDetection = false;
@@ -76,6 +77,15 @@ namespace PinballRacer
             //  Defining the window size
             //graphics.PreferredBackBufferWidth = 800;
             //graphics.PreferredBackBufferHeight = 600;
+            timer = 0;
+            timeToShoot = 1000;
+            timeToCloseLoader = 2000;
+            timeToEnableCollisionDetection = 3000;
+
+            launched = false;
+            closeLoader = false;
+            enableCollisionDetection = false;
+
             pressed = false; showBoard = true; pressed2 = false;
         }
 
@@ -84,19 +94,23 @@ namespace PinballRacer
             this.Components.Remove(trackManager);
             this.Components.Remove(playerManager);
 
-            //this.Components.Remove(playerManager);
-            //this.Components.Remove(trackManager);
-
             trackManager = new TrackSpriteManager(this);
             playerManager = new PlayerSpriteManager(this);
+
             this.Components.Add(trackManager);
             this.Components.Add(playerManager);
+
+            timer = 0;
+            timeToShoot = 1000;
+            timeToCloseLoader = 2000;
+            timeToEnableCollisionDetection = 3000;
+            launched = false;
+            closeLoader = false;
+            enableCollisionDetection = false;
+
             pressed = false; showBoard = true; pressed2 = false;
 
             this.Initialize();
-            this.LoadContent();
-            camera.AspectRatio = (float)graphics.GraphicsDevice.Viewport.Width /
-                graphics.GraphicsDevice.Viewport.Height;
         }
 
         /// <summary>
