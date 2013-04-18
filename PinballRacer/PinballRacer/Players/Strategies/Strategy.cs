@@ -26,8 +26,8 @@ namespace PinballRacer.Players.Strategies
 
         protected float points_value;
         protected float distance_value;
-        float rankModifier;
-        float pointModifier;
+        public float rankModifier;
+        public float pointModifier;
 
         Random random;
 

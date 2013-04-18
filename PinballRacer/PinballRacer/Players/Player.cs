@@ -53,12 +53,15 @@ namespace PinballRacer.Players
         public int currentLap;
         public float progress;
         public string name;
+        public int pointRank;
 
         public void InitializeModel(Model aModel)
         {
             currentWaypoint = 0;
             currentLap = 0;
             model = aModel;
+            rank = 1;
+            pointRank = 1;
         }
 
         public int ImpulseCount()

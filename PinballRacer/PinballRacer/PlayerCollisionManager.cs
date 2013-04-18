@@ -56,7 +56,7 @@ namespace PinballRacer
                 {
                     if (p2 != p)
                     {
-                        if (Collision(p, p2))
+                        if (Collision(p, p2) && Game1.enableCollisionDetection)
                         {
                             p.SetPath(null);
                             HandleCollision(p, p2);
