@@ -160,5 +160,17 @@ namespace PinballRacer.Players
                 }
             }
         }
+
+        private void SetSteeringVelocity(Vector3 targetPosition)
+        {
+            Vector3 desiredVelocity = Vector3.Normalize(targetPosition - position) * MAX_SPEED;
+            Vector3 steering = desiredVelocity - velocity;
+            velocity = truncate(velocity + steering, MAX_ACC);
+        }
+
+        private Vector3 truncate(Vector3 velocity, float max)
+        {
+            return velocity;
+        }
     }
 }
