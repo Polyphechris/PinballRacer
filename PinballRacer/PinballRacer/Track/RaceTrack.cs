@@ -107,6 +107,15 @@ namespace PinballRacer.Track
 
         private void InitializeInnerWalls()
         {
+            Vector2 bottomLeft = new Vector2(TRACK_WIDTH / 2 - 4, TRACK_HEIGHT - 15);
+            for (int i = 0; i <= 3; ++i)
+            {
+                for (int j = 0; j <= 4; ++j)
+                {
+                    AddWall((int)bottomLeft.X + (i * 3), (int)bottomLeft.Y + j);
+                }
+            }
+
             for (int i = TRACK_WIDTH_IN; i < TRACK_WIDTH_OUT; ++i)
             {
                 for (int j = TRACK_HEIGHT_IN; j < TRACK_HEIGHT_OUT; ++j)
@@ -228,9 +237,17 @@ namespace PinballRacer.Track
             AddObstacle(new Flipper((TRACK_WIDTH - 4) / 2 + 10, 10, content.Load<Model>("flipper"), (float)Math.PI + 0.3f, true));
             Flipper.flipperSphere = content.Load<Model>("ball");
 
-            AddObstacle(new Switch(new Vector2(TRACK_WIDTH / 2 - 4, TRACK_HEIGHT - 15), content.Load<Model>("ball"), content.Load<Model>("cube")));
-        }
+            Vector2 bottomLeft = new Vector2(TRACK_WIDTH / 2 - 4, TRACK_HEIGHT - 15);
+            AddObstacle(new Switch(bottomLeft, content.Load<Model>("ball"), content.Load<Model>("cube")));
 
+            //for (int i = 0; i <= 3; ++i)
+            //{
+            //    for (int j = 0; j <= 4; ++j)
+            //    {
+            //        AddWall((int)bottomLeft.X + (i * 3), (int)bottomLeft.Y + j);
+            //    }
+            //}
+        }
         private void AddObstacle(Obstacle o)
         {
             o.ID = ID;

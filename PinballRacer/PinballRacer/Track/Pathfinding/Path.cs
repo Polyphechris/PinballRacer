@@ -12,7 +12,7 @@ namespace PinballRacer.Track.Pathfinding
     public class Path
     {
         const float UNIT_LEN = 20;
-        const float NEXT_THRESHOLD = 0.25f;
+        const float NEXT_THRESHOLD = 1.9f;
         float runtime;
         float started;
         float end;

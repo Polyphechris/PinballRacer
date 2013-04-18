@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using PinballRacer.Track;
 
 namespace PinballRacer.Players.Strategies
 {
@@ -22,6 +23,16 @@ namespace PinballRacer.Players.Strategies
         public Player tag;
 
         public Vector3 steering;
+
+        protected float points_value;
+        protected float distance_value;
+
+        public float GenerateHeuristic(Vector3 playerPosition, Vector2 goalPosition, Obstacle obstacle)
+        {
+            float heuristic = 0f;
+
+            return heuristic;
+        }
 
         //Two sets of behaviours for each NPC
         public abstract Vector3 Chase(Player p, List<Player> players);

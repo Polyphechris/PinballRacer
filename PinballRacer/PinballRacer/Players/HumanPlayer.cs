@@ -170,8 +170,6 @@ namespace PinballRacer.Players
             }
         }
 
-
-
         private void CheckPitchRollChanges(Keys key)
         {            
             if (key.Equals(forward))

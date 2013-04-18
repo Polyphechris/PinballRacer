@@ -46,14 +46,15 @@ namespace PinballRacer.Players
                 if (Game1.closeLoader)
                 {
                     CheckPitchRollChanges(up, down, left, right);
-
-                    if (impulses.Count > 0)
-                    {
-                        velocity += acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    }
+                    SetSteering();
+                   // if (impulses.Count > 0)
+                   // {
+                    velocity += acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    //}
                     ApplyFriction(previousVelocity);
                     UpdateRotation(previousRotation);
                     previousPosition = new Vector3(position.X, position.Y, position.Z);
+                    velocity = truncate(velocity, MAX_SPEED);
                     position += velocity * gameTime.ElapsedGameTime.Milliseconds / 1000;
                 }
                 else
@@ -161,15 +162,29 @@ namespace PinballRacer.Players
             }
         }
 
-        private void SetSteeringVelocity(Vector3 targetPosition)
+        private void SetSteering()
         {
-            Vector3 desiredVelocity = Vector3.Normalize(targetPosition - position) * MAX_SPEED;
+            Vector3 desiredVelocity = Vector3.Zero;
+            if (path != null)
+            {
+                //Gets the desired direction
+                desiredVelocity = MAX_SPEED * path.getDirection(0, position);
+                if (path.checkEnd())
+                {
+                    path = null;
+                }
+            }
             Vector3 steering = desiredVelocity - velocity;
-            velocity = truncate(velocity + steering, MAX_ACC);
+            steering.Z = 0;
+            steering = Vector3.Normalize(steering) * MAX_ACC;            
+            acceleration += steering;
+           // acceleration += truncate(acceleration + steering, MAX_ACC);
         }
 
         private Vector3 truncate(Vector3 velocity, float max)
         {
+            velocity.Z = 0;
+            velocity = Vector3.Normalize(velocity) * MAX_SPEED;
             return velocity;
         }
     }
