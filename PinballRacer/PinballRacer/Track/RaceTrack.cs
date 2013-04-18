@@ -42,6 +42,7 @@ namespace PinballRacer.Track
         public enum squareStates { EMPTY = 0, WALL, PLAYER1, PLAYER2, OBSTACLE, GOAL1, LAST };
         public enum trackStates { PLAYING = 0, START, GAMEOVER };
         public squareStates[,] board;
+        Wall tokenWall = new WallRegular(0,0,null);
 
         public RaceTrack(ContentManager c)
         {
@@ -333,7 +334,7 @@ namespace PinballRacer.Track
 
             foreach (Obstacle o in obstacles.Values)
             {
-               // if(o.GetType() != Wall)
+                if(o.GetType() != tokenWall.GetType())
                 o.draw(view, projection);
             }
             DrawSpring();

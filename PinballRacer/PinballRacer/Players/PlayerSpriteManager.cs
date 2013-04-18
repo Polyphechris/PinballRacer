@@ -33,12 +33,7 @@ namespace PinballRacer.Players
             human.color = new Vector3(0.1f, 1f, 0.1f);
             human.name = "YOU";
             npcs = new List<NpcPlayer>();
-<<<<<<< HEAD
-
             numberOfNpcs = 3;
-=======
-            
->>>>>>> 308ea8411f70fb357655fadb5c79dcaf627e78c4
             for (int i = 0; i < numberOfNpcs; ++i)
             {
                 NpcPlayer p = new NpcPlayer();
