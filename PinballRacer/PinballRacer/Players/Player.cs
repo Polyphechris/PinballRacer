@@ -111,7 +111,7 @@ namespace PinballRacer.Players
 
         public void Draw(Matrix view, Matrix projection)
         {
-            if(path != null)
+            if (path != null)
                 path.Draw(view, projection, model);
             //  yaw(spin), pitch (forward/backward), roll (sideways)            
             Matrix world = Matrix.CreateScale(scale) *

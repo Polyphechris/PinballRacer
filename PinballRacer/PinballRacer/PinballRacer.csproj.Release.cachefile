@@ -4,14 +4,13 @@ Content\bumper_2.xnb
 Content\spring.xnb
 Content\flipper.xnb
 Content\ball.xnb
-Content\Score.xnb
-Content\smoke.xnb
 Content\slingshotleft.xnb
 Content\slingshotright.xnb
 Content\tirestack.xnb
 Content\testBall.xnb
 Content\plane.xnb
-Content\MenuFont.xnb
 Content\Countdown.xnb
 Content\dot.xnb
-Content\newcube.xnb
+Content\smoke.xnb
+Content\MenuFont.xnb
+Content\Score.xnb

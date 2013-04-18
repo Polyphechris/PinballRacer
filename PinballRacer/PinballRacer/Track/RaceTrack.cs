@@ -228,8 +228,8 @@ namespace PinballRacer.Track
             AddObstacle(new Slingshot(new Vector3((TRACK_WIDTH - 4) / 2 - 12.5f, 20.6f, -0.2f), content.Load<Model>("slingshotright"), Matrix.CreateRotationZ(MathHelper.ToRadians(-127)), false));
             AddObstacle(new Slingshot(new Vector3((TRACK_WIDTH - 4) / 2 + 12.25f, 20.0f, 2.65f), content.Load<Model>("slingshotleft"), Matrix.CreateRotationZ(MathHelper.ToRadians(180)), true));
 
-            AddObstacle(new Flipper((TRACK_WIDTH - 4) / 2 - 10, 10, content.Load<Model>("flipper"), 0f - 0.3f, false));
-            AddObstacle(new Flipper((TRACK_WIDTH - 4) / 2 + 10, 10, content.Load<Model>("flipper"), (float)Math.PI + 0.3f, true));
+            //AddObstacle(new Flipper((TRACK_WIDTH - 4) / 2 - 10, 10, content.Load<Model>("flipper"), 0f - 0.3f, false));
+            //AddObstacle(new Flipper((TRACK_WIDTH - 4) / 2 + 10, 10, content.Load<Model>("flipper"), (float)Math.PI + 0.3f, true));
             Flipper.flipperSphere = content.Load<Model>("ball");
 
             Vector2 bottomLeft = new Vector2(TRACK_WIDTH / 2 - 4, TRACK_HEIGHT - 15);

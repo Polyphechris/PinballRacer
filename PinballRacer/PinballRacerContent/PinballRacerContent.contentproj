@@ -58,6 +58,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="dot.bmp">
+      <Name>dot</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>FontTextureProcessor</Processor>
+    </Compile>
     <Compile Include="spring.fbx">
       <Name>spring</Name>
       <Importer>FbxImporter</Importer>
