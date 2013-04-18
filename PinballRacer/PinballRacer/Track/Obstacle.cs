@@ -12,7 +12,7 @@ namespace PinballRacer.Track
     {
         const float HIT_TIMER = 300f;
         float hitTime = 0;
-        public int ID { get; set; }
+        public int ID;
         protected Model model;
         public int score { get; protected set; }
         protected Vector3 position;
