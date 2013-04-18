@@ -39,7 +39,7 @@ namespace PinballRacer.Players
                 NpcPlayer p = new NpcPlayer();
                 if (i == 2)
                 {
-                    p.color = new Vector3(1, 0.75f, 0.8f);
+                    p.color = new Vector3(1, 1f, 0.2f);
                     p.name = "Even Steven";
                     p.pickStrategy = new BalancedStrategy(); 
                 }
@@ -101,11 +101,6 @@ namespace PinballRacer.Players
             foreach (Player p in npcs)
             {
                 p.Draw(Game1.view, Game1.projection);
-            }
-
-            foreach (NpcPlayer n in npcs)
-            {
-                n.Draw(Game1.view, Game1.projection);
             }
         }
 

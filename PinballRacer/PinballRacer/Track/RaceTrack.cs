@@ -322,6 +322,7 @@ namespace PinballRacer.Track
         {
             PathController.Draw(view, projection, content.Load<Model>("ball"), content.Load<Model>("cube"));
             DrawFloor();
+            DrawWalls(view, projection, content.Load<Model>("cube"));
             foreach (Floor f in floors)
             {
                 f.draw(view, projection);
@@ -338,6 +339,28 @@ namespace PinballRacer.Track
                 o.draw(view, projection);
             }
             DrawSpring();
+        }
+
+        public void DrawWalls(Matrix view, Matrix projection, Model model)
+        {
+            foreach (ModelMesh mesh in floor.Meshes)
+            {
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+                    effect.LightingEnabled = true;
+                    effect.EnableDefaultLighting();
+                    effect.DirectionalLight0.Enabled = true;
+                    effect.DirectionalLight0.Direction = new Vector3(0, 0, -1);
+                    effect.AmbientLightColor = new Vector3(0.55f);
+                    effect.DirectionalLight0.DiffuseColor = new Vector3(1, 1, 1);// Shinnyness/reflexive
+                    effect.World = Matrix.CreateScale(new Vector3(TRACK_WIDTH / 2, TRACK_HEIGHT / 2, 1)) *
+                        Matrix.CreateTranslation(new Vector3(TRACK_WIDTH / 2, TRACK_HEIGHT / 2, -0.5f));
+                    effect.View = Game1.view;
+                    effect.Projection = Game1.projection;
+                    //effect.Alpha = 0.8f;
+                }
+                mesh.Draw();
+            }
         }
 
         public void DrawFloor()
