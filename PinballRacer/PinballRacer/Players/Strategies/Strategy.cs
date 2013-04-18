@@ -47,7 +47,7 @@ namespace PinballRacer.Players.Strategies
             //Max value to 100 then multiply them by probabilities (weighted average)
             distanceH = Math.Min(distanceH, 100);
             scoreH = Math.Min(scoreH, 100);
-            heuristic = (scoreH * points_value) + (distanceH * points_value);            
+            heuristic = (scoreH * points_value) + (distanceH * distance_value);            
 
             return heuristic;
         }
