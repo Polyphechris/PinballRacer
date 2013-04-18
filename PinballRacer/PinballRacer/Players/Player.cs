@@ -29,8 +29,8 @@ namespace PinballRacer.Players
         protected const float CONE = (float)Math.PI / 4;
 
         //  Movement attributes
-        public Vector3 position { get; set; }
-        public Vector3 previousPosition { get; set; }
+        public Vector3 position;
+        public Vector3 previousPosition;
         protected Vector3 direction { get; set; }
         public Vector3 velocity;
         protected Vector3 acceleration { get; set; }        
@@ -40,8 +40,8 @@ namespace PinballRacer.Players
         protected float timer { get; set; }        
 
         //  Model attributes
-        public Model model { get; private set; }        
-        public Vector3 color { get; set; }
+        public Model model { get; private set; }
+        public Vector3 color;
         public float scale { get; protected set; }
         protected Vector3 rotation;        
 
@@ -53,10 +53,13 @@ namespace PinballRacer.Players
         public int currentLap;
         public float progress;
         public string name;
+
+        public bool doneRace;
         public int pointRank;
 
         public void InitializeModel(Model aModel)
         {
+            doneRace = false;
             currentWaypoint = 0;
             currentLap = 0;
             model = aModel;

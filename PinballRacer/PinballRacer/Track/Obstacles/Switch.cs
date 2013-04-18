@@ -15,7 +15,7 @@ namespace PinballRacer.Track.Obstacles
         const float LANE_HEIGHT = 4;
         const float LIGHT_RADIUS = 0.75f;
         const int LIGHT_VALUE = 1000;
-        const int JACKPOT_VALUE = 10000;
+        const int JACKPOT_VALUE = 100000;
         const float IMMUNE_TIME = 1000f;
 
         //X, Y , Z, ON(0)/OFF(1)

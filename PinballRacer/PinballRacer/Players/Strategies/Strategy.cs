@@ -62,7 +62,7 @@ namespace PinballRacer.Players.Strategies
             return heuristic;
         }
 
-        protected virtual void Initialize()
+        protected void Initialize()
         {
             random = new Random();
         }

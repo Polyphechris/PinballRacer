@@ -14,23 +14,26 @@ namespace PinballRacer
     {
         const float DETECTION_LENGTH = 3f;
         public Player human;
-        public List<Player> NPC;
-        public List<Player> finishedPlayers;
+        public List<Player> NPC;        
         RaceTrack Track;
         ContentManager content;
         Model wall;
         Model ball;
+        static int ranking;
+
 
         public PlayerCollisionManager(ContentManager c, RaceTrack t)
         {
+            // Sets the game rank
+            ranking = 1;
+
             Track = t;
             content = c;
             NPC = new List<Player>();
         }
 
         public void InitializePlayers(List<NpcPlayer> players, Player human)
-        {
-            finishedPlayers = new List<Player>();
+        {            
             this.human = human;
             foreach (NpcPlayer npc in players)
             {                
@@ -43,6 +46,11 @@ namespace PinballRacer
         {
             foreach (Player p in NPC)
             {
+                if (p.doneRace)
+                {
+                    continue;
+                }
+                
                 if (p != human)
                 {
                     Track.PathController.Update(time.ElapsedGameTime.Milliseconds, p);
@@ -55,6 +63,10 @@ namespace PinballRacer
                 //Check P2P collision
                 foreach (Player p2 in NPC)
                 {
+                    if (p2.doneRace)
+                    {
+                        continue;
+                    }
                     if (p2 != p)
                     {
                         if (Collision(p, p2) && Game1.enableCollisionDetection)
@@ -147,18 +159,9 @@ namespace PinballRacer
 
         //List sorted by points
         public List<Player> GetLeadersPoints()
-        {
-            if (NPC.Count > 0)
-            {
-                NPC = (from p in NPC orderby p.score descending select p).ToList();
-                return NPC;
-            }
-            else
-            {
-                finishedPlayers = (from p in finishedPlayers orderby p.score descending select p).ToList();
-                return finishedPlayers;
-            }
-            
+        {            
+            NPC = (from p in NPC orderby p.score descending select p).ToList();
+            return NPC;
         }
 
         //List sorter by race pole position
@@ -175,7 +178,7 @@ namespace PinballRacer
 
         public bool SomeoneFinished(int numberOfLaps)
         {
-            List<Player> finished = new List<Player>();
+            List<Player> whoFinished = new List<Player>();
             foreach (Player p in NPC)
             {
                 //  Winning condition
@@ -183,27 +186,40 @@ namespace PinballRacer
                 {
                     if (p.currentWaypoint == 1)
                     {
-                        if (p.position.Y > 89)
+                        if (p.position.Y > 88)
                         {
-                            finished.Add(p);
+                            p.doneRace = true;
+                            whoFinished.Add(p);
                         }
                     }
                 }
             }
 
-            //  In case more than 
-            if (finished.Count > 0)
-            {                
-                finished = (from p in finished orderby p.position.Y descending select p).ToList();
-
-                foreach (Player p in finished)
-                {
-                    NPC.Remove(p);
-                    finishedPlayers.Add(p);
-                }
+            if (whoFinished.Count > 1)
+            {
+                whoFinished = (from p in whoFinished orderby p.position.Y descending select p).ToList();
             }
 
-            return (finishedPlayers.Count > 0);
+            foreach (Player p in whoFinished)
+            {                
+                p.rank = ranking;
+                ++ranking;
+            }
+
+            return (CountWhoFinished() > 0);
+        }
+
+        public int CountWhoFinished()
+        {
+            int counter = 0;
+            foreach (Player p in NPC)
+            {
+                if (p.doneRace)
+                {
+                    ++counter;
+                }
+            }
+            return counter;
         }
     }
 }
