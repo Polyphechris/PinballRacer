@@ -113,7 +113,8 @@ namespace PinballRacer.Track.Obstacles
                         float d = (lines[i].X * player.X + lines[i].Y * player.Y + lines[i].Z) /
                                             (float)(Math.Sqrt(Math.Pow(lines[i].X, 2) + Math.Pow(lines[i].Y, 2)));
                         if (Math.Abs(d) <= Player.RADIUS)
-                        { isHit = true; p.score += score; return forces[i] * E; }
+                        { AudioManager.playEffect(AudioEffect.FLIPPER_BOUNCE);
+                            isHit = true; p.score += score; return forces[i] * E; }
                     }
                 }
                 else
@@ -122,9 +123,11 @@ namespace PinballRacer.Track.Obstacles
                         isBetween(vertices[i].X, vertices[end].X, player.X))
                     {
                         if (inverted && player.X - Player.RADIUS < vertices[end].X)
-                        { isHit = true; p.score += score; return forces[i] * E; }
+                        { AudioManager.playEffect(AudioEffect.FLIPPER_BOUNCE);
+                            isHit = true; p.score += score; return forces[i] * E; }
                         else if (player.X + Player.RADIUS > vertices[end].X)
-                        { isHit = true; p.score += score; return forces[i] * E; }
+                        { AudioManager.playEffect(AudioEffect.FLIPPER_BOUNCE);
+                            isHit = true; p.score += score; return forces[i] * E; }
                     }
                 }
                 //}

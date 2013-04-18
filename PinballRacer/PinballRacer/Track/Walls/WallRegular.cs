@@ -32,6 +32,7 @@ namespace PinballRacer.Track.Walls
                 //Check bounding Boxes
                 if (UpdateBoundingBox(model, world2).Intersects(sphere1))
                 {
+                    AudioManager.playEffect(AudioEffect.WALL_BOUNCE);
                     return true;
                 }
             }

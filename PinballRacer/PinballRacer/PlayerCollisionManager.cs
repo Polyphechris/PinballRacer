@@ -116,6 +116,7 @@ namespace PinballRacer
             float distance = (p1.position - p2.position).Length();
             if(distance < Player.RADIUS * 2)
             {
+                AudioManager.playEffect(AudioEffect.WALL_BOUNCE);
                 return true;
             }
             return false;
