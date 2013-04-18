@@ -61,6 +61,8 @@ namespace PinballRacer
         private GamePadState gamePadState;
         private GamePadState previousGamePadState;
 
+        public static Random random;
+
         public Game1()
         {
             //  Initialize drawable game components
@@ -79,19 +81,21 @@ namespace PinballRacer
             //graphics.PreferredBackBufferWidth = 800;
             //graphics.PreferredBackBufferHeight = 600;
             timer = 0;
-            timeToShoot = 1000;
-            timeToCloseLoader = 2000;
-            timeToEnableCollisionDetection = 3000;
+            timeToShoot = 4000;
+            timeToCloseLoader = 5000;
+            timeToEnableCollisionDetection = 6000;
 
             launched = false;
             closeLoader = false;
             enableCollisionDetection = false;
 
             pressed = false; showBoard = true; pressed2 = false;
+            random = new Random();
         }
 
         private void ResetGame()
         {
+            //random = new Random();
             this.Components.Remove(trackManager);
             this.Components.Remove(playerManager);
 
@@ -102,13 +106,12 @@ namespace PinballRacer
             this.Components.Add(playerManager);
 
             timer = 0;
-            timeToShoot = 1000;
-            timeToCloseLoader = 2000;
-            timeToEnableCollisionDetection = 3000;
+            timeToShoot = 4000;
+            timeToCloseLoader = 5000;
+            timeToEnableCollisionDetection = 6000;            
             launched = false;
             closeLoader = false;
             enableCollisionDetection = false;
-
             pressed = false; showBoard = true; pressed2 = false;
 
             this.Initialize();
@@ -163,9 +166,10 @@ namespace PinballRacer
 
             // Initial camera load
             camera = new ChaseCamera();
-            cameraView = CameraView.OVERVIEW;
+            cameraView = CameraView.THIRD_PERSON;
             Player player = playerManager.GetHumanPlayer();
             UpdatePlayerCamera(player);
+            camAngle = 0f;
             camera.Reset();
 
             collisionManager = new PlayerCollisionManager(Content, trackManager.track);

@@ -10,7 +10,7 @@ namespace PinballRacer.Track.Obstacles
 {
     class Slingshot : Obstacle
     {
-        const int SCORE = 10000;
+        const int SCORE = 3000;
         public const float E = 25f;
         Matrix rotation;
         bool inverted;
