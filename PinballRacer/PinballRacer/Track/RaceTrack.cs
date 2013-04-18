@@ -345,13 +345,7 @@ namespace PinballRacer.Track
         {
             PathController.Draw(view, projection, content.Load<Model>("ball"), content.Load<Model>("cube"));
             DrawFloor();
-            DrawWalls(view, projection, content.Load<Model>("cube"));
-            foreach (Floor f in floors)
-            {
-                f.draw(view, projection);
-                
-            }
-
+           // DrawWalls(view, projection, content.Load<Model>("cube"));
             foreach (Obstacle o in obstacles.Values)
             {
             //    if(o.GetType() != tokenWall.GetType())
