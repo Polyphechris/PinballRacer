@@ -14,7 +14,7 @@ namespace PinballRacer.Track
         float hitTime = 0;
         public int ID { get; set; }
         protected Model model;
-        protected int score;
+        public int score { get; protected set; }
         protected Vector3 position;
         protected Vector3 scale;
         public bool isHit;

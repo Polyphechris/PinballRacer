@@ -86,13 +86,16 @@ namespace PinballRacer.Track.Pathfinding
             return newNode;
         }
         
-        public void ComputeHeuristics(Player p)
+        public void ComputeHeuristics(Player p, Dictionary<int, Obstacle> obstacles, int[,] tiles)
         {
-
             foreach (Node n in allNodes)
             {
                 n.visited = false; n.open = false;
-                n.heuristic = Vector2.Distance(n.position, End.position);
+                int objectID = tiles[(int)n.position.X, (int)n.position.Y];
+                if (objectID != 0)
+                    n.heuristic = ((NpcPlayer)p).pickStrategy.GenerateHeuristic(n.position, End.position, obstacles[objectID]);
+                else
+                    n.heuristic = ((NpcPlayer)p).pickStrategy.GenerateHeuristic(n.position, End.position, null);
             } 
         }
 

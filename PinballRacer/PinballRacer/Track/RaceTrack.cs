@@ -34,13 +34,11 @@ namespace PinballRacer.Track
 
         public Dictionary<int, Obstacle> obstacles;
         public int[,] tiles;
-        List<Wall> walls;
         List<Floor> floors;
         public List<Vector2> Waypoints;
 
         public PathManager PathController;
 
-        public float[,] TerrainMap;
         public enum squareStates { EMPTY = 0, WALL, PLAYER1, PLAYER2, OBSTACLE, GOAL1, LAST };
         public enum trackStates { PLAYING = 0, START, GAMEOVER };
         public squareStates[,] board;
@@ -65,9 +63,9 @@ namespace PinballRacer.Track
             springLevel = minSpringLevel;
 
             Waypoints = new List<Vector2>();
-            Waypoints.Add(new Vector2(48, 98));
+            Waypoints.Add(new Vector2(47, 97));
             Waypoints.Add(new Vector2(TRACK_WIDTH/2 - 2, TRACK_HEIGHT/2 - 10));
-            Waypoints.Add(new Vector2(2, 98));
+            Waypoints.Add(new Vector2(3, 97));
             Waypoints.Add(new Vector2(TRACK_WIDTH_IN - 5, TRACK_HEIGHT_IN - 5));
             Waypoints.Add(new Vector2(TRACK_WIDTH_OUT + 5, TRACK_HEIGHT_IN - 5));
 
@@ -107,9 +105,6 @@ namespace PinballRacer.Track
 
         private void InitializeOutterWalls()
         {
-            TerrainMap = new float[TRACK_WIDTH, TRACK_HEIGHT];
-            walls = new List<Wall>();
-
             for (int i = 0; i < TRACK_WIDTH; ++i)
             {
                 for (int j = 0; j < TRACK_HEIGHT; ++j)
@@ -288,7 +283,6 @@ namespace PinballRacer.Track
                 board[x, y] = squareStates.WALL;
                 Wall w = new WallBumper(x, y, m);
                 AddObstacle(w);
-                walls.Add(w);
                 tiles[x, y] = w.ID;
             }
         }
@@ -302,7 +296,6 @@ namespace PinballRacer.Track
                 board[x, y] = squareStates.WALL;
                 Wall w = new WallRegular(x, y, m);
                 AddObstacle(w);
-                walls.Add(w);
                 tiles[x, y] = w.ID;
                 //Add to track graph
             }

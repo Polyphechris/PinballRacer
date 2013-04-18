@@ -12,6 +12,8 @@ namespace PinballRacer.Track.Obstacles
     {
         public static Model flipperSphere;
         public const float E = 1f;
+        public const int SCORE = 2500;
+
         public const float INTERVAL = 1000f;
         public float W1 = 3f;
         public float W2= 0.75f;
@@ -35,6 +37,7 @@ namespace PinballRacer.Track.Obstacles
 
         public Flipper(float x, float y, Model m, float a, bool i)
         {
+            score = SCORE;
             w = 0;
             idle_timer = 0f;
             state = states.IDLE;
