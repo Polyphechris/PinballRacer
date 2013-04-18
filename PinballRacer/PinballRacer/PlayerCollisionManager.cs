@@ -145,8 +145,8 @@ namespace PinballRacer
             List<Vector4> newList1 = new List<Vector4>();
             newList1.Add(new Vector4(-ImpulseDirection.X, -ImpulseDirection.Y, 0, 0));
             //Add impulses to each player
-            p1.score -= 1000;
-            p2.score -= 1000;
+            //p1.score -= 1000;
+            //p2.score -= 1000;
 
             //handle collision resolution
             p1.position = new Vector3(p1.previousPosition.X, p1.previousPosition.Y, p1.previousPosition.Z);

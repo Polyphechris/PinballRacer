@@ -20,8 +20,9 @@ namespace PinballRacer.Track.Obstacles
             model = m;
             position = new Vector3(x, y, 0.5f);
             scale = new Vector3(0.7f, 0.7f, 0.025f);
-            isHit = false;            
-            CollisionBox = new Rectangle((int)(x - (RADIUS/2)),(int)( y - (RADIUS/2)), (int)RADIUS * 2, (int)RADIUS * 2);
+            isHit = false;
+            CollisionBox = new Rectangle((int)(x - (RADIUS / 2)), (int)(y - (RADIUS / 2)), (int)RADIUS * 2, (int)RADIUS * 2);
+            world = Matrix.CreateScale(scale) * Matrix.CreateTranslation(position);
         }
 
         public override Vector3 getResultingForce(Player p)
@@ -48,7 +49,7 @@ namespace PinballRacer.Track.Obstacles
                     effect.EnableDefaultLighting();
                     effect.DirectionalLight0.Direction = new Vector3(0f, 0, -1f);
                     effect.DirectionalLight0.DiffuseColor = new Vector3(0.9f, 0.9f, 0.9f);// Shinnyness/reflexive
-                    effect.World = Matrix.CreateScale(scale) * Matrix.CreateTranslation(position);
+                    effect.World = world;
                     effect.View = view;
                     effect.Projection = projection;
                     //effect.Alpha = 0.8f;

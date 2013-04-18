@@ -33,6 +33,8 @@ namespace PinballRacer.Track.Obstacles
             else
                 CollisionBox = new Rectangle((int)(vertices[2].X - 1), (int)(vertices[2].Y - 1),
                     (int)(vertices[0].X - vertices[2].X + 2), (int)(vertices[0].Y - vertices[2].Y + 2));
+
+            world = Matrix.CreateScale(scale) * rotation * Matrix.CreateTranslation(position);
         }
 
         public void InitializeSegments()
@@ -162,7 +164,7 @@ namespace PinballRacer.Track.Obstacles
                     effect.AmbientLightColor = new Vector3(0.2f);
                     effect.DirectionalLight0.Direction = new Vector3(0f, -1f, -1f);
                     effect.DirectionalLight0.DiffuseColor = new Vector3(0.9f, 0.9f, 0.9f);// Shinnyness/reflexive
-                    effect.World = Matrix.CreateScale(scale) * rotation * Matrix.CreateTranslation(position);
+                    effect.World = world;
                     effect.View = view;
                     effect.Projection = projection;
                     if (isHit)

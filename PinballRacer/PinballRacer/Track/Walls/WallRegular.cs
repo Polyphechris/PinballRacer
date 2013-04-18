@@ -18,6 +18,7 @@ namespace PinballRacer.Track.Walls
             model = m;
             scale = new Vector3(0.5f,  0.5f, 2f);
             position = new Vector3(x,  y, 0);
+            world = Matrix.CreateScale(scale) * Matrix.CreateTranslation(position);
         }
 
         public bool Collides(Player player)

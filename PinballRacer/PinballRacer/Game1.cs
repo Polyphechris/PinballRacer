@@ -193,7 +193,7 @@ namespace PinballRacer
                 UpdatePlayerCamera(player);
                 UpdateLoader(gameTime);
 
-                if (collisionManager.SomeoneFinished(1))
+                if (collisionManager.SomeoneFinished(3))
                 {
                     int whoFinished = collisionManager.CountWhoFinished();
                     if (whoFinished != 4)
@@ -202,7 +202,7 @@ namespace PinballRacer
                         {
                             if (!p.doneRace)
                             {
-                                p.score -= (int)Math.Pow(10, whoFinished);
+                                p.score -= (int)Math.Pow(4, whoFinished);
                             }
                         }
                     }
@@ -272,6 +272,7 @@ namespace PinballRacer
                         spriteBatch.DrawString(font, " - SCORES -", startLeaderboard1 + new Vector2(50, 0), Color.White, 0f, Vector2.Zero, 0.75f, SpriteEffects.None, 0f);
                         foreach (Player p in collisionManager.GetLeadersPoints())
                         {
+                            p.pointRank = count;  
                             //SCORES
                             spriteBatch.DrawString(font, p.name, startLeaderboard1 + new Vector2(0, count * 30), Color.White, 0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0f);
                             spriteBatch.DrawString(font, p.score.ToString(), startLeaderboard1 + new Vector2(170, count * 30), Color.White, 0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0f);
@@ -284,6 +285,7 @@ namespace PinballRacer
                         count = 1;
                         foreach (Player p in collisionManager.GetLeadersRank())
                         {
+                            p.rank = count;                            
                             //RANKS
                             spriteBatch.DrawString(font, p.name, startLeaderboard2 + new Vector2(0, count * 30), Color.White, 0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0f);
                             spriteBatch.DrawString(font, count.ToString(), startLeaderboard2 + new Vector2(170, count * 30), Color.White, 0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0f);
@@ -322,13 +324,13 @@ namespace PinballRacer
             {
                 spriteBatch.Draw(smoke, new Vector2(0, 0), new Rectangle(0, 0, 2000, 2000), Color.FromNonPremultiplied(155, 155, 155, 155));            
                 spriteBatch.DrawString(font, "PAUSED", new Vector2((graphics.PreferredBackBufferWidth / 2) - 25, graphics.PreferredBackBufferHeight / 2), Color.White);
-                spriteBatch.DrawString(font, "(i)Instructions", new Vector2((graphics.PreferredBackBufferWidth / 2) - 25, graphics.PreferredBackBufferHeight / 2 + 30), Color.White);
-                spriteBatch.DrawString(font, "(x)Exit", new Vector2((graphics.PreferredBackBufferWidth / 2) - 25, graphics.PreferredBackBufferHeight / 2 + 60), Color.White);
+                spriteBatch.DrawString(font, "Instructions (<)", new Vector2((graphics.PreferredBackBufferWidth / 2) - 25, graphics.PreferredBackBufferHeight / 2 + 30), Color.White);
+                spriteBatch.DrawString(font, "Exit (x)", new Vector2((graphics.PreferredBackBufferWidth / 2) - 25, graphics.PreferredBackBufferHeight / 2 + 60), Color.White);
             }
             if (gameState == states.main1)
             {
                 spriteBatch.DrawString(font, "PINBALL RACERS", new Vector2(25, 25), Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0);
-                spriteBatch.DrawString(font, "Press A to Begin",
+                spriteBatch.DrawString(font, "Press (A) to Begin",
                     new Vector2((graphics.PreferredBackBufferWidth / 2) - 105, graphics.PreferredBackBufferHeight / 2 + 30), Color.Gray);
                 
                 //Drawing game modes
@@ -633,7 +635,8 @@ namespace PinballRacer
                     pressed = true;
                     gameState = states.pause;
                 }
-                else if (keyboardState.IsKeyDown(Keys.D1) && !pressed2)
+                else if ((keyboardState.IsKeyDown(Keys.D1) && !pressed2) ||
+                    gamePadState.IsButtonDown(Buttons.B) && !previousGamePadState.IsButtonDown(Buttons.B))
                 {
                     pressed2 = true;
                     showBoard = !showBoard;
@@ -734,6 +737,11 @@ namespace PinballRacer
             if (keyboardState.IsKeyDown(Keys.Down)) { down = true; }
             if (keyboardState.IsKeyDown(Keys.Left)) { left = true; }
             if (keyboardState.IsKeyDown(Keys.Right)) { right = true; }
+
+            if (gamePadState.IsButtonDown(Buttons.DPadUp)) { up = true; }
+            if (gamePadState.IsButtonDown(Buttons.DPadDown)) { down = true; }
+            if (gamePadState.IsButtonDown(Buttons.DPadLeft)) { left = true; }
+            if (gamePadState.IsButtonDown(Buttons.DPadRight)) { right = true; }
 
             // Determine the angle to target
             if (left)
