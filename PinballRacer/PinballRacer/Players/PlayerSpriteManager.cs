@@ -40,7 +40,7 @@ namespace PinballRacer.Players
                 if (i == 0) { p.color = new Vector3(1, 0.75f, 0.8f); p.name = "Nimble Nimbus"; p.pickStrategy = new FinishFirstStrategy(); }
                 else { p.color = new Vector3(0.1f, 0.4f, 1); p.name = "The Gobbler"; p.pickStrategy = new MostPointsStrategy(); }
                 p.InitializeModel(ball);
-                p.InitializePosition(new Vector3(47.5f, 2.5f + i, Player.RADIUS / 2), Vector3.Zero, Player.RADIUS, Vector3.Zero);
+                p.InitializePosition(new Vector3(47.5f, 2.5f + i + (numberOfNpcs*0.05f), Player.RADIUS / 2), Vector3.Zero, Player.RADIUS, Vector3.Zero);
                 npcs.Add(p);
             }
 
@@ -51,7 +51,7 @@ namespace PinballRacer.Players
             human = new HumanPlayer();
             human.InitializeModel(ball);
             float scale = Player.RADIUS;
-            Vector3 position = new Vector3(47.5f, 2.5f + numberOfNpcs, Player.RADIUS / 2);
+            Vector3 position = new Vector3(47.5f, 2.5f + numberOfNpcs + (numberOfNpcs*0.05f), Player.RADIUS / 2);
             Vector3 direction = new Vector3(0.0f, 0.0f, 0.0f);
             Vector3 rotation = new Vector3(0.0f, 0.0f, 0.0f);
             
