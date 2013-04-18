@@ -19,7 +19,7 @@ namespace PinballRacer.Players
         protected const float ANGULAR_VELOCITY = 0.02f;     // Increasing this reduces the rotation speed
         protected const float SPEED_UP = 0.005f;
         protected const float SLOW_DOWN = -0.005f;
-        protected const float MAX_ACC = 8f;
+        protected const float MAX_ACC = 1f;
         protected const float MIN_ACC = -0.005f;
         protected const float MAX_SPEED = 4f;
         protected const float KINETIC_FRICTION = 0.95f;
@@ -88,8 +88,6 @@ namespace PinballRacer.Players
 
         public virtual void Update(GameTime gameTime)
         {
-            Console.WriteLine(currentWaypoint);
-
             acceleration = Vector3.Zero;
             for (int i = 0; i < impulses.Count; ++i)
             {
