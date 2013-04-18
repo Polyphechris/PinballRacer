@@ -592,7 +592,7 @@ namespace PinballRacer
                     mode = modes.RACE;
                 }
                 if ((keyboardState.IsKeyDown(Keys.Space) && !pressed) ||
-                    (gamePadState.IsButtonDown(Buttons.A) && !pressed))
+                    (gamePadState.IsButtonDown(Buttons.A) && !previousGamePadState.IsButtonDown(Buttons.A)))
                 {
                     pressed = true;
                     gameState = states.play;
@@ -606,9 +606,10 @@ namespace PinballRacer
             else if (gameState == states.victory)
             {
                 if ((keyboardState.IsKeyDown(Keys.Space) && !pressed) ||
-                    (gamePadState.IsButtonDown(Buttons.A) && !pressed))
+                    (gamePadState.IsButtonDown(Buttons.A) && !previousGamePadState.IsButtonDown(Buttons.A)))
                 {
                     pressed = true;
+                    ResetGame();
                     gameState = states.main1;
                 }
             }
