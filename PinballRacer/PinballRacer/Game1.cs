@@ -197,13 +197,13 @@ namespace PinballRacer
                 UpdatePlayerCamera(player);
                 UpdateLoader(gameTime);
 
-                if (collisionManager.SomeoneFinished(1))
+                if (collisionManager.SomeoneFinished(3))
                 {
                     if (collisionManager.NPC.Count > 0)
                     {
                         foreach (Player p in collisionManager.NPC)
                         {
-                            p.score -= (int)Math.Pow(10, collisionManager.finishedPlayers.Count);
+                            p.score -= (int)Math.Pow(4, collisionManager.finishedPlayers.Count);
                         }
                     }
                     else
