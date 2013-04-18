@@ -103,6 +103,7 @@ namespace PinballRacer.Track.Obstacles
                     sphere2 = sphere2.Transform(sphereWorld);
                     if (sphere2.Intersects(sphere1))
                     {
+                        AudioManager.playEffect(AudioEffect.FLIPPER_BOUNCE);
                         return true;
                     }
                 }

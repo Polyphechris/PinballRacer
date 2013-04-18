@@ -1,6 +1,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 using PinballRacer.Track;
 using PinballRacer.Players;
 
@@ -16,6 +18,7 @@ namespace PinballRacer
         TrackSpriteManager trackManager;
         PlayerSpriteManager playerManager;
         PlayerCollisionManager collisionManager;
+        AudioManager audioManager;
 
         public static BasicEffect m_basicEffect;
 
@@ -121,6 +124,20 @@ namespace PinballRacer
             countdown = Content.Load<Texture2D>("Countdown");
 
             GraphicsDevice.RasterizerState = RasterizerState.CullNone;
+
+            // Music / Effects
+            MusicDictionary songs = new MusicDictionary();
+            songs.Add(Music.MAIN_MENU, Content.Load<Song>("music/mainmenu"));
+            songs.Add(Music.RACE, Content.Load<Song>("music/race"));
+
+            AudioEffectsDictionary soundEffects = new AudioEffectsDictionary();
+            soundEffects.Add(AudioEffect.BUMPER_BOUNCE, Content.Load<SoundEffect>("sound/bumperbounce"));
+            soundEffects.Add(AudioEffect.WALL_BOUNCE, Content.Load<SoundEffect>("sound/wallbounce"));
+            soundEffects.Add(AudioEffect.TIRE_BOUNCE, Content.Load<SoundEffect>("sound/tirebounce"));
+            soundEffects.Add(AudioEffect.FLIPPER_BOUNCE, Content.Load<SoundEffect>("sound/flipperbounce"));
+
+            audioManager = new AudioManager(songs, soundEffects);
+            AudioManager.playMusic(Music.MAIN_MENU);
 
             // Initial camera load
             camera = new ChaseCamera();
@@ -510,6 +527,7 @@ namespace PinballRacer
                 {
                     pressed = true;
                     gameState = states.play;
+                    AudioManager.playMusic(Music.RACE);
                 }
                 else
                 {
