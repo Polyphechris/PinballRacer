@@ -222,7 +222,7 @@ namespace PinballRacer
                         {
                             if (!p.doneRace)
                             {
-                                p.score -= (int)Math.Pow(4, whoFinished);
+                                p.score -= (int)Math.Pow(6, whoFinished);
                             }
                         }
                     }
