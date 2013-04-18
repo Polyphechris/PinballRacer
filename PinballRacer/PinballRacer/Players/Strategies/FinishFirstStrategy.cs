@@ -9,6 +9,7 @@ namespace PinballRacer.Players.Strategies
     {
         public FinishFirstStrategy()
         {
+            base.Initialize();
             Initialize();
         }
 

@@ -58,6 +58,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="dot.bmp">
+      <Name>dot</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>FontTextureProcessor</Processor>
+    </Compile>
     <Compile Include="spring.fbx">
       <Name>spring</Name>
       <Importer>FbxImporter</Importer>
@@ -130,6 +135,38 @@
       <Name>MenuFont</Name>
       <Importer>TextureImporter</Importer>
       <Processor>FontTextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="music\mainmenu.mp3">
+      <Name>mainmenu</Name>
+      <Importer>Mp3Importer</Importer>
+      <Processor>SongProcessor</Processor>
+    </Compile>
+    <Compile Include="music\race.mp3">
+      <Name>race</Name>
+      <Importer>Mp3Importer</Importer>
+      <Processor>SongProcessor</Processor>
+    </Compile>
+    <Compile Include="sound\bumperbounce.wav">
+      <Name>bumperbounce</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+    <Compile Include="sound\flipperbounce.wav">
+      <Name>flipperbounce</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+    <Compile Include="sound\tirebounce.wav">
+      <Name>tirebounce</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+    <Compile Include="sound\wallbounce.wav">
+      <Name>wallbounce</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>

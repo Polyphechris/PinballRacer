@@ -26,6 +26,7 @@ namespace PinballRacer.Players.Strategies
 
         protected float points_value;
         protected float distance_value;
+        Random random;
 
         public float GenerateHeuristic(Vector2 nodePosition, Vector2 goalPosition, Obstacle obstacle)
         {
@@ -38,8 +39,12 @@ namespace PinballRacer.Players.Strategies
             if(obstacle != null)
             {
                 score = obstacle.score;
+                if (score == 5000)
+                {
+                    heuristic = 1;
+                }
             }
-            scoreH = 100000 - score;
+            scoreH = (((float)score) / 10000f) * 100f;
 
             //Calculate heuristic based on distance to goal
             distanceH = Vector2.Distance(nodePosition, goalPosition);
@@ -47,13 +52,16 @@ namespace PinballRacer.Players.Strategies
             //Max value to 100 then multiply them by probabilities (weighted average)
             distanceH = Math.Min(distanceH, 100);
             scoreH = Math.Min(scoreH, 100);
-            heuristic = (scoreH * points_value) + (distanceH * distance_value);            
 
+            float randomMultiple = random.Next(90, 110);
+            heuristic = (scoreH * points_value) + (distanceH * distance_value);
+            heuristic = heuristic * randomMultiple / 100;
             return heuristic;
         }
 
         protected virtual void Initialize()
         {
+            random = new Random();
         }
         ////Two sets of behaviours for each NPC
         //public abstract Vector3 Chase(Player p, List<Player> players);

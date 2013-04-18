@@ -42,6 +42,7 @@ namespace PinballRacer.Track
         public enum squareStates { EMPTY = 0, WALL, PLAYER1, PLAYER2, OBSTACLE, GOAL1, LAST };
         public enum trackStates { PLAYING = 0, START, GAMEOVER };
         public squareStates[,] board;
+        Wall tokenWall = new WallRegular(0,0,null);
 
         public RaceTrack(ContentManager c)
         {
@@ -245,8 +246,8 @@ namespace PinballRacer.Track
             AddObstacle(new Slingshot(new Vector3((TRACK_WIDTH - 4) / 2 - 12.5f, 20.6f, -0.2f), content.Load<Model>("slingshotright"), Matrix.CreateRotationZ(MathHelper.ToRadians(-127)), false));
             AddObstacle(new Slingshot(new Vector3((TRACK_WIDTH - 4) / 2 + 12.25f, 20.0f, 2.65f), content.Load<Model>("slingshotleft"), Matrix.CreateRotationZ(MathHelper.ToRadians(180)), true));
 
-            AddObstacle(new Flipper((TRACK_WIDTH - 4) / 2 - 10, 10, content.Load<Model>("flipper"), 0f - 0.3f, false));
-            AddObstacle(new Flipper((TRACK_WIDTH - 4) / 2 + 10, 10, content.Load<Model>("flipper"), (float)Math.PI + 0.3f, true));
+            //AddObstacle(new Flipper((TRACK_WIDTH - 4) / 2 - 10, 10, content.Load<Model>("flipper"), 0f - 0.3f, false));
+            //AddObstacle(new Flipper((TRACK_WIDTH - 4) / 2 + 10, 10, content.Load<Model>("flipper"), (float)Math.PI + 0.3f, true));
             Flipper.flipperSphere = content.Load<Model>("ball");
 
             Vector2 bottomLeft = new Vector2(TRACK_WIDTH / 2 - 4, TRACK_HEIGHT - 15);
@@ -338,10 +339,11 @@ namespace PinballRacer.Track
         {
             PathController.Draw(view, projection, content.Load<Model>("ball"), content.Load<Model>("cube"));
             DrawFloor();
-            
-            for (int i = 0; i < floors.Count; ++i)
+
+            DrawWalls(view, projection, content.Load<Model>("cube"));
+            foreach (Floor f in floors)
             {
-                floors[i].draw(view, projection);
+                f.draw(view, projection);
                 
             }
 
@@ -352,9 +354,79 @@ namespace PinballRacer.Track
 
             foreach (Obstacle o in obstacles.Values)
             {
+                if(o.GetType() != tokenWall.GetType())
                 o.draw(view, projection);
             }
             DrawSpring();
+        }
+
+        public void DrawWalls(Matrix view, Matrix projection, Model model)
+        {
+            foreach (ModelMesh mesh in model.Meshes)
+            {
+                //OUTTER WALLs
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+                    effect.LightingEnabled = true;
+                    effect.EnableDefaultLighting();         
+                    effect.AmbientLightColor = new Vector3(0.55f);
+                    effect.DirectionalLight0.DiffuseColor = new Vector3(1,0, 0);// Shinnyness/reflexive
+                    effect.World = Matrix.CreateScale(new Vector3(TRACK_WIDTH / 2, 1, 1)) *
+                        Matrix.CreateTranslation(new Vector3(TRACK_WIDTH / 2,0, -0.5f));
+                    effect.View = Game1.view;
+                    effect.Projection = Game1.projection;
+                    //effect.Alpha = 0.8f;
+                }
+                mesh.Draw();
+            }  
+            foreach (ModelMesh mesh in model.Meshes)
+            {
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+                    effect.EnableDefaultLighting();
+                    effect.AmbientLightColor = new Vector3(0.55f);
+                    effect.DirectionalLight0.DiffuseColor = new Vector3(1, 0, 0);// Shinnyness/reflexive
+                    effect.World = Matrix.CreateScale(new Vector3(TRACK_WIDTH / 2, 1, 1)) *
+                        Matrix.CreateTranslation(new Vector3(TRACK_WIDTH / 2, 100, -0.5f));
+                    effect.View = Game1.view;
+                    effect.Projection = Game1.projection;
+                    //effect.Alpha = 0.8f;
+                }
+                mesh.Draw();
+            }   
+            foreach (ModelMesh mesh in model.Meshes)
+            {
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+                    effect.EnableDefaultLighting();
+                    effect.AmbientLightColor = new Vector3(0.55f);
+                    effect.DirectionalLight0.DiffuseColor = new Vector3(1, 0, 0);// Shinnyness/reflexive
+                    effect.World = Matrix.CreateScale(new Vector3(1, TRACK_HEIGHT / 2, 1)) *
+                        Matrix.CreateTranslation(new Vector3(0, TRACK_HEIGHT / 2, -0.5f));
+                    effect.View = Game1.view;
+                    effect.Projection = Game1.projection;
+                    //effect.Alpha = 0.8f;
+                }
+                mesh.Draw();
+            }
+            foreach (ModelMesh mesh in model.Meshes)
+            {
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+                    effect.EnableDefaultLighting();
+                    effect.AmbientLightColor = new Vector3(0.55f);
+                    effect.DirectionalLight0.DiffuseColor = new Vector3(1, 0, 0);// Shinnyness/reflexive
+                    effect.World = Matrix.CreateScale(new Vector3(1, TRACK_HEIGHT / 2, 1)) *
+                        Matrix.CreateTranslation(new Vector3(TRACK_WIDTH, TRACK_HEIGHT / 2, -0.5f));
+                    effect.View = Game1.view;
+                    effect.Projection = Game1.projection;
+                    //effect.Alpha = 0.8f;
+                }
+                mesh.Draw();
+            }
+                //INNER WALLS
+
+            
         }
 
         public void DrawFloor()

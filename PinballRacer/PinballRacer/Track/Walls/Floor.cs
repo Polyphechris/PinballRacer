@@ -39,6 +39,7 @@ namespace PinballRacer.Track.Walls
                     effect.World = Matrix.CreateScale(scale) * Matrix.CreateTranslation(position);
                     effect.View = view;
                     effect.Projection = projection;
+                    effect.Alpha = 0.5f;
                 }
                 mesh.Draw();
             }
