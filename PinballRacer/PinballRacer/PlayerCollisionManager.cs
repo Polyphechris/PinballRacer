@@ -156,5 +156,25 @@ namespace PinballRacer
             NPC = (from p in NPC orderby p.progress descending select p).ToList();
             return NPC;
         }
+
+        public Player RaceFinished(int numberOfLaps)
+        {
+            Player someoneFinished = null;
+            foreach (Player p in NPC)
+            {
+                //  Winning condition
+                if (p.currentLap >= numberOfLaps)
+                {
+                    if (p.currentWaypoint == 1)
+                    {
+                        if (p.position.Y > 89)
+                        {
+                            someoneFinished = p;
+                        }
+                    }
+                }
+            }
+            return someoneFinished;
+        }
     }
 }

@@ -244,6 +244,12 @@ namespace PinballRacer
 
                     }
                 }
+
+                if (collisionManager.RaceFinished(1) != null)
+                {
+                    string test;
+                    //start reducing the other players points
+                }
             }                  
             if (gameState == states.pause)
             {
