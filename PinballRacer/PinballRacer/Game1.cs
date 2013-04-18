@@ -34,6 +34,7 @@ namespace PinballRacer
         SpriteFont font;
         private Texture2D smoke;
         private Texture2D countdown;
+        private Texture2D keyMapping;
         bool pressed;
         bool pressed2;
         bool showBoard;
@@ -142,6 +143,7 @@ namespace PinballRacer
             font = Content.Load<SpriteFont>("MenuFont");
             smoke = Content.Load<Texture2D>("smoke");
             countdown = Content.Load<Texture2D>("Countdown");
+            keyMapping = Content.Load<Texture2D>("keymapping");
 
             GraphicsDevice.RasterizerState = RasterizerState.CullNone;
 
@@ -345,9 +347,9 @@ namespace PinballRacer
             if (gameState == states.pause)
             {
                 spriteBatch.Draw(smoke, new Vector2(0, 0), new Rectangle(0, 0, 2000, 2000), Color.FromNonPremultiplied(155, 155, 155, 155));            
-                spriteBatch.DrawString(font, "PAUSED", new Vector2((graphics.PreferredBackBufferWidth / 2) - 25, graphics.PreferredBackBufferHeight / 2), Color.White);
-                spriteBatch.DrawString(font, "Instructions (<)", new Vector2((graphics.PreferredBackBufferWidth / 2) - 25, graphics.PreferredBackBufferHeight / 2 + 30), Color.White);
-                spriteBatch.DrawString(font, "Exit (x)", new Vector2((graphics.PreferredBackBufferWidth / 2) - 25, graphics.PreferredBackBufferHeight / 2 + 60), Color.White);
+                spriteBatch.DrawString(font, "PAUSED", new Vector2((graphics.PreferredBackBufferWidth / 3), graphics.PreferredBackBufferHeight / 3), Color.White);
+                spriteBatch.DrawString(font, "Instructions (I/Select)", new Vector2((graphics.PreferredBackBufferWidth / 3), graphics.PreferredBackBufferHeight / 3 + 30), Color.White);
+                spriteBatch.DrawString(font, "Exit (X)", new Vector2((graphics.PreferredBackBufferWidth / 3), graphics.PreferredBackBufferHeight / 3 + 60), Color.White);
             }
             if (gameState == states.main1)
             {
@@ -375,9 +377,15 @@ namespace PinballRacer
                         (int)(graphics.PreferredBackBufferWidth - (graphics.PreferredBackBufferWidth / 5)),
                         (int)(graphics.PreferredBackBufferHeight - (graphics.PreferredBackBufferHeight / 5))),
                     new Rectangle(0, 0, 1000, 1000),
-                    Color.FromNonPremultiplied(155, 155, 155, 220)); 
-                spriteBatch.DrawString(font, "INSTRUCTIONS", new Vector2((graphics.PreferredBackBufferWidth / 2) - 85, graphics.PreferredBackBufferHeight / 10 + 22), Color.White);
+                    Color.FromNonPremultiplied(155, 155, 155, 220));
 
+                spriteBatch.Draw(keyMapping,
+                   new Rectangle((int)(graphics.PreferredBackBufferWidth / 2) - (int)(keyMapping.Width/2),
+                       (int)(graphics.PreferredBackBufferHeight / 2) - (int)(keyMapping.Height / 2),
+                   keyMapping.Width, keyMapping.Height), null, Color.White);
+
+                spriteBatch.DrawString(font, "INSTRUCTIONS", new Vector2((graphics.PreferredBackBufferWidth / 2), graphics.PreferredBackBufferHeight / 10 + 22), Color.White);
+                /*
                 spriteBatch.DrawString(font, " - Free Camera -", new Vector2(graphics.PreferredBackBufferWidth / 9, startInstruction + 25), Color.White);
                 spriteBatch.DrawString(font, "Use W/A/S/D to rotate camera", new Vector2(graphics.PreferredBackBufferWidth / 9, startInstruction + 65), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
                 spriteBatch.DrawString(font, "Use Q/E to move forward and backward", new Vector2(graphics.PreferredBackBufferWidth / 9, startInstruction + 85), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
@@ -388,6 +396,7 @@ namespace PinballRacer
                 
                 spriteBatch.DrawString(font, "Use Up/Down/Left/Right to move Ball", new Vector2(graphics.PreferredBackBufferWidth / 9, startInstruction + 185), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
                 spriteBatch.DrawString(font, "Space Next/Pause", new Vector2(graphics.PreferredBackBufferWidth / 9, startInstruction + 205), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
+                */
             } 
             spriteBatch.End();
         }
