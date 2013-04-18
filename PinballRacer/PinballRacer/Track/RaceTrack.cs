@@ -343,24 +343,71 @@ namespace PinballRacer.Track
 
         public void DrawWalls(Matrix view, Matrix projection, Model model)
         {
-            foreach (ModelMesh mesh in floor.Meshes)
+            foreach (ModelMesh mesh in model.Meshes)
             {
+                //OUTTER WALLs
                 foreach (BasicEffect effect in mesh.Effects)
                 {
                     effect.LightingEnabled = true;
-                    effect.EnableDefaultLighting();
-                    effect.DirectionalLight0.Enabled = true;
-                    effect.DirectionalLight0.Direction = new Vector3(0, 0, -1);
+                    effect.EnableDefaultLighting();         
                     effect.AmbientLightColor = new Vector3(0.55f);
-                    effect.DirectionalLight0.DiffuseColor = new Vector3(1, 1, 1);// Shinnyness/reflexive
-                    effect.World = Matrix.CreateScale(new Vector3(TRACK_WIDTH / 2, TRACK_HEIGHT / 2, 1)) *
-                        Matrix.CreateTranslation(new Vector3(TRACK_WIDTH / 2, TRACK_HEIGHT / 2, -0.5f));
+                    effect.DirectionalLight0.DiffuseColor = new Vector3(1,0, 0);// Shinnyness/reflexive
+                    effect.World = Matrix.CreateScale(new Vector3(TRACK_WIDTH / 2, 1, 1)) *
+                        Matrix.CreateTranslation(new Vector3(TRACK_WIDTH / 2,0, -0.5f));
+                    effect.View = Game1.view;
+                    effect.Projection = Game1.projection;
+                    //effect.Alpha = 0.8f;
+                }
+                mesh.Draw();
+            }  
+            foreach (ModelMesh mesh in model.Meshes)
+            {
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+                    effect.EnableDefaultLighting();
+                    effect.AmbientLightColor = new Vector3(0.55f);
+                    effect.DirectionalLight0.DiffuseColor = new Vector3(1, 0, 0);// Shinnyness/reflexive
+                    effect.World = Matrix.CreateScale(new Vector3(TRACK_WIDTH / 2, 1, 1)) *
+                        Matrix.CreateTranslation(new Vector3(TRACK_WIDTH / 2, 100, -0.5f));
+                    effect.View = Game1.view;
+                    effect.Projection = Game1.projection;
+                    //effect.Alpha = 0.8f;
+                }
+                mesh.Draw();
+            }   
+            foreach (ModelMesh mesh in model.Meshes)
+            {
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+                    effect.EnableDefaultLighting();
+                    effect.AmbientLightColor = new Vector3(0.55f);
+                    effect.DirectionalLight0.DiffuseColor = new Vector3(1, 0, 0);// Shinnyness/reflexive
+                    effect.World = Matrix.CreateScale(new Vector3(1, TRACK_HEIGHT / 2, 1)) *
+                        Matrix.CreateTranslation(new Vector3(0, TRACK_HEIGHT / 2, -0.5f));
                     effect.View = Game1.view;
                     effect.Projection = Game1.projection;
                     //effect.Alpha = 0.8f;
                 }
                 mesh.Draw();
             }
+            foreach (ModelMesh mesh in model.Meshes)
+            {
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+                    effect.EnableDefaultLighting();
+                    effect.AmbientLightColor = new Vector3(0.55f);
+                    effect.DirectionalLight0.DiffuseColor = new Vector3(1, 0, 0);// Shinnyness/reflexive
+                    effect.World = Matrix.CreateScale(new Vector3(1, TRACK_HEIGHT / 2, 1)) *
+                        Matrix.CreateTranslation(new Vector3(TRACK_WIDTH, TRACK_HEIGHT / 2, -0.5f));
+                    effect.View = Game1.view;
+                    effect.Projection = Game1.projection;
+                    //effect.Alpha = 0.8f;
+                }
+                mesh.Draw();
+            }
+                //INNER WALLS
+
+            
         }
 
         public void DrawFloor()
