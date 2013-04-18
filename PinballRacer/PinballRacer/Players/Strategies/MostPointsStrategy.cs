@@ -9,12 +9,13 @@ namespace PinballRacer.Players.Strategies
     {
         public MostPointsStrategy()
         {
+            base.Initialize();
             Initialize();
         }
         protected virtual void Initialize()
         {
-            points_value = 0.0f;
-            distance_value = 0.9f;
+            points_value = -2f;
+            distance_value = 2f;
         }
     }
 }

@@ -125,13 +125,13 @@ namespace PinballRacer.Track.Pathfinding
                 }
                 if (current.isGoal)
                 {
-                    Node top = GetTopOpen();
-                    if (top.cost >= current.cost)
-                    {
+                    //Node top = GetTopOpen();
+                   // if (top.cost >= current.cost)
+                    //{
                         searchDone = true;
                         ResetLists();
                         return ConstructPath(current);
-                    }
+                    //}
                 }
                 AddToOpen(current);
                 current.visited = true;
@@ -144,7 +144,7 @@ namespace PinballRacer.Track.Pathfinding
 
         public Node GetTopOpen()
         {
-            float value = 1000000;            
+            float value = float.MaxValue;            
             Node node = null;
 
             foreach (Node n in openList)

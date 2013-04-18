@@ -27,6 +27,7 @@ namespace PinballRacer.Track.Obstacles
             Vector3 player = p.position;
             if (Vector3.Distance(player, position) <= RADIUS + Player.RADIUS)
             {
+                AudioManager.playEffect(AudioEffect.TIRE_BOUNCE);
                 isHit = true;
                 Vector3 force = player - position;
                 force.Normalize();
