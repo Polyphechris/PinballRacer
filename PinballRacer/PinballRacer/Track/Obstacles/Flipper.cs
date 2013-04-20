@@ -9,7 +9,7 @@ using PinballRacer.Players;
 namespace PinballRacer.Track.Obstacles
 {
     class Flipper : Obstacle
-    {
+    {   
         public static Model flipperSphere;
         public const float E = 2f;
         public const int SCORE = 2500;

@@ -9,10 +9,14 @@ Content\slingshotright.xnb
 Content\tirestack.xnb
 Content\testBall.xnb
 Content\plane.xnb
+Content\ballSkin1.xnb
+Content\ballSkin2.xnb
+Content\ballSkin3.xnb
 Content\Countdown.xnb
 Content\dot.xnb
 Content\smoke.xnb
 Content\MenuFont.xnb
+Content\keymapping.xnb
 Content\Score.xnb
 Content\music\mainmenu.xnb
 Content\music\race.xnb
@@ -20,9 +24,5 @@ Content\sound\bumperbounce.xnb
 Content\sound\flipperbounce.xnb
 Content\sound\tirebounce.xnb
 Content\sound\wallbounce.xnb
-Content\ballSkin1.xnb
-Content\ballSkin2.xnb
-Content\ballSkin3.xnb
-Content\keymapping.xnb
 Content\music\mainmenu.wma
 Content\music\race.wma

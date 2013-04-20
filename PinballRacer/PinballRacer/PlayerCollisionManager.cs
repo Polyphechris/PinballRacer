@@ -150,7 +150,7 @@ namespace PinballRacer
 
             //handle collision resolution
             p1.position = new Vector3(p1.previousPosition.X, p1.previousPosition.Y, p1.previousPosition.Z);
-            p2.position = new Vector3(p2.previousPosition.X, p2.previousPosition.Y, p2.previousPosition.Z);
+            //p2.position = new Vector3(p2.previousPosition.X, p2.previousPosition.Y, p2.previousPosition.Z);
 
             p1.AddImpulses(newList);
             p2.AddImpulses(newList1);
