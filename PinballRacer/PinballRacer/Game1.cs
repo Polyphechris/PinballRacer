@@ -358,8 +358,8 @@ namespace PinballRacer
             if (gameState == states.main1)
             {
                 spriteBatch.DrawString(font, "PINBALL RACERS", new Vector2(25, 25), Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0);
-                spriteBatch.DrawString(font, "Press (A) to Begin",
-                    new Vector2((graphics.PreferredBackBufferWidth / 2) - 105, graphics.PreferredBackBufferHeight / 2 + 30), Color.Gray);
+                spriteBatch.DrawString(font, "Press (A/SPACE) to Begin",
+                    new Vector2((graphics.PreferredBackBufferWidth / 2) - 170, graphics.PreferredBackBufferHeight / 2 + 30), Color.Gray);
                 
                 //Drawing game modes
                 float scale = 1f;
@@ -750,7 +750,7 @@ namespace PinballRacer
                 case CameraView.THIRD_PERSON:
                     // Update view to a 3rd person view according to the player's position
                     Vector3 cameraPosition = Vector3.Transform(new Vector3(0, -5, 2.5f), 
-	                    Matrix.CreateFromAxisAngle(Vector3.UnitZ, camAngle)) + player.position;
+                        Matrix.CreateFromAxisAngle(Vector3.UnitZ, camAngle)) + player.position;
                     view = Matrix.CreateLookAt(cameraPosition, player.position, Vector3.UnitZ);
                     break;
                 default:
